@@ -1,0 +1,6 @@
+Library/
+obj/
+*.sln
+.vscode/
+*.meta
+*.csproj
