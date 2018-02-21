@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Testy : Player {
+public class Testy : MovementManager {
+
 
     public override void HardAttackSkill()
     {

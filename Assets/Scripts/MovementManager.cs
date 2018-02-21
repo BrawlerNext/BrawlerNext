@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Player : MonoBehaviour
+public abstract class MovementManager : MonoBehaviour
 {
 
     public float speed;
@@ -51,6 +51,7 @@ public abstract class Player : MonoBehaviour
     protected void Move()
     {
         Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
+        
 		movement *= speed;
 		
 		if (!groundChecker.isGrounded){

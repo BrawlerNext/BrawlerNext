@@ -60,7 +60,8 @@ GameObject:
   - component: {fileID: 65850640529600404}
   - component: {fileID: 23135560963996378}
   - component: {fileID: 54681641360626960}
-  - component: {fileID: 114380066243228690}
+  - component: {fileID: 114699600174821018}
+  - component: {fileID: 114978173701589048}
   m_Layer: 0
   m_Name: Testy
   m_TagString: Untagged
@@ -77,6 +78,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4012926139760718}
   - component: {fileID: 65904289609998142}
+  - component: {fileID: 114792054537414748}
   m_Layer: 0
   m_Name: GroundChecker
   m_TagString: Untagged
@@ -174,7 +176,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
-  m_StereoMirrorMode: 0
 --- !u!23 &23012281612909206
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -184,11 +185,12 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 140d848b2b2beb8468cd07c96d09e371, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -199,6 +201,7 @@ MeshRenderer:
   m_PreserveUVs: 1
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -216,11 +219,12 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 9ec7cf7a7c639fb4f8cbc61afab77ce1, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -231,6 +235,7 @@ MeshRenderer:
   m_PreserveUVs: 1
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
   m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -318,7 +323,7 @@ Behaviour:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1225830808536952}
   m_Enabled: 1
---- !u!114 &114380066243228690
+--- !u!114 &114699600174821018
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -326,11 +331,37 @@ MonoBehaviour:
   m_GameObject: {fileID: 1627787273988504}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3b612c67e399d04c99775832c151675, type: 3}
+  m_Script: {fileID: 11500000, guid: bdedb4809dc3ce34c9e8099fa63d321c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
-  jumpForce: 500
+  player: 49
+--- !u!114 &114792054537414748
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1900256750172958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f17eb0183c3f55a4f86066680fce9482, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGrounded: 0
+--- !u!114 &114978173701589048
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1627787273988504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c52db0edf03eeb459f86cf42b1dbaf7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 10
+  jumpForce: 1000
+  gravityScale: 1
+  maxJumps: 2
 --- !u!124 &124536692273573358
 Behaviour:
   m_ObjectHideFlags: 1
