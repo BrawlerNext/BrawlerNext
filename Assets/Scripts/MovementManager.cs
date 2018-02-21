@@ -5,15 +5,13 @@ using UnityEngine;
 
 public abstract class MovementManager : MonoBehaviour
 {
+    private int jumps = 0;
 
-    public float speed;
-	public float jumpForce;
-	public int gravityScale;
-	public int maxJumps = 2;
-	private int jumps = 0;
+    public Character character;
 
     protected Rigidbody rb;
     protected GroundChecker groundChecker;
+    protected ControlManager controlManager;
 
     void Awake()
     {
@@ -25,26 +23,36 @@ public abstract class MovementManager : MonoBehaviour
     {
         // Movement
         Move();
-        // Skills
-        switch (getCurrentKeyCode())
-        {
-            case KeyCode.Mouse0:
-                SoftAttackSkill();
-                break;
 
-            case KeyCode.Mouse1:
-                HardAttackSkill();
-                break;
+        if (controlManager.IsJumping()) {
+            if (groundChecker.isGrounded || jumps < character.maxJumps || (jumps == character.maxJumps && controlManager.IsBurning())){
+                Jump();
+                jumps++;
+            }
 
-            case KeyCode.Space:
-				if (groundChecker.isGrounded || jumps < maxJumps){
-                	JumpSkill();
-					jumps++;
-				}
-                break;
+            return;
         }
 
-		print(groundChecker.isGrounded);
+        if (controlManager.IsDefending()) {
+            return;
+        }
+
+        if (controlManager.IsSoftAttacking()) {
+            SoftAttack();
+            return;
+        }
+
+        if (controlManager.IsHardAttacking()) {
+            return;
+        }
+
+        if (controlManager.IsDashing()) {
+            return;
+        }
+
+        if (controlManager.IsBurning()) {
+            return;
+        }
     }
 
 
@@ -52,10 +60,10 @@ public abstract class MovementManager : MonoBehaviour
     {
         Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
         
-		movement *= speed;
+		movement *= character.speed;
 		
 		if (!groundChecker.isGrounded){
-			movement.y = rb.velocity.y + Physics.gravity.y * gravityScale * Time.deltaTime;
+			movement.y = rb.velocity.y + Physics.gravity.y * character.gravityScale * Time.deltaTime;
 		} else {
 			jumps = 0;
 		}
@@ -63,9 +71,9 @@ public abstract class MovementManager : MonoBehaviour
         rb.velocity = movement;
     }
 
-    public abstract void SoftAttackSkill();
-    public abstract void HardAttackSkill();
-    public abstract void JumpSkill();
+    public abstract void SoftAttack();
+    public abstract void HardAttack();
+    public abstract void Jump();
 
     private KeyCode getCurrentKeyCode()
     {
