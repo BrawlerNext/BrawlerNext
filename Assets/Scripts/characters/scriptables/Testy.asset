@@ -8,8 +8,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea13d8c1417eaf94abd83cb43c9484aa, type: 3}
-  m_Name: Character
+  m_Script: {fileID: 11500000, guid: ecee679f4a9ea004d9f6183faaf54a57, type: 3}
+  m_Name: Testy
   m_EditorClassIdentifier: 
   speed: 10
   jumpForce: 1000

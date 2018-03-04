@@ -1,27 +1,35 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using characters.scriptables;
+using util;
 using UnityEngine;
 
 public abstract class MovementManager : MonoBehaviour
 {
-    private int jumps = 0;
-
     public Character character;
+    public Player player;
+    public Controller controller;
 
     protected Rigidbody rb;
     protected GroundChecker groundChecker;
     protected ControlManager controlManager;
+    protected Animator animator;
+    
+    protected int jumps = 0;
 
     void Awake()
     {
         rb = gameObject.GetComponent<Rigidbody>();
         groundChecker = gameObject.GetComponentInChildren<GroundChecker>();
+        animator = gameObject.GetComponentInChildren<Animator>();
+        
+        controlManager = gameObject.GetComponent<ControlManager>();
+        controlManager.Init(controller, player);
     }
 
     protected void FixedUpdate()
     {
-        // Movement
         Move();
 
         if (controlManager.IsJumping()) {
@@ -58,7 +66,7 @@ public abstract class MovementManager : MonoBehaviour
 
     protected void Move()
     {
-        Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
+        Vector3 movement = new Vector3(controlManager.GetHorizontalMovement(), 0.0f, controlManager.GetVerticalMovement());
         
 		movement *= character.speed;
 		
@@ -67,6 +75,10 @@ public abstract class MovementManager : MonoBehaviour
 		} else {
 			jumps = 0;
 		}
+
+        animator.SetBool("IsRunning", Math.Abs(movement.x) > 5f || Math.Abs(movement.z) > 5f);
+        
+        Debug.Log(movement);
 
         rb.velocity = movement;
     }

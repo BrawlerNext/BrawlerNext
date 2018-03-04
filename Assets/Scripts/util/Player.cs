@@ -1,3 +1,6 @@
-public enum Player {
-  Player1 = '1'
+namespace util
+{
+  public enum Player {
+    P1
+  }
 }

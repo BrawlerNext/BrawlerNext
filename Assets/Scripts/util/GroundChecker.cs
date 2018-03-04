@@ -1,24 +1,25 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class GroundChecker : MonoBehaviour
+namespace util
 {
-    public bool isGrounded;
-
-    void OnTriggerEnter(Collider col)
+    public class GroundChecker : MonoBehaviour
     {
-        if (col.gameObject.CompareTag("Ground"))
+        public bool isGrounded;
+
+        void OnTriggerEnter(Collider col)
         {
-            isGrounded = true;
+            if (col.gameObject.CompareTag("Ground"))
+            {
+                isGrounded = true;
+            }
         }
-    }
 
-    void OnTriggerExit(Collider col)
-    {
-        if (col.gameObject.CompareTag("Ground"))
+        void OnTriggerExit(Collider col)
         {
-            isGrounded = false;
+            if (col.gameObject.CompareTag("Ground"))
+            {
+                isGrounded = false;
+            }
         }
     }
 }

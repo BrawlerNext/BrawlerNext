@@ -5,3 +5,11 @@ obj/
 *.meta
 *.csproj
 Temp/
+
+\.idea/\.idea\.BrawlerNext/\.idea/
+
+\.idea/\.idea\.BrawlerNext/
+
+\.idea/\.idea\.BrawlerNext1/\.idea/
+
+\.idea/\.idea\.BrawlerNext1/
