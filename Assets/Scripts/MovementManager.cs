@@ -15,7 +15,8 @@ public abstract class MovementManager : MonoBehaviour
     protected GroundChecker groundChecker;
     protected ControlManager controlManager;
     protected Animator animator;
-    
+
+    protected bool inAnimation = false;
     protected int jumps = 0;
 
     void Awake()
@@ -23,62 +24,97 @@ public abstract class MovementManager : MonoBehaviour
         rb = gameObject.GetComponent<Rigidbody>();
         groundChecker = gameObject.GetComponentInChildren<GroundChecker>();
         animator = gameObject.GetComponentInChildren<Animator>();
-        
+
         controlManager = gameObject.GetComponent<ControlManager>();
         controlManager.Init(controller, player);
     }
 
     protected void FixedUpdate()
     {
+        Debug.Log(inAnimation);
+        
         Move();
 
-        if (controlManager.IsJumping()) {
-            if (groundChecker.isGrounded || jumps < character.maxJumps || (jumps == character.maxJumps && controlManager.IsBurning())){
-                Jump();
-                jumps++;
+        if (!inAnimation)
+        {
+            if (controlManager.IsJumping())
+            {
+                if (groundChecker.isGrounded || jumps < character.maxJumps ||
+                    (jumps == character.maxJumps && controlManager.IsBurning()))
+                {
+                    Jump();
+                    jumps++;
+                }
+
+                return;
             }
 
-            return;
-        }
+            if (controlManager.IsSoftAttacking())
+            {
+                animator.SetBool("IsSoftAttacking", true);
+                SoftAttack();
+                return;
+            }
+            else
+            {
+                animator.SetBool("IsSoftAttacking", false);
+            }
 
-        if (controlManager.IsDefending()) {
-            return;
-        }
+            if (controlManager.IsHardAttacking())
+            {
+                return;
+            }
 
-        if (controlManager.IsSoftAttacking()) {
-            SoftAttack();
-            return;
-        }
+            if (controlManager.IsDefending())
+            {
+                return;
+            }
 
-        if (controlManager.IsHardAttacking()) {
-            return;
-        }
+            if (controlManager.IsDashing())
+            {
+                return;
+            }
 
-        if (controlManager.IsDashing()) {
-            return;
+            if (controlManager.IsBurning())
+            {
+                return;
+            }
         }
+    }
 
-        if (controlManager.IsBurning()) {
-            return;
-        }
+    public void startAnimation()
+    {
+        inAnimation = true;
+    }
+
+    public void stopAnimation()
+    {
+        inAnimation = false;
     }
 
 
     protected void Move()
     {
-        Vector3 movement = new Vector3(controlManager.GetHorizontalMovement(), 0.0f, controlManager.GetVerticalMovement());
-        
-		movement *= character.speed;
-		
-		if (!groundChecker.isGrounded){
-			movement.y = rb.velocity.y + Physics.gravity.y * character.gravityScale * Time.deltaTime;
-		} else {
-			jumps = 0;
-		}
+        Vector3 movement = Vector3.zero;
 
-        animator.SetBool("IsRunning", Math.Abs(movement.x) > 5f || Math.Abs(movement.z) > 5f);
-        
-        Debug.Log(movement);
+        if (!inAnimation)
+        {
+            movement = new Vector3(controlManager.GetHorizontalMovement(), 0.0f,
+                controlManager.GetVerticalMovement());
+        }
+
+        movement *= character.speed;
+
+        if (!groundChecker.isGrounded)
+        {
+            movement.y = rb.velocity.y + Physics.gravity.y * character.gravityScale * Time.deltaTime;
+        }
+        else
+        {
+            jumps = 0;
+        }
+
+        animator.SetBool("IsRunning", !inAnimation && (Math.Abs(movement.x) > 5f || Math.Abs(movement.z) > 5f));
 
         rb.velocity = movement;
     }
@@ -87,23 +123,4 @@ public abstract class MovementManager : MonoBehaviour
     public abstract void HardAttack();
     public abstract void Jump();
 
-    private KeyCode getCurrentKeyCode()
-    {
-        if(Input.GetKeyDown(KeyCode.Space))
-		{
-			return KeyCode.Space;
-		}
-
-        if(Input.GetKeyDown(KeyCode.Mouse0))
-		{
-			return KeyCode.Mouse0;
-		}
-
-        if(Input.GetKeyDown(KeyCode.Mouse1))
-		{
-			return KeyCode.Mouse1;
-		}
-
-		return KeyCode.Return;
-    }
 }

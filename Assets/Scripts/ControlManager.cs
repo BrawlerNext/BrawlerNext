@@ -33,7 +33,7 @@ public class ControlManager : MonoBehaviour {
 
   public bool IsSoftAttacking()
   {
-    throw new System.NotImplementedException();
+    return GetButton("SoftAttack");
   }
 
   public bool IsDashing()
@@ -63,7 +63,7 @@ public class ControlManager : MonoBehaviour {
   
   private bool GetButton(string name)
   {
-    return Input.GetButton(BuildControlName(name));
+    return Input.GetButtonDown(BuildControlName(name));
   }
 
 

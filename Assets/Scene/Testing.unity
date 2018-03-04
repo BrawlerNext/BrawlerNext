@@ -330,6 +330,10 @@ Prefab:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 1f72f3f270619c043b7fa141b9df573b, type: 2}
+    - target: {fileID: 9500000, guid: 00955f7523876d648a420e187cd8af79, type: 3}
+      propertyPath: m_UpdateMode
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 00955f7523876d648a420e187cd8af79, type: 3}
   m_IsPrefabParent: 0
