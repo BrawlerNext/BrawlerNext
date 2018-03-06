@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Name: Testy
   m_EditorClassIdentifier: 
   speed: 3
-  softPunchDamage: 25
-  hardPunchDamage: 50
+  softPunchDamage: 5
+  hardPunchDamage: 10
   kickDamage: 25
   jumpForce: 350
   gravityScale: 1
