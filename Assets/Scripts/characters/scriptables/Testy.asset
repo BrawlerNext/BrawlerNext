@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Name: Testy
   m_EditorClassIdentifier: 
   speed: 10
-  jumpForce: 1000
+  jumpForce: 250
   gravityScale: 1
   maxJumps: 2

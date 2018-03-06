@@ -6,7 +6,9 @@ namespace characters.scriptables
 
 	public class Character : ScriptableObject {
 		public float speed = 10;
-		public float jumpForce = 1000;
+        public float punchDamage = 25;
+        public float kickDamage = 25;
+		public float jumpForce = 250;
 		public int gravityScale = 1;
 		public int maxJumps = 2;
 	}

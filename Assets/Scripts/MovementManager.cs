@@ -11,6 +11,9 @@ public abstract class MovementManager : MonoBehaviour
     public Player player;
     public Controller controller;
 
+    protected Collider punchCollider;
+    protected Collider kickCollider;
+
     protected Rigidbody rb;
     protected GroundChecker groundChecker;
     protected ControlManager controlManager;
@@ -25,17 +28,41 @@ public abstract class MovementManager : MonoBehaviour
         groundChecker = gameObject.GetComponentInChildren<GroundChecker>();
         animator = gameObject.GetComponentInChildren<Animator>();
 
+        Collider[] allColiders = gameObject.GetComponentsInChildren<Collider>();
+
+        for (int i = 0; i < allColiders.Length; i++)
+		{
+
+            switch (allColiders[i].tag)
+            {
+                case "PunchCollider":
+                    punchCollider = allColiders[i];
+                    punchCollider.enabled = false;
+                    break;
+                case "KickCollider":
+                    kickCollider = allColiders[i];
+                    kickCollider.enabled = false;
+                    break;
+                default:
+                    break;
+            }
+            	 
+		}
+
         controlManager = gameObject.GetComponent<ControlManager>();
         controlManager.Init(controller, player);
     }
 
-    protected void Update()
+    protected void FixedUpdate()
     {
         Move();
+    }
+
+    protected void Update()
+    {
 
         if (!inAnimation)
         {
-            Debug.Log(!groundChecker.isGrounded);
             animator.SetBool("InAir", !groundChecker.isGrounded);
 
             if (controlManager.IsJumping())
@@ -93,16 +120,15 @@ public abstract class MovementManager : MonoBehaviour
         }
     }
 
-    public void startAnimation()
+    public void toogleInAnimationFlag()
     {
-        inAnimation = true;
+        inAnimation = !inAnimation;
     }
 
-    public void stopAnimation()
+    public void tooglePunchCollider()
     {
-        inAnimation = false;
+        punchCollider.enabled = !punchCollider.enabled;
     }
-
 
     protected void Move()
     {
@@ -112,24 +138,45 @@ public abstract class MovementManager : MonoBehaviour
         {
             movement = new Vector3(controlManager.GetHorizontalMovement(), 0.0f,
                 controlManager.GetVerticalMovement());
+
+            animator.SetBool("IsRunning", !inAnimation && (Math.Abs(movement.x) > 0.5f || Math.Abs(movement.z) > 0.5f));
         }
 
         movement *= character.speed;
 
-        if (!groundChecker.isGrounded)
-        {
-            movement.y = rb.velocity.y + Physics.gravity.y * character.gravityScale * Time.deltaTime;
-        }
-        else
+        if (groundChecker.isGrounded)
         {
             jumps = 0;
         }
 
-        animator.SetBool("IsRunning", !inAnimation && (Math.Abs(movement.x) > 5f || Math.Abs(movement.z) > 5f));
+        rb.velocity += movement;
 
-        if (movement.x > 0.1f && movement.z > 0.1f)
+        rb.velocity = Vector3.ClampMagnitude(rb.velocity, 15);
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        float impulse = 0;
+
+        foreach (ContactPoint contact in collision.contacts)
         {
-            rb.velocity = movement;
+            if (contact.thisCollider.CompareTag("PunchCollider"))
+            {
+                impulse = character.punchDamage;
+            }
+
+            if (contact.thisCollider.CompareTag("KickCollider"))
+            {
+                impulse = character.kickDamage;
+            }
+        }
+        if (collision.gameObject.CompareTag("Hiteable"))
+        {
+            foreach (ContactPoint contact in collision.contacts)
+            {
+                collision.gameObject.GetComponent<Rigidbody>().AddForce(transform.forward * impulse * 100, ForceMode.Impulse);
+                //rb.AddForce(transform.forward * impulse * 100 * -1, ForceMode.Impulse);
+            }
         }
     }
 

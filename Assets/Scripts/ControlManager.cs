@@ -56,9 +56,16 @@ public class ControlManager : MonoBehaviour {
     return GetAxis("Vertical");
   }
 
+  public float GetCameraMovement()
+  {
+      return GetAxis("Camera");
+  }
+
   private float GetAxis(string axis)
   {
-    return Input.GetAxisRaw(BuildControlName(axis));
+    float normalized = Mathf.Abs(Input.GetAxisRaw(BuildControlName(axis))) > 0.3f ? 1 : 0;
+    float sign = Mathf.Sign(Input.GetAxisRaw(BuildControlName(axis)));
+    return normalized * sign;
   }
   
   private bool GetButton(string name)

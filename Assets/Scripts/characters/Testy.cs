@@ -24,7 +24,7 @@ public class Testy : MovementManager {
 
     public override void Jump()
     {
-        rb.AddForce(Vector3.up * character.jumpForce, ForceMode.Impulse);
+        rb.AddForce(Vector3.up * character.jumpForce * 10, ForceMode.Impulse);
     }
 
     public override void SoftAttack()
