@@ -11,7 +11,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab5f308a567e0e54cbb4be38e424d298, type: 3}
   m_Name: Testy
   m_EditorClassIdentifier: 
-  speed: 10
-  jumpForce: 250
+  speed: 3
+  softPunchDamage: 25
+  hardPunchDamage: 50
+  kickDamage: 25
+  jumpForce: 350
   gravityScale: 1
   maxJumps: 2

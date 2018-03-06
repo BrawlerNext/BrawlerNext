@@ -11,7 +11,8 @@ public abstract class MovementManager : MonoBehaviour
     public Player player;
     public Controller controller;
 
-    protected Collider punchCollider;
+    protected Collider leftPunchCollider;
+    protected Collider rightPunchCollider;
     protected Collider kickCollider;
 
     protected Rigidbody rb;
@@ -35,9 +36,13 @@ public abstract class MovementManager : MonoBehaviour
 
             switch (allColiders[i].tag)
             {
-                case "PunchCollider":
-                    punchCollider = allColiders[i];
-                    punchCollider.enabled = false;
+                case "LeftPunchCollider":
+                    leftPunchCollider = allColiders[i];
+                    leftPunchCollider.enabled = false;
+                    break;
+                case "RightPunchCollider":
+                    rightPunchCollider = allColiders[i];
+                    rightPunchCollider.enabled = false;
                     break;
                 case "KickCollider":
                     kickCollider = allColiders[i];
@@ -125,9 +130,14 @@ public abstract class MovementManager : MonoBehaviour
         inAnimation = !inAnimation;
     }
 
-    public void tooglePunchCollider()
+    public void toogleLeftPunchCollider()
     {
-        punchCollider.enabled = !punchCollider.enabled;
+        leftPunchCollider.enabled = !leftPunchCollider.enabled;
+    }
+
+    public void toogleRightPunchCollider()
+    {
+        rightPunchCollider.enabled = !rightPunchCollider.enabled;
     }
 
     protected void Move()
@@ -160,12 +170,19 @@ public abstract class MovementManager : MonoBehaviour
 
         foreach (ContactPoint contact in collision.contacts)
         {
-            if (contact.thisCollider.CompareTag("PunchCollider"))
+            if (contact.thisCollider.tag.Contains("PunchCollider"))
             {
-                impulse = character.punchDamage;
+                if (animator.GetBool("IsSoftAttacking"))
+                {
+                    impulse = character.softPunchDamage;
+                }
+                else
+                {
+                    impulse = character.hardPunchDamage;
+                }
             }
 
-            if (contact.thisCollider.CompareTag("KickCollider"))
+            if (contact.thisCollider.tag.Contains("KickCollider"))
             {
                 impulse = character.kickDamage;
             }

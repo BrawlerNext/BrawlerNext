@@ -21576,22 +21576,29 @@ AnimationClip:
   m_GenerateMotionCurves: 0
   m_Events:
   - time: 0
-    functionName: startAnimation
+    functionName: toogleInAnimationFlag
     data: 
     objectReferenceParameter: {fileID: 11500000, guid: 4405125602997b346890a8dd5e1da02a,
       type: 3}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0
-    functionName: 
+  - time: 0.16666667
+    functionName: toogleLeftPunchCollider
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.4
+    functionName: toogleLeftPunchCollider
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 0.78333336
-    functionName: stopAnimation
+    functionName: toogleInAnimationFlag
     data: 
     objectReferenceParameter: {fileID: 11500000, guid: efa84b2c1c0ae2247b71b7b6ae7f7388,
       type: 3}

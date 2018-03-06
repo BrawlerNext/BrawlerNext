@@ -28,7 +28,7 @@ public class ControlManager : MonoBehaviour {
 
   public bool IsHardAttacking()
   {
-      return false;
+      return GetButton("HardAttack");
   }
 
   public bool IsSoftAttacking()

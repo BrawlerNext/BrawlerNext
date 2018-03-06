@@ -5,7 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ground
-  - PunchCollider
+  - Hiteable
+  - LeftPunchCollider
+  - RightPunchCollider
+  - LeftKickCollider
+  - RightKickCollider
   layers:
   - Default
   - TransparentFX
