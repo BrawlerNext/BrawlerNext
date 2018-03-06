@@ -21578,15 +21578,15 @@ AnimationClip:
   - time: 0
     functionName: startAnimation
     data: 
-    objectReferenceParameter: {fileID: 11500000, guid: 2ca8b765c5c567c49992b48201e47213,
+    objectReferenceParameter: {fileID: 11500000, guid: 4405125602997b346890a8dd5e1da02a,
       type: 3}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 0.78333336
-    functionName: stopAnimation()
+    functionName: stopAnimation
     data: 
-    objectReferenceParameter: {fileID: 11500000, guid: 2ca8b765c5c567c49992b48201e47213,
+    objectReferenceParameter: {fileID: 11500000, guid: efa84b2c1c0ae2247b71b7b6ae7f7388,
       type: 3}
     floatParameter: 0
     intParameter: 0

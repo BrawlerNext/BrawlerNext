@@ -18,7 +18,7 @@ public class ControlManager : MonoBehaviour {
   
   public bool IsDefending()
   {
-    throw new System.NotImplementedException();
+      return false;
   }
 
   public bool IsJumping()
@@ -28,7 +28,7 @@ public class ControlManager : MonoBehaviour {
 
   public bool IsHardAttacking()
   {
-    throw new System.NotImplementedException();
+      return false;
   }
 
   public bool IsSoftAttacking()
@@ -38,12 +38,12 @@ public class ControlManager : MonoBehaviour {
 
   public bool IsDashing()
   {
-    throw new System.NotImplementedException();
+      return false;
   }
 
   public bool IsBurning()
   {
-    throw new System.NotImplementedException();
+      return false;
   }
   
   public float GetHorizontalMovement()

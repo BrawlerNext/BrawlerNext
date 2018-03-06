@@ -29,10 +29,8 @@ public abstract class MovementManager : MonoBehaviour
         controlManager.Init(controller, player);
     }
 
-    protected void FixedUpdate()
+    protected void Update()
     {
-        Debug.Log(inAnimation);
-        
         Move();
 
         if (!inAnimation)
