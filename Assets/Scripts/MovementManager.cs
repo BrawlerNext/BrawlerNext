@@ -35,17 +35,21 @@ public abstract class MovementManager : MonoBehaviour
 
         if (!inAnimation)
         {
+            Debug.Log(!groundChecker.isGrounded);
+            animator.SetBool("InAir", !groundChecker.isGrounded);
+
             if (controlManager.IsJumping())
             {
                 if (groundChecker.isGrounded || jumps < character.maxJumps ||
                     (jumps == character.maxJumps && controlManager.IsBurning()))
                 {
+                    animator.SetBool("IsJumping", true);
                     Jump();
                     jumps++;
                 }
-
                 return;
             }
+            animator.SetBool("IsJumping", false);
 
             if (controlManager.IsSoftAttacking())
             {
@@ -53,30 +57,39 @@ public abstract class MovementManager : MonoBehaviour
                 SoftAttack();
                 return;
             }
-            else
-            {
-                animator.SetBool("IsSoftAttacking", false);
-            }
+            animator.SetBool("IsSoftAttacking", false);
 
             if (controlManager.IsHardAttacking())
             {
+                animator.SetBool("IsHardAttacking", true);
+                HardAttack();
                 return;
             }
+            animator.SetBool("IsHardAttacking", false);
 
             if (controlManager.IsDefending())
             {
+                animator.SetBool("IsDefending", true);
+                Defend();
                 return;
             }
+            animator.SetBool("IsDefending", false);
 
             if (controlManager.IsDashing())
             {
+                animator.SetBool("IsDashing", true);
+                Dash();
                 return;
             }
+            animator.SetBool("IsDashing", false);
 
             if (controlManager.IsBurning())
             {
+                animator.SetBool("IsBurning", true);
+                Burn();
                 return;
             }
+            animator.SetBool("IsBurning", false);
         }
     }
 
@@ -114,11 +127,17 @@ public abstract class MovementManager : MonoBehaviour
 
         animator.SetBool("IsRunning", !inAnimation && (Math.Abs(movement.x) > 5f || Math.Abs(movement.z) > 5f));
 
-        rb.velocity = movement;
+        if (movement.x > 0.1f && movement.z > 0.1f)
+        {
+            rb.velocity = movement;
+        }
     }
 
     public abstract void SoftAttack();
     public abstract void HardAttack();
     public abstract void Jump();
+    public abstract void Defend();
+    public abstract void Dash();
+    public abstract void Burn();
 
 }

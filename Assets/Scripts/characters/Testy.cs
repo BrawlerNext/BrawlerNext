@@ -2,6 +2,21 @@
 
 public class Testy : MovementManager {
 
+    public override void Burn()
+    {
+
+    }
+
+    public override void Defend()
+    {
+
+    }
+
+    public override void Dash()
+    {
+
+    }
+
     public override void HardAttack()
     {
         
