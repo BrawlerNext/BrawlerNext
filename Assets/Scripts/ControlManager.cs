@@ -56,11 +56,6 @@ public class ControlManager : MonoBehaviour {
     return GetAxis("Vertical");
   }
 
-  public float GetCameraMovement()
-  {
-      return GetAxis("Camera");
-  }
-
   private float GetAxis(string axis)
   {
     float normalized = Mathf.Abs(Input.GetAxisRaw(BuildControlName(axis))) > 0.3f ? 1 : 0;

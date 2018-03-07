@@ -13,21 +13,37 @@ public abstract class MovementManager : MonoBehaviour
 
     protected Collider leftPunchCollider;
     protected Collider rightPunchCollider;
-    protected Collider kickCollider;
+
+    protected int currentCombo = 1;
+    protected float impulse = 0;
 
     protected Rigidbody rb;
     protected GroundChecker groundChecker;
     protected ControlManager controlManager;
     protected Animator animator;
 
+    protected Transform otherPlayer;
+
     protected bool inAnimation = false;
     protected int jumps = 0;
+
+    protected bool isSoftAttacking = false;
 
     void Awake()
     {
         rb = gameObject.GetComponent<Rigidbody>();
         groundChecker = gameObject.GetComponentInChildren<GroundChecker>();
         animator = gameObject.GetComponentInChildren<Animator>();
+
+        switch (player)
+        {
+            case Player.P1:
+                otherPlayer = GameObject.FindGameObjectWithTag(Player.P2.ToString()).transform;
+                break;
+            case Player.P2:
+                otherPlayer = GameObject.FindGameObjectWithTag(Player.P1.ToString()).transform;
+                break;
+        }
 
         Collider[] allColiders = gameObject.GetComponentsInChildren<Collider>();
 
@@ -43,10 +59,6 @@ public abstract class MovementManager : MonoBehaviour
                 case "RightPunchCollider":
                     rightPunchCollider = allColiders[i];
                     rightPunchCollider.enabled = false;
-                    break;
-                case "KickCollider":
-                    kickCollider = allColiders[i];
-                    kickCollider.enabled = false;
                     break;
                 default:
                     break;
@@ -66,6 +78,13 @@ public abstract class MovementManager : MonoBehaviour
     protected void Update()
     {
 
+        animator.SetInteger("Combo", currentCombo);
+
+        transform.LookAt(otherPlayer);
+
+        isSoftAttacking |= controlManager.IsSoftAttacking();
+
+        animator.SetBool("IsSoftAttacking", isSoftAttacking);
         if (!inAnimation)
         {
             animator.SetBool("InAir", !groundChecker.isGrounded);
@@ -83,16 +102,20 @@ public abstract class MovementManager : MonoBehaviour
             }
             animator.SetBool("IsJumping", false);
 
-            if (controlManager.IsSoftAttacking())
+          
+            if (isSoftAttacking)
             {
+                isSoftAttacking = false;
+                currentCombo++;
                 animator.SetBool("IsSoftAttacking", true);
                 SoftAttack();
                 return;
             }
-            animator.SetBool("IsSoftAttacking", false);
+            
 
             if (controlManager.IsHardAttacking())
             {
+                currentCombo++;
                 animator.SetBool("IsHardAttacking", true);
                 HardAttack();
                 return;
@@ -122,6 +145,9 @@ public abstract class MovementManager : MonoBehaviour
                 return;
             }
             animator.SetBool("IsBurning", false);
+
+            currentCombo = 1;
+
         }
     }
 
@@ -146,9 +172,15 @@ public abstract class MovementManager : MonoBehaviour
 
         if (!inAnimation)
         {
-            movement = new Vector3(controlManager.GetHorizontalMovement(), 0.0f,
-                controlManager.GetVerticalMovement());
+            float horizontalMovement = controlManager.GetHorizontalMovement();
+            float verticalMovement = controlManager.GetVerticalMovement();
 
+            if (Math.Abs(horizontalMovement) != 0f || Math.Abs(verticalMovement) != 0f)
+            {
+                movement += transform.forward * controlManager.GetHorizontalMovement();
+                movement += transform.right * controlManager.GetVerticalMovement() * -1;
+            }
+            
             animator.SetBool("IsRunning", !inAnimation && (Math.Abs(movement.x) > 0.5f || Math.Abs(movement.z) > 0.5f));
         }
 
@@ -181,20 +213,19 @@ public abstract class MovementManager : MonoBehaviour
                     impulse = character.hardPunchDamage;
                 }
             }
-
-            if (contact.thisCollider.tag.Contains("KickCollider"))
-            {
-                impulse = character.kickDamage;
-            }
         }
-        if (collision.gameObject.CompareTag("Hiteable"))
+        if (collision.gameObject.CompareTag(otherPlayer.tag))
         {
             foreach (ContactPoint contact in collision.contacts)
             {
-                collision.gameObject.GetComponent<Rigidbody>().AddForce(transform.forward * impulse * 100, ForceMode.Impulse);
-                //rb.AddForce(transform.forward * impulse * 100 * -1, ForceMode.Impulse);
+                collision.gameObject.GetComponent<MovementManager>().AddImpulse(impulse * 100f);
             }
         }
+    }
+
+    public void AddImpulse(float impulse)
+    {
+        this.impulse += impulse;
     }
 
     public abstract void SoftAttack();
