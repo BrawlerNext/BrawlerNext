@@ -24,11 +24,11 @@ public abstract class MovementManager : MonoBehaviour
 
     protected Transform otherPlayer;
 
+    protected float impulseDelay = 0;
     protected int jumps = 0;
 
     protected Dictionary<Actions, bool> Flags = new Dictionary<Actions, bool>();
     protected Dictionary<Actions, bool> ActuallyDoing = new Dictionary<Actions, bool>();
-    protected bool ToogleValue = true;
     
     protected Actions[] AllActions = new[] {Actions.JUMP, Actions.HARD_PUNCH, Actions.SOFT_PUNCH, Actions.MOVE};
 
@@ -113,6 +113,21 @@ public abstract class MovementManager : MonoBehaviour
     {
         transform.LookAt(otherPlayer);
 
+        if (impulse > 0)
+        {
+            impulseDelay -= Time.deltaTime;
+            
+            animator.SetBool("IsDamaged", true);
+            
+            if (impulseDelay <= 0)
+            {
+                ApplyImpulse();
+                animator.SetBool("IsDamaged", false);
+            }
+            
+            return;
+        }
+
         ActuallyDoing[Actions.SOFT_PUNCH] |= controlManager.IsSoftAttacking();
         ActuallyDoing[Actions.JUMP] |= controlManager.IsJumping();
         ActuallyDoing[Actions.HARD_PUNCH] |= controlManager.IsHardAttacking();
@@ -153,7 +168,6 @@ public abstract class MovementManager : MonoBehaviour
             }
         }
 
-
         if (Flags[Actions.HARD_PUNCH])
         {
             if (ActuallyDoing[Actions.HARD_PUNCH])
@@ -185,6 +199,15 @@ public abstract class MovementManager : MonoBehaviour
     public void ResetCombo()
     {
         currentCombo = 1;
+    }
+
+    public void ApplyImpulse()
+    {
+        rb.AddForce(transform.forward * -1 * impulse, ForceMode.Impulse);
+        impulse = 0;
+        EnableAllFlags();
+        SetActuallyDoingTo(false);
+        ResetCombo();
     }
     
     public void toogleFlagOf(Actions action)
@@ -249,17 +272,16 @@ public abstract class MovementManager : MonoBehaviour
             }
         }
 
-        if (collision.gameObject.CompareTag(otherPlayer.tag))
+        if (impulse > 0)
         {
-            foreach (ContactPoint contact in collision.contacts)
-            {
-                collision.gameObject.GetComponent<MovementManager>().AddImpulse(impulse * 100f);
-            }
+            otherPlayer.GetComponent<MovementManager>().AddImpulse(impulse * 100f);
         }
     }
 
     public void AddImpulse(float impulse)
     {
+        DisableAllFlags();
+        impulseDelay = 1;
         this.impulse += impulse;
     }
 
