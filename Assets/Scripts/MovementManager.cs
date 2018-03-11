@@ -24,10 +24,13 @@ public abstract class MovementManager : MonoBehaviour
 
     protected Transform otherPlayer;
 
-    protected bool inAnimation = false;
     protected int jumps = 0;
 
-    protected bool isSoftAttacking = false;
+    protected Dictionary<Actions, bool> Flags = new Dictionary<Actions, bool>();
+    protected Dictionary<Actions, bool> ActuallyDoing = new Dictionary<Actions, bool>();
+    protected bool ToogleValue = true;
+    
+    protected Actions[] AllActions = new[] {Actions.JUMP, Actions.HARD_PUNCH, Actions.SOFT_PUNCH, Actions.MOVE};
 
     void Awake()
     {
@@ -35,6 +38,34 @@ public abstract class MovementManager : MonoBehaviour
         groundChecker = gameObject.GetComponentInChildren<GroundChecker>();
         animator = gameObject.GetComponentInChildren<Animator>();
 
+        controlManager = gameObject.GetComponent<ControlManager>();
+        controlManager.Init(controller, player);
+
+        SetFlagsTo(true);
+        SetActuallyDoingTo(false);
+        
+        FindOtherPlayer();
+        SetColliders();
+    }
+
+    private void SetFlagsTo(bool enabled)
+    {
+        foreach (Actions action in AllActions)
+        {
+            Flags[action] = enabled;
+        }
+    }
+    
+    private void SetActuallyDoingTo(bool enabled)
+    {
+        foreach (Actions action in AllActions)
+        {
+            ActuallyDoing[action] = enabled;
+        }
+    }
+
+    private void FindOtherPlayer()
+    {
         switch (player)
         {
             case Player.P1:
@@ -44,12 +75,14 @@ public abstract class MovementManager : MonoBehaviour
                 otherPlayer = GameObject.FindGameObjectWithTag(Player.P1.ToString()).transform;
                 break;
         }
+    }
 
+    private void SetColliders()
+    {
         Collider[] allColiders = gameObject.GetComponentsInChildren<Collider>();
 
         for (int i = 0; i < allColiders.Length; i++)
-		{
-
+        {
             switch (allColiders[i].tag)
             {
                 case "LeftPunchCollider":
@@ -63,34 +96,39 @@ public abstract class MovementManager : MonoBehaviour
                 default:
                     break;
             }
-            	 
-		}
-
-        controlManager = gameObject.GetComponent<ControlManager>();
-        controlManager.Init(controller, player);
+        }
     }
 
     protected void FixedUpdate()
     {
-        Move();
+        animator.SetBool("IsRunning", Flags[Actions.MOVE]);
+        
+        if (Flags[Actions.MOVE])
+        {
+            Move();
+        }
     }
 
     protected void Update()
     {
-
-        animator.SetInteger("Combo", currentCombo);
-
         transform.LookAt(otherPlayer);
 
-        isSoftAttacking |= controlManager.IsSoftAttacking();
+        ActuallyDoing[Actions.SOFT_PUNCH] |= controlManager.IsSoftAttacking();
+        ActuallyDoing[Actions.JUMP] |= controlManager.IsJumping();
+        ActuallyDoing[Actions.HARD_PUNCH] |= controlManager.IsHardAttacking();
 
-        animator.SetBool("IsSoftAttacking", isSoftAttacking);
-        if (!inAnimation)
+        animator.SetBool("IsSoftAttacking", ActuallyDoing[Actions.SOFT_PUNCH]);
+        animator.SetBool("IsHardAttacking", ActuallyDoing[Actions.HARD_PUNCH]);
+        
+        animator.SetInteger("Combo", currentCombo);
+        animator.SetBool("InAir", !groundChecker.isGrounded);
+
+        if (Flags[Actions.JUMP])
         {
-            animator.SetBool("InAir", !groundChecker.isGrounded);
-
-            if (controlManager.IsJumping())
+            if (ActuallyDoing[Actions.JUMP])
             {
+                ActuallyDoing[Actions.JUMP] = false;
+                
                 if (groundChecker.isGrounded || jumps < character.maxJumps ||
                     (jumps == character.maxJumps && controlManager.IsBurning()))
                 {
@@ -98,62 +136,61 @@ public abstract class MovementManager : MonoBehaviour
                     Jump();
                     jumps++;
                 }
+
                 return;
             }
-            animator.SetBool("IsJumping", false);
 
-          
-            if (isSoftAttacking)
+            animator.SetBool("IsJumping", false);
+        }
+
+        if (Flags[Actions.SOFT_PUNCH])
+        {
+            if (ActuallyDoing[Actions.SOFT_PUNCH])
             {
-                isSoftAttacking = false;
-                currentCombo++;
-                animator.SetBool("IsSoftAttacking", true);
+                ActuallyDoing[Actions.SOFT_PUNCH] = false;
                 SoftAttack();
                 return;
             }
-            
+        }
 
-            if (controlManager.IsHardAttacking())
+
+        if (Flags[Actions.HARD_PUNCH])
+        {
+            if (ActuallyDoing[Actions.HARD_PUNCH])
             {
-                currentCombo++;
-                animator.SetBool("IsHardAttacking", true);
+                ActuallyDoing[Actions.HARD_PUNCH] = false;
                 HardAttack();
                 return;
             }
-            animator.SetBool("IsHardAttacking", false);
-
-            if (controlManager.IsDefending())
-            {
-                animator.SetBool("IsDefending", true);
-                Defend();
-                return;
-            }
-            animator.SetBool("IsDefending", false);
-
-            if (controlManager.IsDashing())
-            {
-                animator.SetBool("IsDashing", true);
-                Dash();
-                return;
-            }
-            animator.SetBool("IsDashing", false);
-
-            if (controlManager.IsBurning())
-            {
-                animator.SetBool("IsBurning", true);
-                Burn();
-                return;
-            }
-            animator.SetBool("IsBurning", false);
-
-            currentCombo = 1;
-
         }
+
     }
 
-    public void toogleInAnimationFlag()
+    public void EnableAllFlags()
     {
-        inAnimation = !inAnimation;
+        SetFlagsTo(true);
+    }
+    
+    public void DisableAllFlags()
+    {
+        SetFlagsTo(false);
+        SetActuallyDoingTo(false);
+    }
+
+    public void IncreaseCombo()
+    {
+        currentCombo++;
+    }
+    
+    public void ResetCombo()
+    {
+        currentCombo = 1;
+    }
+    
+    public void toogleFlagOf(Actions action)
+    {
+
+        Flags[action] = !Flags[action];
     }
 
     public void toogleLeftPunchCollider()
@@ -170,19 +207,16 @@ public abstract class MovementManager : MonoBehaviour
     {
         Vector3 movement = Vector3.zero;
 
-        if (!inAnimation)
-        {
-            float horizontalMovement = controlManager.GetHorizontalMovement();
-            float verticalMovement = controlManager.GetVerticalMovement();
+        float horizontalMovement = controlManager.GetHorizontalMovement();
+        float verticalMovement = controlManager.GetVerticalMovement();
 
-            if (Math.Abs(horizontalMovement) != 0f || Math.Abs(verticalMovement) != 0f)
-            {
-                movement += transform.forward * controlManager.GetHorizontalMovement();
-                movement += transform.right * controlManager.GetVerticalMovement() * -1;
-            }
-            
-            animator.SetBool("IsRunning", !inAnimation && (Math.Abs(movement.x) > 0.5f || Math.Abs(movement.z) > 0.5f));
+        if (Math.Abs(horizontalMovement) != 0f || Math.Abs(verticalMovement) != 0f)
+        {
+            movement += transform.forward * controlManager.GetHorizontalMovement();
+            movement += transform.right * controlManager.GetVerticalMovement() * -1;
         }
+
+        animator.SetBool("IsRunning", (Math.Abs(movement.x) > 0.5f || Math.Abs(movement.z) > 0.5f));
 
         movement *= character.speed;
 
@@ -214,6 +248,7 @@ public abstract class MovementManager : MonoBehaviour
                 }
             }
         }
+
         if (collision.gameObject.CompareTag(otherPlayer.tag))
         {
             foreach (ContactPoint contact in collision.contacts)
@@ -234,5 +269,13 @@ public abstract class MovementManager : MonoBehaviour
     public abstract void Defend();
     public abstract void Dash();
     public abstract void Burn();
+}
 
+public enum Actions
+{
+    ALL,
+    JUMP,
+    SOFT_PUNCH,
+    HARD_PUNCH,
+    MOVE
 }
