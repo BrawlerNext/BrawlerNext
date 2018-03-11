@@ -34,3 +34,11 @@ sysinfo.txt
 *.apk
 *.unitypackage
 \.idea/\.idea\.BrawlerNext1/\.idea/
+
+\.idea/\.idea\.BrawlerNext/\.idea/
+
+\.idea/\.idea\.BrawlerNext1/
+
+\.idea/\.idea\.BrawlerNext/
+
+\.vscode/
