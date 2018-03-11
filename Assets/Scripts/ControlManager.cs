@@ -45,7 +45,12 @@ public class ControlManager : MonoBehaviour {
   {
       return false;
   }
-  
+
+  public bool IsCancelTargeting()
+  {
+    return IsPressingButton("Target");
+  }
+
   public float GetHorizontalMovement()
   {
     return GetAxis("Horizontal");
@@ -62,12 +67,16 @@ public class ControlManager : MonoBehaviour {
     float sign = Mathf.Sign(Input.GetAxisRaw(BuildControlName(axis)));
     return normalized * sign;
   }
-  
+
   private bool GetButton(string name)
   {
     return Input.GetButtonDown(BuildControlName(name));
   }
 
+  private bool IsPressingButton(string name)
+  {
+    return Input.GetButton(BuildControlName(name));
+  }
 
   private string BuildControlName(string control)
   {

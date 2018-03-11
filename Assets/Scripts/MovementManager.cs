@@ -23,7 +23,7 @@ public abstract class MovementManager : MonoBehaviour
     protected Animator animator;
 
     protected Transform otherPlayer;
-
+    
     protected float impulseDelay = 0;
     protected int jumps = 0;
 
@@ -111,7 +111,11 @@ public abstract class MovementManager : MonoBehaviour
 
     protected void Update()
     {
-        transform.LookAt(otherPlayer);
+        
+        if (!controlManager.IsCancelTargeting())
+        {
+            transform.LookAt(otherPlayer);
+        }
 
         if (impulse > 0)
         {
@@ -235,8 +239,8 @@ public abstract class MovementManager : MonoBehaviour
 
         if (Math.Abs(horizontalMovement) != 0f || Math.Abs(verticalMovement) != 0f)
         {
-            movement += transform.forward * controlManager.GetHorizontalMovement();
-            movement += transform.right * controlManager.GetVerticalMovement() * -1;
+            movement += otherPlayer.forward * controlManager.GetHorizontalMovement() * -1;
+            movement += otherPlayer.right * controlManager.GetVerticalMovement() ;
         }
 
         animator.SetBool("IsRunning", (Math.Abs(movement.x) > 0.5f || Math.Abs(movement.z) > 0.5f));
