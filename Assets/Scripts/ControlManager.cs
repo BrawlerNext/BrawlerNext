@@ -10,10 +10,15 @@ public class ControlManager : MonoBehaviour {
     this.controller = controller;
     this.player = player;
   }
-  
-  private void Update()
+
+  private bool GetIaDesition()
   {
-    
+    if (controller == Controller.IA)
+    {
+      return Random.value >= 0.5f;
+    }
+
+    return false;
   }
   
   public bool IsDefending()
@@ -63,18 +68,27 @@ public class ControlManager : MonoBehaviour {
 
   private float GetAxis(string axis)
   {
-    float normalized = Mathf.Abs(Input.GetAxisRaw(BuildControlName(axis))) > 0.3f ? 1 : 0;
-    float sign = Mathf.Sign(Input.GetAxisRaw(BuildControlName(axis)));
-    return normalized * sign;
+    if (controller != Controller.IA) // TODO
+    {
+      float normalized = Mathf.Abs(Input.GetAxisRaw(BuildControlName(axis))) > 0.3f ? 1 : 0;
+      float sign = Mathf.Sign(Input.GetAxisRaw(BuildControlName(axis)));
+      return normalized * sign;      
+    }
+
+    return 0;
   }
 
   private bool GetButton(string name)
   {
+    if (controller == Controller.IA) return GetIaDesition();
+    
     return Input.GetButtonDown(BuildControlName(name));
   }
 
   private bool IsPressingButton(string name)
   {
+    if (controller == Controller.IA) return GetIaDesition();
+    
     return Input.GetButton(BuildControlName(name));
   }
 

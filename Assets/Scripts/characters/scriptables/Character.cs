@@ -15,5 +15,7 @@ namespace characters.scriptables
 
 		public float shieldRepairDelay = 3;
 		public float shieldLife = 100;
+		public float shieldRepairVelocity = 10;
+		public float shieldDamagedReducedPercentage = 0.5f;
 	}
 }

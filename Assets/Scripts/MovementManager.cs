@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using characters.scriptables;
 using util;
@@ -7,10 +8,14 @@ using UnityEngine;
 
 public abstract class MovementManager : MonoBehaviour
 {
+    // General modifiers
+    public float ImpulseMultiplier = 100f;
+
     // Basic input data
     public Character character;
     public Player player;
     public Controller controller;
+
 
     // Colliders of the player
     protected Collider leftPunchCollider;
@@ -26,6 +31,7 @@ public abstract class MovementManager : MonoBehaviour
 
     protected Transform otherPlayer;
 
+
     // Runtime data
     protected int currentCombo = 1;
     protected int currentJumps = 0;
@@ -39,6 +45,7 @@ public abstract class MovementManager : MonoBehaviour
 
     protected Dictionary<Actions, bool> Flags = new Dictionary<Actions, bool>();
     protected Dictionary<Actions, bool> ActuallyDoing = new Dictionary<Actions, bool>();
+
 
     protected Actions[] AllActions = new[]
         {Actions.JUMP, Actions.HARD_PUNCH, Actions.SOFT_PUNCH, Actions.MOVE, Actions.DEFEND};
@@ -125,6 +132,34 @@ public abstract class MovementManager : MonoBehaviour
 
     protected void Update()
     {
+        if (GameDirector.DebugginGame)
+        {
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                Debug.ClearDeveloperConsole();
+            }
+        
+            if (Input.GetKey(KeyCode.Z))
+            {
+                if (CompareTag("P1"))
+                {
+                    print("Shield current life: " + currentShieldLife);
+                    print("Shield is repairing?: " + shieldIsRepairing);
+                    print("Current impulse: " + impulse);   
+                }
+            }
+            
+            if (Input.GetKey(KeyCode.X))
+            {
+                if (CompareTag("P2"))
+                {
+                    print("Shield current life: " + currentShieldLife);
+                    print("Shield is repairing?: " + shieldIsRepairing);
+                    print("Current impulse: " + impulse);   
+                }
+            }
+        }
+        
         if (!controlManager.IsCancelTargeting())
         {
             transform.LookAt(otherPlayer);
@@ -170,13 +205,13 @@ public abstract class MovementManager : MonoBehaviour
 
             if (shieldsUp)
             {
-                currentShieldLife -= Time.deltaTime * 10;
-
+                currentShieldLife -= Time.deltaTime * character.shieldRepairVelocity;
+                Defend();
                 return;
             }
             else
             {
-                currentShieldLife += Time.deltaTime * 5;
+                currentShieldLife += Time.deltaTime * (character.shieldRepairVelocity / 2f);
 
                 currentShieldLife = Math.Min(currentShieldLife, character.shieldLife);
             }
@@ -328,7 +363,7 @@ public abstract class MovementManager : MonoBehaviour
 
         if (impulse > 0)
         {
-            otherPlayer.GetComponent<MovementManager>().AddImpulse(impulse * 100f);
+            otherPlayer.GetComponent<MovementManager>().AddImpulse(impulse * ImpulseMultiplier);
         }
     }
 
@@ -339,6 +374,10 @@ public abstract class MovementManager : MonoBehaviour
             DisableAllFlags();
             impulseDelay = 1;
             this.impulse += impulse;
+        }
+        else
+        {
+            currentShieldLife -= impulse * character.shieldDamagedReducedPercentage / ImpulseMultiplier;
         }
     }
 
@@ -352,7 +391,6 @@ public abstract class MovementManager : MonoBehaviour
 
 public enum Actions
 {
-    ALL,
     JUMP,
     SOFT_PUNCH,
     HARD_PUNCH,

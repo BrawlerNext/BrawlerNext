@@ -1,6 +1,9 @@
 namespace util
 {
   public enum Controller {
-    Xbox, Play4, Keyboard
+    Xbox, 
+    Play4, 
+    Keyboard,
+    IA
   }
 }

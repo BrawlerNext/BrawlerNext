@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,10 +9,14 @@ public class GameDirector : MonoBehaviour
 	private Transform player1;
 	private Transform player2;
 
+	public static bool DebugginGame = false;
+	
 	public bool Debugging = false;
 
 	private void Awake()
 	{
+		GameDirector.DebugginGame = Debugging;
+		
 		player1 = GameObject.FindGameObjectWithTag("P1").transform;
 		player2 = GameObject.FindGameObjectWithTag("P2").transform;
 
