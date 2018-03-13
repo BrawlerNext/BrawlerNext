@@ -7,30 +7,41 @@ using UnityEngine;
 
 public abstract class MovementManager : MonoBehaviour
 {
+    // Basic input data
     public Character character;
     public Player player;
     public Controller controller;
 
+    // Colliders of the player
     protected Collider leftPunchCollider;
     protected Collider rightPunchCollider;
+    protected GameObject shield;
 
-    protected int currentCombo = 1;
-    protected float impulse = 0;
 
+    // Stateless data
     protected Rigidbody rb;
     protected GroundChecker groundChecker;
     protected ControlManager controlManager;
     protected Animator animator;
 
     protected Transform otherPlayer;
-    
+
+    // Runtime data
+    protected int currentCombo = 1;
+    protected int currentJumps = 0;
+
+    protected float currentShieldLife = 0;
+    protected bool shieldsUp = false;
+    protected bool shieldIsRepairing = false;
+
     protected float impulseDelay = 0;
-    protected int jumps = 0;
+    protected float impulse = 0;
 
     protected Dictionary<Actions, bool> Flags = new Dictionary<Actions, bool>();
     protected Dictionary<Actions, bool> ActuallyDoing = new Dictionary<Actions, bool>();
-    
-    protected Actions[] AllActions = new[] {Actions.JUMP, Actions.HARD_PUNCH, Actions.SOFT_PUNCH, Actions.MOVE};
+
+    protected Actions[] AllActions = new[]
+        {Actions.JUMP, Actions.HARD_PUNCH, Actions.SOFT_PUNCH, Actions.MOVE, Actions.DEFEND};
 
     void Awake()
     {
@@ -41,11 +52,33 @@ public abstract class MovementManager : MonoBehaviour
         controlManager = gameObject.GetComponent<ControlManager>();
         controlManager.Init(controller, player);
 
+        currentShieldLife = character.shieldLife;
+
+        foreach (Transform child in gameObject.GetComponentsInChildren<Transform>())
+        {
+            if (child.CompareTag("Shield"))
+            {
+                shield = child.gameObject;
+                shield.SetActive(false);
+            }
+
+            if (child.CompareTag("LeftPunchCollider"))
+            {
+                leftPunchCollider = child.GetComponent<Collider>();
+                leftPunchCollider.enabled = false;
+            }
+
+            if (child.CompareTag("RightPunchCollider"))
+            {
+                rightPunchCollider = child.GetComponent<Collider>();
+                rightPunchCollider.enabled = false;
+            }
+        }
+
         SetFlagsTo(true);
         SetActuallyDoingTo(false);
-        
+
         FindOtherPlayer();
-        SetColliders();
     }
 
     private void SetFlagsTo(bool enabled)
@@ -55,7 +88,7 @@ public abstract class MovementManager : MonoBehaviour
             Flags[action] = enabled;
         }
     }
-    
+
     private void SetActuallyDoingTo(bool enabled)
     {
         foreach (Actions action in AllActions)
@@ -77,41 +110,21 @@ public abstract class MovementManager : MonoBehaviour
         }
     }
 
-    private void SetColliders()
-    {
-        Collider[] allColiders = gameObject.GetComponentsInChildren<Collider>();
-
-        for (int i = 0; i < allColiders.Length; i++)
-        {
-            switch (allColiders[i].tag)
-            {
-                case "LeftPunchCollider":
-                    leftPunchCollider = allColiders[i];
-                    leftPunchCollider.enabled = false;
-                    break;
-                case "RightPunchCollider":
-                    rightPunchCollider = allColiders[i];
-                    rightPunchCollider.enabled = false;
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
     protected void FixedUpdate()
     {
-        animator.SetBool("IsRunning", Flags[Actions.MOVE]);
-        
-        if (Flags[Actions.MOVE])
+        if (!shieldsUp)
         {
-            Move();
+            animator.SetBool("IsRunning", Flags[Actions.MOVE]);
+
+            if (Flags[Actions.MOVE])
+            {
+                Move();
+            }
         }
     }
 
     protected void Update()
     {
-        
         if (!controlManager.IsCancelTargeting())
         {
             transform.LookAt(otherPlayer);
@@ -121,40 +134,66 @@ public abstract class MovementManager : MonoBehaviour
         if (impulse > 0)
         {
             impulseDelay -= Time.deltaTime;
-            
+
             animator.SetBool("IsDamaged", true);
-            
+
             if (impulseDelay <= 0)
             {
                 ApplyImpulse();
                 animator.SetBool("IsDamaged", false);
             }
-            
+
             return;
         }
 
-        ActuallyDoing[Actions.SOFT_PUNCH] |= controlManager.IsSoftAttacking();
-        ActuallyDoing[Actions.JUMP] |= controlManager.IsJumping();
-        ActuallyDoing[Actions.HARD_PUNCH] |= controlManager.IsHardAttacking();
-
-        animator.SetBool("IsSoftAttacking", ActuallyDoing[Actions.SOFT_PUNCH]);
-        animator.SetBool("IsHardAttacking", ActuallyDoing[Actions.HARD_PUNCH]);
-        
         animator.SetInteger("Combo", currentCombo);
         animator.SetBool("InAir", !groundChecker.isGrounded);
 
+        if (Flags[Actions.DEFEND])
+        {
+            if (!shieldIsRepairing)
+            {
+                if (currentShieldLife < (character.shieldLife * 0.25))
+                {
+                    shieldIsRepairing = true;
+                    StartCoroutine(RepairShield());
+                }
+
+                shieldsUp = controlManager.IsDefending();
+            }
+            else
+            {
+                shieldsUp = false;
+            }
+
+            shield.SetActive(shieldsUp);
+
+            if (shieldsUp)
+            {
+                currentShieldLife -= Time.deltaTime * 10;
+
+                return;
+            }
+            else
+            {
+                currentShieldLife += Time.deltaTime * 5;
+
+                currentShieldLife = Math.Min(currentShieldLife, character.shieldLife);
+            }
+        }
+
+        ActuallyDoing[Actions.JUMP] |= controlManager.IsJumping();
         if (Flags[Actions.JUMP])
         {
             if (ActuallyDoing[Actions.JUMP])
             {
                 ActuallyDoing[Actions.JUMP] = false;
-                
-                if (groundChecker.isGrounded || jumps < character.maxJumps ||
-                    (jumps == character.maxJumps && controlManager.IsBurning()))
+
+                if (groundChecker.isGrounded || currentJumps < character.maxJumps)
                 {
                     animator.SetBool("IsJumping", true);
                     Jump();
-                    jumps++;
+                    currentJumps++;
                 }
 
                 return;
@@ -163,6 +202,9 @@ public abstract class MovementManager : MonoBehaviour
             animator.SetBool("IsJumping", false);
         }
 
+        ActuallyDoing[Actions.SOFT_PUNCH] |= controlManager.IsSoftAttacking();
+
+        animator.SetBool("IsSoftAttacking", ActuallyDoing[Actions.SOFT_PUNCH]);
         if (Flags[Actions.SOFT_PUNCH])
         {
             if (ActuallyDoing[Actions.SOFT_PUNCH])
@@ -173,6 +215,9 @@ public abstract class MovementManager : MonoBehaviour
             }
         }
 
+        ActuallyDoing[Actions.HARD_PUNCH] |= controlManager.IsHardAttacking();
+
+        animator.SetBool("IsHardAttacking", ActuallyDoing[Actions.HARD_PUNCH]);
         if (Flags[Actions.HARD_PUNCH])
         {
             if (ActuallyDoing[Actions.HARD_PUNCH])
@@ -182,14 +227,19 @@ public abstract class MovementManager : MonoBehaviour
                 return;
             }
         }
+    }
 
+    private IEnumerator RepairShield()
+    {
+        yield return new WaitForSeconds(character.shieldRepairDelay);
+        shieldIsRepairing = false;
     }
 
     public void EnableAllFlags()
     {
         SetFlagsTo(true);
     }
-    
+
     public void DisableAllFlags()
     {
         SetFlagsTo(false);
@@ -200,7 +250,7 @@ public abstract class MovementManager : MonoBehaviour
     {
         currentCombo++;
     }
-    
+
     public void ResetCombo()
     {
         currentCombo = 1;
@@ -214,10 +264,9 @@ public abstract class MovementManager : MonoBehaviour
         SetActuallyDoingTo(false);
         ResetCombo();
     }
-    
+
     public void toogleFlagOf(Actions action)
     {
-
         Flags[action] = !Flags[action];
     }
 
@@ -241,7 +290,7 @@ public abstract class MovementManager : MonoBehaviour
         if (Math.Abs(horizontalMovement) != 0f || Math.Abs(verticalMovement) != 0f)
         {
             movement += otherPlayer.forward * controlManager.GetHorizontalMovement() * -1;
-            movement += otherPlayer.right * controlManager.GetVerticalMovement() ;
+            movement += otherPlayer.right * controlManager.GetVerticalMovement();
         }
 
         animator.SetBool("IsRunning", (Math.Abs(movement.x) > 0.5f || Math.Abs(movement.z) > 0.5f));
@@ -250,7 +299,7 @@ public abstract class MovementManager : MonoBehaviour
 
         if (groundChecker.isGrounded)
         {
-            jumps = 0;
+            currentJumps = 0;
         }
 
         rb.velocity += movement;
@@ -285,9 +334,12 @@ public abstract class MovementManager : MonoBehaviour
 
     public void AddImpulse(float impulse)
     {
-        DisableAllFlags();
-        impulseDelay = 1;
-        this.impulse += impulse;
+        if (!shieldsUp)
+        {
+            DisableAllFlags();
+            impulseDelay = 1;
+            this.impulse += impulse;
+        }
     }
 
     public abstract void SoftAttack();
@@ -304,5 +356,6 @@ public enum Actions
     JUMP,
     SOFT_PUNCH,
     HARD_PUNCH,
-    MOVE
+    MOVE,
+    DEFEND
 }

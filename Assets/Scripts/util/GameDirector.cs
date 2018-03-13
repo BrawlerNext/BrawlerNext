@@ -8,18 +8,26 @@ public class GameDirector : MonoBehaviour
 	private Transform player1;
 	private Transform player2;
 
+	public bool Debugging = false;
+
 	private void Awake()
 	{
 		player1 = GameObject.FindGameObjectWithTag("P1").transform;
 		player2 = GameObject.FindGameObjectWithTag("P2").transform;
 
 		ResetPositions();
+		
 	}
 
 	private void ResetPositions()
 	{
 		player1.position = GameObject.FindGameObjectWithTag("RespawnP1").transform.position;
 		player2.position = GameObject.FindGameObjectWithTag("RespawnP2").transform.position;
+
+		if (Debugging)
+		{
+			player1.position = player2.position + player2.forward * 3f;
+		}
 	}
 
 	private void Update()

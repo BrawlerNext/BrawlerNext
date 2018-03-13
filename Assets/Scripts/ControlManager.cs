@@ -18,7 +18,7 @@ public class ControlManager : MonoBehaviour {
   
   public bool IsDefending()
   {
-      return false;
+    return IsPressingButton("Defend");
   }
 
   public bool IsJumping()
