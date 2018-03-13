@@ -41,12 +41,14 @@ public class GameDirector : MonoBehaviour
 		{
 			Debug.Log("Player 1 dies.");
 			ResetPositions();
+			AudioManager.Play(AudioType.DEATH);
 		}
 		
 		if (player2.position.y < -10)
 		{
 			Debug.Log("Player 2 dies.");
 			ResetPositions();
+			AudioManager.Play(AudioType.DEATH);
 		}
 	}
 }

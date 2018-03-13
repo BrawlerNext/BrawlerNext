@@ -14,6 +14,7 @@ TagManager:
   - P2
   - RespawnP1
   - RespawnP2
+  - Shield
   layers:
   - Default
   - TransparentFX

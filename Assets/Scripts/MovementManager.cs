@@ -143,9 +143,7 @@ public abstract class MovementManager : MonoBehaviour
             {
                 if (CompareTag("P1"))
                 {
-                    print("Shield current life: " + currentShieldLife);
-                    print("Shield is repairing?: " + shieldIsRepairing);
-                    print("Current impulse: " + impulse);   
+                    DebugData();
                 }
             }
             
@@ -153,9 +151,7 @@ public abstract class MovementManager : MonoBehaviour
             {
                 if (CompareTag("P2"))
                 {
-                    print("Shield current life: " + currentShieldLife);
-                    print("Shield is repairing?: " + shieldIsRepairing);
-                    print("Current impulse: " + impulse);   
+                    DebugData();   
                 }
             }
         }
@@ -201,6 +197,13 @@ public abstract class MovementManager : MonoBehaviour
                 shieldsUp = false;
             }
 
+            bool shieldIsActive = shield.activeSelf;
+
+            if (!shieldIsActive && shieldsUp)
+            {
+                AudioManager.Play(AudioType.DEFEND);
+            }
+            
             shield.SetActive(shieldsUp);
 
             if (shieldsUp)
@@ -226,12 +229,18 @@ public abstract class MovementManager : MonoBehaviour
 
                 if (groundChecker.isGrounded || currentJumps < character.maxJumps)
                 {
+                    currentJumps++;
+                    AudioManager.Play(AudioType.JUMP);
                     animator.SetBool("IsJumping", true);
                     Jump();
-                    currentJumps++;
                 }
 
                 return;
+            }
+            
+            if (groundChecker.isGrounded)
+            {
+                currentJumps = 0;
             }
 
             animator.SetBool("IsJumping", false);
@@ -264,31 +273,19 @@ public abstract class MovementManager : MonoBehaviour
         }
     }
 
+    private void DebugData()
+    {
+        print("Current jump: " + currentJumps);
+        print("Is grounded?: " + groundChecker.isGrounded);
+        print("Shield current life: " + currentShieldLife);
+        print("Shield is repairing?: " + shieldIsRepairing);
+        print("Current impulse: " + impulse);
+    }
+
     private IEnumerator RepairShield()
     {
         yield return new WaitForSeconds(character.shieldRepairDelay);
         shieldIsRepairing = false;
-    }
-
-    public void EnableAllFlags()
-    {
-        SetFlagsTo(true);
-    }
-
-    public void DisableAllFlags()
-    {
-        SetFlagsTo(false);
-        SetActuallyDoingTo(false);
-    }
-
-    public void IncreaseCombo()
-    {
-        currentCombo++;
-    }
-
-    public void ResetCombo()
-    {
-        currentCombo = 1;
     }
 
     public void ApplyImpulse()
@@ -298,21 +295,6 @@ public abstract class MovementManager : MonoBehaviour
         EnableAllFlags();
         SetActuallyDoingTo(false);
         ResetCombo();
-    }
-
-    public void toogleFlagOf(Actions action)
-    {
-        Flags[action] = !Flags[action];
-    }
-
-    public void toogleLeftPunchCollider()
-    {
-        leftPunchCollider.enabled = !leftPunchCollider.enabled;
-    }
-
-    public void toogleRightPunchCollider()
-    {
-        rightPunchCollider.enabled = !rightPunchCollider.enabled;
     }
 
     protected void Move()
@@ -331,11 +313,6 @@ public abstract class MovementManager : MonoBehaviour
         animator.SetBool("IsRunning", (Math.Abs(movement.x) > 0.5f || Math.Abs(movement.z) > 0.5f));
 
         movement *= character.speed;
-
-        if (groundChecker.isGrounded)
-        {
-            currentJumps = 0;
-        }
 
         rb.velocity += movement;
 
@@ -363,6 +340,7 @@ public abstract class MovementManager : MonoBehaviour
 
         if (impulse > 0)
         {
+            AudioManager.Play(AudioType.HIT);
             otherPlayer.GetComponent<MovementManager>().AddImpulse(impulse * ImpulseMultiplier);
         }
     }
@@ -387,6 +365,49 @@ public abstract class MovementManager : MonoBehaviour
     public abstract void Defend();
     public abstract void Dash();
     public abstract void Burn();
+    
+    // Animation keyframe methods
+    
+    public void EnableAllFlags()
+    {
+        SetFlagsTo(true);
+    }
+
+    public void DisableAllFlags()
+    {
+        SetFlagsTo(false);
+        SetActuallyDoingTo(false);
+    }
+
+    public void IncreaseCombo()
+    {
+        currentCombo++;
+    }
+
+    public void ResetCombo()
+    {
+        currentCombo = 1;
+    }
+
+    public void playSoundOf(AudioType type)
+    {
+        AudioManager.Play(type);
+    }
+
+    public void toogleFlagOf(Actions action)
+    {
+        Flags[action] = !Flags[action];
+    }
+
+    public void toogleLeftPunchCollider()
+    {
+        leftPunchCollider.enabled = !leftPunchCollider.enabled;
+    }
+
+    public void toogleRightPunchCollider()
+    {
+        rightPunchCollider.enabled = !rightPunchCollider.enabled;
+    }
 }
 
 public enum Actions

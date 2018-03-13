@@ -30205,6 +30205,13 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
+  - time: 0.033333335
+    functionName: playSoundOf
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 2
+    messageOptions: 0
   - time: 0.55
     functionName: toogleRightPunchCollider
     data: 

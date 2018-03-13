@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Name: Testy
   m_EditorClassIdentifier: 
   speed: 10
+  maxJumps: 2
+  jumpForce: 250
   softPunchDamage: 25
   hardPunchDamage: 25
-  kickDamage: 25
-  jumpForce: 250
-  gravityScale: 1
-  maxJumps: 2
+  shieldRepairDelay: 3
+  shieldLife: 50
+  shieldRepairVelocity: 10
+  shieldDamagedReducedPercentage: 0.5
