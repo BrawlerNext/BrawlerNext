@@ -31,8 +31,8 @@ public abstract class MovementManager : MonoBehaviour
 
     protected Transform otherPlayer;
 
-
     // Runtime data
+    protected bool isStunned = false;
     protected int currentCombo = 1;
     protected int currentJumps = 0;
 
@@ -42,6 +42,8 @@ public abstract class MovementManager : MonoBehaviour
 
     protected float impulseDelay = 0;
     protected float impulse = 0;
+
+    protected Vector3 lastMovementNormalized;
 
     protected Dictionary<Actions, bool> Flags = new Dictionary<Actions, bool>();
     protected Dictionary<Actions, bool> ActuallyDoing = new Dictionary<Actions, bool>();
@@ -132,6 +134,8 @@ public abstract class MovementManager : MonoBehaviour
 
     protected void Update()
     {
+
+        // DEBUG
         if (GameDirector.DebugginGame)
         {
             if (Input.GetKeyDown(KeyCode.C))
@@ -155,7 +159,8 @@ public abstract class MovementManager : MonoBehaviour
                 }
             }
         }
-        
+        /*********/
+
         if (!controlManager.IsCancelTargeting())
         {
             transform.LookAt(otherPlayer);
@@ -171,110 +176,117 @@ public abstract class MovementManager : MonoBehaviour
             if (impulseDelay <= 0)
             {
                 ApplyImpulse();
+                isStunned = false;
                 animator.SetBool("IsDamaged", false);
             }
-
-            return;
-        }
-
-        animator.SetInteger("Combo", currentCombo);
-        animator.SetBool("InAir", !groundChecker.isGrounded);
-
-        if (Flags[Actions.DEFEND])
-        {
-            if (!shieldIsRepairing)
-            {
-                if (currentShieldLife < (character.shieldLife * 0.25))
-                {
-                    shieldIsRepairing = true;
-                    StartCoroutine(RepairShield());
-                }
-
-                shieldsUp = controlManager.IsDefending();
-            }
             else
             {
-                shieldsUp = false;
-            }
-
-            bool shieldIsActive = shield.activeSelf;
-
-            if (!shieldIsActive && shieldsUp)
-            {
-                AudioManager.Play(AudioType.DEFEND);
-            }
-            
-            shield.SetActive(shieldsUp);
-
-            if (shieldsUp)
-            {
-                currentShieldLife -= Time.deltaTime * character.shieldRepairVelocity;
-                Defend();
-                return;
-            }
-            else
-            {
-                currentShieldLife += Time.deltaTime * (character.shieldRepairVelocity / 2f);
-
-                currentShieldLife = Math.Min(currentShieldLife, character.shieldLife);
+                isStunned = true;
             }
         }
 
-        ActuallyDoing[Actions.JUMP] |= controlManager.IsJumping();
-        if (Flags[Actions.JUMP])
+        if (!isStunned)
         {
-            if (ActuallyDoing[Actions.JUMP])
-            {
-                ActuallyDoing[Actions.JUMP] = false;
+            animator.SetInteger("Combo", currentCombo);
+            animator.SetBool("InAir", !groundChecker.isGrounded);
 
-                if (groundChecker.isGrounded || currentJumps < character.maxJumps)
+            if (Flags[Actions.DEFEND])
+            {
+                if (!shieldIsRepairing)
                 {
-                    currentJumps++;
-                    AudioManager.Play(AudioType.JUMP);
-                    animator.SetBool("IsJumping", true);
-                    Jump();
+                    if (currentShieldLife < (character.shieldLife * 0.25))
+                    {
+                        shieldIsRepairing = true;
+                        StartCoroutine(RepairShield());
+                    }
+
+                    shieldsUp = controlManager.IsDefending();
+                }
+                else
+                {
+                    shieldsUp = false;
                 }
 
-                return;
+                bool shieldIsActive = shield.activeSelf;
+
+                if (!shieldIsActive && shieldsUp)
+                {
+                    AudioManager.Play(AudioType.DEFEND);
+                }
+
+                shield.SetActive(shieldsUp);
+
+                if (shieldsUp)
+                {
+                    currentShieldLife -= Time.deltaTime * character.shieldRepairVelocity;
+                    Defend();
+                    return;
+                }
+                else
+                {
+                    currentShieldLife += Time.deltaTime * (character.shieldRepairVelocity / 2f);
+
+                    currentShieldLife = Math.Min(currentShieldLife, character.shieldLife);
+                }
             }
-            
-            if (groundChecker.isGrounded)
+
+            ActuallyDoing[Actions.JUMP] |= controlManager.IsJumping();
+            if (Flags[Actions.JUMP])
             {
-                currentJumps = 0;
+                if (ActuallyDoing[Actions.JUMP])
+                {
+                    ActuallyDoing[Actions.JUMP] = false;
+
+                    if (groundChecker.isGrounded || currentJumps < character.maxJumps)
+                    {
+                        currentJumps++;
+                        AudioManager.Play(AudioType.JUMP);
+                        animator.SetBool("IsJumping", true);
+                        Jump();
+                    }
+
+                    return;
+                }
+
+                if (groundChecker.isGrounded)
+                {
+                    currentJumps = 0;
+                }
+
+                animator.SetBool("IsJumping", false);
             }
 
-            animator.SetBool("IsJumping", false);
-        }
+            ActuallyDoing[Actions.SOFT_PUNCH] |= controlManager.IsSoftAttacking();
 
-        ActuallyDoing[Actions.SOFT_PUNCH] |= controlManager.IsSoftAttacking();
-
-        animator.SetBool("IsSoftAttacking", ActuallyDoing[Actions.SOFT_PUNCH]);
-        if (Flags[Actions.SOFT_PUNCH])
-        {
-            if (ActuallyDoing[Actions.SOFT_PUNCH])
+            animator.SetBool("IsSoftAttacking", ActuallyDoing[Actions.SOFT_PUNCH]);
+            if (Flags[Actions.SOFT_PUNCH])
             {
-                ActuallyDoing[Actions.SOFT_PUNCH] = false;
-                SoftAttack();
-                return;
+                if (ActuallyDoing[Actions.SOFT_PUNCH])
+                {
+                    ActuallyDoing[Actions.SOFT_PUNCH] = false;
+                    SoftAttack();
+                    return;
+                }
             }
-        }
 
-        ActuallyDoing[Actions.HARD_PUNCH] |= controlManager.IsHardAttacking();
+            ActuallyDoing[Actions.HARD_PUNCH] |= controlManager.IsHardAttacking();
 
-        animator.SetBool("IsHardAttacking", ActuallyDoing[Actions.HARD_PUNCH]);
-        if (Flags[Actions.HARD_PUNCH])
-        {
-            if (ActuallyDoing[Actions.HARD_PUNCH])
+            animator.SetBool("IsHardAttacking", ActuallyDoing[Actions.HARD_PUNCH]);
+            if (Flags[Actions.HARD_PUNCH])
             {
-                ActuallyDoing[Actions.HARD_PUNCH] = false;
-                HardAttack();
-                return;
+                if (ActuallyDoing[Actions.HARD_PUNCH])
+                {
+                    ActuallyDoing[Actions.HARD_PUNCH] = false;
+                    HardAttack();
+                    return;
+                }
             }
         }
     }
 
     private void DebugData()
     {
+        print("Is stunned?: " + isStunned);
         print("Current jump: " + currentJumps);
         print("Is grounded?: " + groundChecker.isGrounded);
         print("Shield current life: " + currentShieldLife);
@@ -311,6 +323,8 @@ public abstract class MovementManager : MonoBehaviour
         }
 
         animator.SetBool("IsRunning", (Math.Abs(movement.x) > 0.5f || Math.Abs(movement.z) > 0.5f));
+
+        lastMovementNormalized = movement.normalized;
 
         movement *= character.speed;
 

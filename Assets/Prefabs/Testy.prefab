@@ -340,7 +340,7 @@ GameObject:
   - component: {fileID: 135699740493583752}
   - component: {fileID: 23982131738059514}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: Shield
   m_TagString: Shield
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -920,6 +920,7 @@ GameObject:
   - component: {fileID: 114298259253566890}
   - component: {fileID: 114421464678979304}
   - component: {fileID: 65259739098657078}
+  - component: {fileID: 64216117103493658}
   m_Layer: 0
   m_Name: Testy
   m_TagString: P1
@@ -2187,6 +2188,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!64 &64216117103493658
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1835250474886460}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Convex: 1
+  m_InflateMesh: 0
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 4300002, guid: facbab4c63040a14d9f3de48ee3472ae, type: 3}
 --- !u!65 &65259739098657078
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -2276,8 +2291,8 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 0.42363676
+  m_Center: {x: 0, y: 0.07636322, z: 0}
 --- !u!136 &136461912079540214
 CapsuleCollider:
   m_ObjectHideFlags: 1

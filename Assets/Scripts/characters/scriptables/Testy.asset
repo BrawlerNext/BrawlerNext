@@ -13,9 +13,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 10
   maxJumps: 2
-  jumpForce: 250
+  jumpForce: 500
   softPunchDamage: 25
-  hardPunchDamage: 25
+  hardPunchDamage: 50
   shieldRepairDelay: 3
   shieldLife: 50
   shieldRepairVelocity: 10

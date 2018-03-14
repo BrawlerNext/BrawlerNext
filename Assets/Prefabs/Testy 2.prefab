@@ -83,7 +83,7 @@ GameObject:
   - component: {fileID: 135971237385018736}
   - component: {fileID: 23910777808076874}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: Shield
   m_TagString: Shield
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2253,7 +2253,7 @@ MonoBehaviour:
   ImpulseMultiplier: 100
   character: {fileID: 11400000, guid: 5e2046ca4825c484aa7014494fd45422, type: 2}
   player: 1
-  controller: 0
+  controller: 2
 --- !u!114 &114414867634027086
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2276,8 +2276,8 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 0.42363676
+  m_Center: {x: 0, y: 0.07636322, z: 0}
 --- !u!136 &136505088722378864
 CapsuleCollider:
   m_ObjectHideFlags: 1
