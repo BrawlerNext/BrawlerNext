@@ -1,40 +1,34 @@
-﻿using System;
+﻿using characters.scriptables;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class AudioManager : MonoBehaviour
+public class AudioManager
 {
-	
-	public AudioEntry[] Clips;
-	
-	private AudioSource SoundSource;
 
-	private static AudioManager instance;
+    private AudioSource soundSource;
+    private Character character;
 
-	private void Awake()
+    public AudioManager(AudioSource soundSource, Character character)
+    {
+        this.soundSource = soundSource;
+        this.character = character;
+    }
+
+	public void Play(AudioType type)
 	{
-		AudioManager.instance = new AudioManager();
-
-		instance.Clips = Clips;
-		instance.SoundSource = GameObject.FindObjectOfType<AudioSource>(); 
-	}
-
-	public static AudioManager Instance()
-	{
-		return instance;
-	}
-
-	public static void Play(AudioType type)
-	{
-		foreach (AudioEntry audioEntry in instance.Clips)
+		foreach (AudioEntry audioEntry in character.clips)
 		{
 			if (audioEntry.Type == type)
 			{
-				instance.SoundSource.PlayOneShot(audioEntry.Clip);
+				soundSource.PlayOneShot(audioEntry.Clip);
+                return;
 			}
 		}
+
+        Debug.LogWarning("Audio type: " + type.ToString() + " not found in " + character.ToString() + " clips!");
 	}
 }
 
@@ -47,9 +41,13 @@ public class AudioEntry
 
 public enum AudioType
 {
-	HIT,
-	DEFEND,
-	PUNCH,
-	JUMP,
-	DEATH
+    SOFT_HIT,
+    HARD_HIT,
+    DEFEND,
+    SOFT_PUNCH,
+    HARD_PUNCH,
+    JUMP,
+    DEATH,
+    BURN,
+    NONE
 }

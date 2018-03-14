@@ -33,6 +33,7 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+
 \.idea/\.idea\.BrawlerNext1/\.idea/
 
 \.idea/\.idea\.BrawlerNext/\.idea/

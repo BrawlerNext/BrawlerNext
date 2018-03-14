@@ -6,7 +6,7 @@ using characters.scriptables;
 using util;
 using UnityEngine;
 
-public abstract class MovementManager : MonoBehaviour
+public abstract class PlayerManager : MonoBehaviour
 {
     // General modifiers
     public float ImpulseMultiplier = 100f;
@@ -27,6 +27,8 @@ public abstract class MovementManager : MonoBehaviour
     protected Rigidbody rb;
     protected GroundChecker groundChecker;
     protected ControlManager controlManager;
+    protected ParticleManager particleManager;
+    protected AudioManager audioManager;
     protected Animator animator;
 
     protected Transform otherPlayer;
@@ -48,12 +50,14 @@ public abstract class MovementManager : MonoBehaviour
     protected Dictionary<Actions, bool> Flags = new Dictionary<Actions, bool>();
     protected Dictionary<Actions, bool> ActuallyDoing = new Dictionary<Actions, bool>();
 
-
     protected Actions[] AllActions = new[]
         {Actions.JUMP, Actions.HARD_PUNCH, Actions.SOFT_PUNCH, Actions.MOVE, Actions.DEFEND};
 
     void Awake()
     {
+        particleManager = new ParticleManager(character);
+        audioManager = new AudioManager(gameObject.GetComponent<AudioSource>(), character);
+
         rb = gameObject.GetComponent<Rigidbody>();
         groundChecker = gameObject.GetComponentInChildren<GroundChecker>();
         animator = gameObject.GetComponentInChildren<Animator>();
@@ -211,7 +215,7 @@ public abstract class MovementManager : MonoBehaviour
 
                 if (!shieldIsActive && shieldsUp)
                 {
-                    AudioManager.Play(AudioType.DEFEND);
+                    audioManager.Play(AudioType.DEFEND);
                 }
 
                 shield.SetActive(shieldsUp);
@@ -240,7 +244,7 @@ public abstract class MovementManager : MonoBehaviour
                     if (groundChecker.isGrounded || currentJumps < character.maxJumps)
                     {
                         currentJumps++;
-                        AudioManager.Play(AudioType.JUMP);
+                        audioManager.Play(AudioType.JUMP);
                         animator.SetBool("IsJumping", true);
                         Jump();
                     }
@@ -344,6 +348,10 @@ public abstract class MovementManager : MonoBehaviour
     {
         float impulse = 0;
 
+        AudioType audio = AudioType.NONE;
+        GameObject particle = null;
+        Vector3 positionToInstantiate = Vector3.zero;
+
         foreach (ContactPoint contact in collision.contacts)
         {
             if (contact.thisCollider.tag.Contains("PunchCollider"))
@@ -351,18 +359,37 @@ public abstract class MovementManager : MonoBehaviour
                 if (animator.GetBool("IsSoftAttacking"))
                 {
                     impulse = character.softPunchDamage;
+                    particle = particleManager.RetrieveParticle(ParticleType.SOFT_HIT);
+                    positionToInstantiate = contact.point;
+                    audio = AudioType.SOFT_HIT;
+                    Debug.Log("OMG");
+                    break;
                 }
                 else
                 {
                     impulse = character.hardPunchDamage;
+                    particle = particleManager.RetrieveParticle(ParticleType.HARD_HIT);
+                    positionToInstantiate = contact.point;
+                    audio = AudioType.HARD_HIT;
+                    Debug.Log("OMG");
+                    break;
                 }
             }
         }
 
         if (impulse > 0)
         {
-            AudioManager.Play(AudioType.HIT);
-            otherPlayer.GetComponent<MovementManager>().AddImpulse(impulse * ImpulseMultiplier);
+            if (audio != AudioType.NONE)
+            {
+                audioManager.Play(audio);
+            }
+
+            otherPlayer.GetComponent<PlayerManager>().AddImpulse(impulse * ImpulseMultiplier);
+
+            if (particle != null)
+            {
+                Instantiate(particle, positionToInstantiate, Quaternion.identity);
+            }
         }
     }
 
@@ -410,9 +437,9 @@ public abstract class MovementManager : MonoBehaviour
         currentCombo = 1;
     }
 
-    public void playSoundOf(AudioType type)
+    public void PlaySoundOf(AudioType type)
     {
-        AudioManager.Play(type);
+        audioManager.Play(type);
     }
 
     public void toogleFlagOf(Actions action)

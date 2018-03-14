@@ -20,3 +20,6 @@ MonoBehaviour:
   shieldLife: 50
   shieldRepairVelocity: 10
   shieldDamagedReducedPercentage: 0.5
+  particles:
+  - type: 0
+    particle: {fileID: 0}

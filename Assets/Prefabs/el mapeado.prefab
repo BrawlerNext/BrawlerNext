@@ -158,6 +158,8 @@ GameObject:
   - component: {fileID: 33534713741332570}
   - component: {fileID: 23602428941208640}
   - component: {fileID: 64934515942992862}
+  - component: {fileID: 65614213895869384}
+  - component: {fileID: 114883199812565344}
   m_Layer: 0
   m_Name: pCylinder12
   m_TagString: Ground
@@ -2621,7 +2623,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1091002231676054}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.000000040916817, y: 0.11358916, z: 0.0000000329463}
+  m_LocalPosition: {x: -0.000000040916817, y: 0.027, z: 0.0000000329463}
   m_LocalScale: {x: 11.040957, y: 0.8811549, z: 11.040957}
   m_Children: []
   m_Father: {fileID: 4092751760799900}
@@ -7150,12 +7152,24 @@ MeshCollider:
   m_GameObject: {fileID: 1091002231676054}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Convex: 0
   m_InflateMesh: 0
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300188, guid: 4df1aac166480fb4cafbe85fdcfba4da, type: 3}
+--- !u!65 &65614213895869384
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1091002231676054}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.019859256, y: 0.052610412, z: 0.019021131}
+  m_Center: {x: 0.0000000013969838, y: -0.016305208, z: -9.313225e-10}
 --- !u!95 &95071112023073056
 Animator:
   serializedVersion: 3
@@ -7173,3 +7187,16 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114883199812565344
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1091002231676054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39f66999b7f65f947ab0dd2a02d42e9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialPosition: {x: 0, y: 0, z: 0}
+  finalPosition: {x: 0, y: 10, z: 0}

@@ -1,9 +1,10 @@
+using System;
 using UnityEngine;
 
 namespace characters.scriptables
 {
 	[CreateAssetMenu(fileName = "Character", menuName = "BrawlerNext/Character", order = 0)]
-
+    [Serializable]
 	public class Character : ScriptableObject {
 		public float speed = 10;
 		
@@ -17,5 +18,8 @@ namespace characters.scriptables
 		public float shieldLife = 100;
 		public float shieldRepairVelocity = 10;
 		public float shieldDamagedReducedPercentage = 0.5f;
+
+        public AudioEntry[] clips;
+        public Particle[] particles;
 	}
 }

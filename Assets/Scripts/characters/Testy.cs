@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Testy : MovementManager {
+public class Testy : PlayerManager {
 
     public override void Burn()
     {
