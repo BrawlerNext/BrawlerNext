@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour {
 
+    public float offsetHorizontal = 10;
+
     public float offsetVertical;
     public float verticalRotationOffset;
-    public float horizontalPercentage;
     
     private Transform player1;
     private Transform player2;
@@ -18,12 +19,18 @@ public class CameraMovement : MonoBehaviour {
 	
 	void Update () {
         Vector3 midpoint = (player1.position + player2.position) * 0.5f;
+
         float distance = Vector3.Distance(player1.position, player2.position);
+
         midpoint += new Vector3(0, offsetVertical, 0);
 
-        transform.LookAt(midpoint);
+        Quaternion rotation = Quaternion.LookRotation((midpoint - transform.position).normalized);
         
-        midpoint += new Vector3(distance * horizontalPercentage, verticalRotationOffset, 0);
+        this.transform.rotation = rotation;
+        
+        midpoint += new Vector3(distance, verticalRotationOffset, 0);
+
+        midpoint.x = Mathf.Max(midpoint.x, offsetHorizontal);
 
         transform.position = Vector3.Lerp(transform.position, midpoint, Time.deltaTime);
 	}

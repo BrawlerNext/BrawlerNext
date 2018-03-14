@@ -318,8 +318,8 @@ public abstract class MovementManager : MonoBehaviour
 
         if (Math.Abs(horizontalMovement) != 0f || Math.Abs(verticalMovement) != 0f)
         {
-            movement += otherPlayer.forward * controlManager.GetHorizontalMovement() * -1;
-            movement += otherPlayer.right * controlManager.GetVerticalMovement();
+            movement += Camera.main.transform.right * controlManager.GetHorizontalMovement();
+            movement += getCameraForwardVector() * controlManager.GetVerticalMovement();
         }
 
         animator.SetBool("IsRunning", (Math.Abs(movement.x) > 0.5f || Math.Abs(movement.z) > 0.5f));
@@ -331,6 +331,13 @@ public abstract class MovementManager : MonoBehaviour
         rb.velocity += movement;
 
         rb.velocity = Vector3.ClampMagnitude(rb.velocity, 15);
+    }
+
+    private Vector3 getCameraForwardVector()
+    {
+        Vector3 middleNormalized = (Camera.main.transform.forward + Vector3.up).normalized;
+        
+        return (middleNormalized - (Vector3.Dot(middleNormalized, Vector3.up) * Vector3.up)).normalized;
     }
 
     void OnCollisionEnter(Collision collision)
