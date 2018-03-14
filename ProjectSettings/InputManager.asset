@@ -186,7 +186,7 @@ InputManager:
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: 
+    positiveButton: joystick button 5
     altNegativeButton: 
     altPositiveButton: 
     gravity: 3
@@ -195,7 +195,7 @@ InputManager:
     snap: 1
     invert: 0
     type: 0
-    axis: 2
+    axis: 0
     joyNum: 1
   - serializedVersion: 3
     m_Name: P1XboxHardAttack
