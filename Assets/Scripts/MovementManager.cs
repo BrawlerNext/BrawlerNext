@@ -45,6 +45,8 @@ public abstract class PlayerManager : MonoBehaviour
     protected float impulseDelay = 0;
     protected float impulse = 0;
 
+    protected Actions lastAction = Actions.IDLE;
+    
     protected Vector3 lastMovementNormalized;
 
     protected Dictionary<Actions, bool> Flags = new Dictionary<Actions, bool>();
@@ -267,6 +269,7 @@ public abstract class PlayerManager : MonoBehaviour
             {
                 if (ActuallyDoing[Actions.SOFT_PUNCH])
                 {
+                    lastAction = Actions.SOFT_PUNCH;
                     ActuallyDoing[Actions.SOFT_PUNCH] = false;
                     SoftAttack();
                     return;
@@ -280,6 +283,7 @@ public abstract class PlayerManager : MonoBehaviour
             {
                 if (ActuallyDoing[Actions.HARD_PUNCH])
                 {
+                    lastAction = Actions.HARD_PUNCH;
                     ActuallyDoing[Actions.HARD_PUNCH] = false;
                     HardAttack();
                     return;
@@ -352,27 +356,26 @@ public abstract class PlayerManager : MonoBehaviour
         GameObject particle = null;
         Vector3 positionToInstantiate = Vector3.zero;
 
+        print(lastAction);
+        
         foreach (ContactPoint contact in collision.contacts)
         {
             if (contact.thisCollider.tag.Contains("PunchCollider"))
             {
-                if (animator.GetBool("IsSoftAttacking"))
+                switch (lastAction)
                 {
-                    impulse = character.softPunchDamage;
-                    particle = particleManager.RetrieveParticle(ParticleType.SOFT_HIT);
-                    positionToInstantiate = contact.point;
-                    audio = AudioType.SOFT_HIT;
-                    Debug.Log("OMG");
-                    break;
-                }
-                else
-                {
-                    impulse = character.hardPunchDamage;
-                    particle = particleManager.RetrieveParticle(ParticleType.HARD_HIT);
-                    positionToInstantiate = contact.point;
-                    audio = AudioType.HARD_HIT;
-                    Debug.Log("OMG");
-                    break;
+                    case Actions.SOFT_PUNCH:
+                        impulse = character.softPunchDamage;
+                        particle = particleManager.RetrieveParticle(ParticleType.SOFT_HIT);
+                        positionToInstantiate = contact.point;
+                        audio = AudioType.SOFT_HIT;
+                        break;
+                    case Actions.HARD_PUNCH:
+                        impulse = character.hardPunchDamage;
+                        particle = particleManager.RetrieveParticle(ParticleType.HARD_HIT);
+                        positionToInstantiate = contact.point;
+                        audio = AudioType.HARD_HIT;
+                        break;
                 }
             }
         }
@@ -464,5 +467,6 @@ public enum Actions
     SOFT_PUNCH,
     HARD_PUNCH,
     MOVE,
-    DEFEND
+    DEFEND,
+    IDLE
 }

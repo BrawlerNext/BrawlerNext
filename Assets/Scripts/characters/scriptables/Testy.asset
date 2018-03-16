@@ -20,6 +20,23 @@ MonoBehaviour:
   shieldLife: 50
   shieldRepairVelocity: 10
   shieldDamagedReducedPercentage: 0.5
+  clips:
+  - Type: 0
+    Clip: {fileID: 8300000, guid: d9861073f9caef1499e6bfc029bf8241, type: 3}
+  - Type: 1
+    Clip: {fileID: 8300000, guid: d9861073f9caef1499e6bfc029bf8241, type: 3}
+  - Type: 2
+    Clip: {fileID: 8300000, guid: fcffc773226771b41b51007c3818d7a7, type: 3}
+  - Type: 3
+    Clip: {fileID: 8300000, guid: 9f386bf8082e4cb4ea7c3a5f4ea69680, type: 3}
+  - Type: 4
+    Clip: {fileID: 8300000, guid: 9f386bf8082e4cb4ea7c3a5f4ea69680, type: 3}
+  - Type: 5
+    Clip: {fileID: 8300000, guid: 53d6fb34d1ca7de4fab62c3ad6bcb720, type: 3}
+  - Type: 6
+    Clip: {fileID: 8300000, guid: e5e1c884b25fd7043a27833eee2b4f26, type: 3}
   particles:
   - type: 0
-    particle: {fileID: 0}
+    particle: {fileID: 1439084418714884, guid: 733d6e6ccf876ae42be8cef5ae70cc4a, type: 2}
+  - type: 1
+    particle: {fileID: 1439084418714884, guid: 733d6e6ccf876ae42be8cef5ae70cc4a, type: 2}
