@@ -12,11 +12,6 @@ public class Testy : PlayerManager {
 
     }
 
-    public override void Dash()
-    {
-
-    }
-
     public override void HardAttack()
     {
         

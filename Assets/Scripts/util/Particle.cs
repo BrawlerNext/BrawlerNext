@@ -21,5 +21,6 @@ public enum ParticleType
     DASH,
     BURN,
     DEATH,
-    RESPAWN
+    RESPAWN,
+    NONE
 }

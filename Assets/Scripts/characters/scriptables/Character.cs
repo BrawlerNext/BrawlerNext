@@ -11,12 +11,17 @@ namespace characters.scriptables
 		public int maxJumps = 2;
 		public float jumpForce = 250;
 
+		public float dashSpeed = 20;
+		public float dashTimeInSeconds = 1.5f;
+		public AnimationCurve dashCurve;
+
 		public float softPunchDamage = 25;
 		public float hardPunchDamage = 25;
 
 		public float shieldRepairDelay = 3;
 		public float shieldLife = 100;
-		public float shieldRepairVelocity = 10;
+		public float shieldDecayVelocity = 10;
+		public float shieldRepairVelocity = 5;
 		public float shieldDamagedReducedPercentage = 0.5f;
 
         public AudioEntry[] clips;

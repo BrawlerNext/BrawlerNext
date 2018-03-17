@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using characters.scriptables;
 using util;
 using UnityEngine;
+using UnityEngine.Experimental.UIElements;
 
 public abstract class PlayerManager : MonoBehaviour
 {
@@ -45,15 +46,16 @@ public abstract class PlayerManager : MonoBehaviour
     protected float impulseDelay = 0;
     protected float impulse = 0;
 
-    protected Actions lastAction = Actions.IDLE;
-    
     protected Vector3 lastMovementNormalized;
+    protected float dashDelay = 999;
+
+    protected Actions lastAction = Actions.IDLE;
 
     protected Dictionary<Actions, bool> Flags = new Dictionary<Actions, bool>();
     protected Dictionary<Actions, bool> ActuallyDoing = new Dictionary<Actions, bool>();
 
     protected Actions[] AllActions = new[]
-        {Actions.JUMP, Actions.HARD_PUNCH, Actions.SOFT_PUNCH, Actions.MOVE, Actions.DEFEND};
+        {Actions.JUMP, Actions.HARD_PUNCH, Actions.SOFT_PUNCH, Actions.MOVE, Actions.DEFEND, Actions.DASHING};
 
     void Awake()
     {
@@ -140,7 +142,6 @@ public abstract class PlayerManager : MonoBehaviour
 
     protected void Update()
     {
-
         // DEBUG
         if (GameDirector.DebugginGame)
         {
@@ -148,7 +149,7 @@ public abstract class PlayerManager : MonoBehaviour
             {
                 Debug.ClearDeveloperConsole();
             }
-        
+
             if (Input.GetKey(KeyCode.Z))
             {
                 if (CompareTag("P1"))
@@ -156,12 +157,12 @@ public abstract class PlayerManager : MonoBehaviour
                     DebugData();
                 }
             }
-            
+
             if (Input.GetKey(KeyCode.X))
             {
                 if (CompareTag("P2"))
                 {
-                    DebugData();   
+                    DebugData();
                 }
             }
         }
@@ -193,15 +194,26 @@ public abstract class PlayerManager : MonoBehaviour
 
         if (!isStunned)
         {
+            dashDelay += Time.deltaTime;
+
+            bool isDashing = dashDelay < character.dashTimeInSeconds;
+
+            if (isDashing)
+            {
+                Dash();
+                return;
+            }
+
             animator.SetInteger("Combo", currentCombo);
             animator.SetBool("InAir", !groundChecker.isGrounded);
 
-            if (Flags[Actions.DEFEND])
+            if (Flags[Actions.DEFEND] || !groundChecker.isGrounded)
             {
                 if (!shieldIsRepairing)
                 {
                     if (currentShieldLife < (character.shieldLife * 0.25))
                     {
+                        audioManager.Play(AudioType.SHIELD_DOWN);
                         shieldIsRepairing = true;
                         StartCoroutine(RepairShield());
                     }
@@ -217,22 +229,43 @@ public abstract class PlayerManager : MonoBehaviour
 
                 if (!shieldIsActive && shieldsUp)
                 {
-                    audioManager.Play(AudioType.DEFEND);
+                    audioManager.Play(AudioType.SHIELD_UP);
                 }
 
                 shield.SetActive(shieldsUp);
 
                 if (shieldsUp)
                 {
-                    currentShieldLife -= Time.deltaTime * character.shieldRepairVelocity;
+                    currentShieldLife -= Time.deltaTime * character.shieldDecayVelocity;
                     Defend();
                     return;
                 }
                 else
                 {
-                    currentShieldLife += Time.deltaTime * (character.shieldRepairVelocity / 2f);
+                    currentShieldLife += Time.deltaTime * character.shieldRepairVelocity;
 
                     currentShieldLife = Math.Min(currentShieldLife, character.shieldLife);
+                }
+            }
+
+            ActuallyDoing[Actions.DASHING] |= controlManager.IsDashing();
+
+            animator.SetBool("IsDashing", ActuallyDoing[Actions.DASHING]);
+            if (Flags[Actions.DASHING])
+            {
+                if (ActuallyDoing[Actions.DASHING])
+                {
+                    lastAction = Actions.DASHING;
+                    ActuallyDoing[Actions.DASHING] = false;
+                    if (lastMovementNormalized != Vector3.zero)
+                    {
+                        dashDelay = 0;
+                        DisableAllFlags();
+                        StartCoroutine(EnableAllFlagsAfterTime(character.dashTimeInSeconds));
+                        audioManager.Play(AudioType.DASH);
+                        Dash();
+                        return;
+                    }
                 }
             }
 
@@ -317,7 +350,7 @@ public abstract class PlayerManager : MonoBehaviour
         ResetCombo();
     }
 
-    protected void Move()
+    private void Move()
     {
         Vector3 movement = Vector3.zero;
 
@@ -344,7 +377,7 @@ public abstract class PlayerManager : MonoBehaviour
     private Vector3 getCameraForwardVector()
     {
         Vector3 middleNormalized = (Camera.main.transform.forward + Vector3.up).normalized;
-        
+
         return (middleNormalized - (Vector3.Dot(middleNormalized, Vector3.up) * Vector3.up)).normalized;
     }
 
@@ -353,11 +386,9 @@ public abstract class PlayerManager : MonoBehaviour
         float impulse = 0;
 
         AudioType audio = AudioType.NONE;
-        GameObject particle = null;
+        ParticleType particleType = ParticleType.NONE;
         Vector3 positionToInstantiate = Vector3.zero;
 
-        print(lastAction);
-        
         foreach (ContactPoint contact in collision.contacts)
         {
             if (contact.thisCollider.tag.Contains("PunchCollider"))
@@ -366,13 +397,13 @@ public abstract class PlayerManager : MonoBehaviour
                 {
                     case Actions.SOFT_PUNCH:
                         impulse = character.softPunchDamage;
-                        particle = particleManager.RetrieveParticle(ParticleType.SOFT_HIT);
+                        particleType = ParticleType.SOFT_HIT;
                         positionToInstantiate = contact.point;
                         audio = AudioType.SOFT_HIT;
                         break;
                     case Actions.HARD_PUNCH:
                         impulse = character.hardPunchDamage;
-                        particle = particleManager.RetrieveParticle(ParticleType.HARD_HIT);
+                        particleType = ParticleType.HARD_HIT;
                         positionToInstantiate = contact.point;
                         audio = AudioType.HARD_HIT;
                         break;
@@ -382,17 +413,11 @@ public abstract class PlayerManager : MonoBehaviour
 
         if (impulse > 0)
         {
-            if (audio != AudioType.NONE)
-            {
-                audioManager.Play(audio);
-            }
-
             otherPlayer.GetComponent<PlayerManager>().AddImpulse(impulse * ImpulseMultiplier);
 
-            if (particle != null)
-            {
-                Instantiate(particle, positionToInstantiate, Quaternion.identity);
-            }
+            audioManager.Play(audio);
+
+            particleManager.InstantiateParticle(particleType, positionToInstantiate);
         }
     }
 
@@ -407,21 +432,37 @@ public abstract class PlayerManager : MonoBehaviour
         else
         {
             currentShieldLife -= impulse * character.shieldDamagedReducedPercentage / ImpulseMultiplier;
+            audioManager.Play(AudioType.SHIELD_HIT);
         }
     }
+
+
+    // Overrideable methods
 
     public abstract void SoftAttack();
     public abstract void HardAttack();
     public abstract void Jump();
     public abstract void Defend();
-    public abstract void Dash();
     public abstract void Burn();
-    
+
+    public void Dash()
+    {
+        rb.velocity = lastMovementNormalized * character.dashSpeed * character.dashCurve.Evaluate(dashDelay);
+    }
+
+    /*********************/
+
     // Animation keyframe methods
-    
+
     public void EnableAllFlags()
     {
         SetFlagsTo(true);
+    }
+
+    private IEnumerator EnableAllFlagsAfterTime(float time)
+    {
+        yield return new WaitForSeconds(time);
+        EnableAllFlags();
     }
 
     public void DisableAllFlags()
@@ -468,5 +509,6 @@ public enum Actions
     HARD_PUNCH,
     MOVE,
     DEFEND,
-    IDLE
+    IDLE,
+    DASHING
 }

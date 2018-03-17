@@ -7,7 +7,6 @@ using UnityEngine;
 [Serializable]
 public class AudioManager
 {
-
     private AudioSource soundSource;
     private Character character;
 
@@ -17,37 +16,43 @@ public class AudioManager
         this.character = character;
     }
 
-	public void Play(AudioType type)
-	{
-		foreach (AudioEntry audioEntry in character.clips)
-		{
-			if (audioEntry.Type == type)
-			{
-				soundSource.PlayOneShot(audioEntry.Clip);
-                return;
-			}
-		}
+    public void Play(AudioType type)
+    {
+        if (type != AudioType.NONE)
+        {
+            foreach (AudioEntry audioEntry in character.clips)
+            {
+                if (audioEntry.Type == type)
+                {
+                    soundSource.PlayOneShot(audioEntry.Clip);
+                    return;
+                }
+            }
 
-        Debug.LogWarning("Audio type: " + type.ToString() + " not found in " + character.ToString() + " clips!");
-	}
+            Debug.LogWarning("Audio type: " + type.ToString() + " not found in " + character.ToString() + " clips!");
+        }
+    }
 }
 
 [Serializable]
 public class AudioEntry
 {
-	public AudioType Type;
-	public AudioClip Clip;
+    public AudioType Type;
+    public AudioClip Clip;
 }
 
 public enum AudioType
 {
     SOFT_HIT,
     HARD_HIT,
-    DEFEND,
+    SHIELD_UP,
     SOFT_PUNCH,
     HARD_PUNCH,
     JUMP,
     DEATH,
     BURN,
-    NONE
+    SHIELD_HIT,
+    SHIELD_DOWN,
+    NONE,
+    DASH
 }

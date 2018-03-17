@@ -11,16 +11,6 @@ public class ControlManager : MonoBehaviour {
     this.player = player;
   }
 
-  private bool GetIaDesition()
-  {
-    if (controller == Controller.IA)
-    {
-      return Random.value >= 0.5f;
-    }
-
-    return false;
-  }
-  
   public bool IsDefending()
   {
     return IsPressingButton("Defend");
@@ -43,7 +33,7 @@ public class ControlManager : MonoBehaviour {
 
   public bool IsDashing()
   {
-      return false;
+      return GetButton("Dash");
   }
 
   public bool IsBurning()
@@ -95,5 +85,15 @@ public class ControlManager : MonoBehaviour {
   private string BuildControlName(string control)
   {
     return player + "" + controller + control;
+  }
+
+  private bool GetIaDesition()
+  {
+    if (controller == Controller.IA)
+    {
+      return Random.value >= 0.5f;
+    }
+
+    return false;
   }
 }
