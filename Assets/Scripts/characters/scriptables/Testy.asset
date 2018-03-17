@@ -14,10 +14,43 @@ MonoBehaviour:
   speed: 10
   maxJumps: 2
   jumpForce: 500
+  dashSpeed: 20
+  dashTimeInSeconds: 0.5
+  dashCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0.009277344
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.031772293
+      value: 0.37909067
+      inSlope: 0.92059374
+      outSlope: 0.92059374
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.12450123
+      value: 0.8588266
+      inSlope: 1.4138429
+      outSlope: 1.4138429
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 1.0092773
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
   softPunchDamage: 25
   hardPunchDamage: 50
   shieldRepairDelay: 3
   shieldLife: 50
+  shieldDecayVelocity: 10
   shieldRepairVelocity: 10
   shieldDamagedReducedPercentage: 0.5
   clips:
@@ -35,6 +68,12 @@ MonoBehaviour:
     Clip: {fileID: 8300000, guid: 53d6fb34d1ca7de4fab62c3ad6bcb720, type: 3}
   - Type: 6
     Clip: {fileID: 8300000, guid: e5e1c884b25fd7043a27833eee2b4f26, type: 3}
+  - Type: 9
+    Clip: {fileID: 8300000, guid: 9e7c350ee5459314aa55c4c84dab25d6, type: 3}
+  - Type: 8
+    Clip: {fileID: 8300000, guid: 16af4a4e40bfad8459abbdd579111e5b, type: 3}
+  - Type: 11
+    Clip: {fileID: 8300000, guid: a019bf2f23f083849bef8f0b197568f6, type: 3}
   particles:
   - type: 0
     particle: {fileID: 1439084418714884, guid: 733d6e6ccf876ae42be8cef5ae70cc4a, type: 2}
