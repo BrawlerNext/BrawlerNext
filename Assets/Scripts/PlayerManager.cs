@@ -257,15 +257,12 @@ public abstract class PlayerManager : MonoBehaviour
                 {
                     lastAction = Actions.DASHING;
                     ActuallyDoing[Actions.DASHING] = false;
-                    if (lastMovementNormalized != Vector3.zero)
-                    {
-                        dashDelay = 0;
-                        DisableAllFlags();
-                        StartCoroutine(EnableAllFlagsAfterTime(character.dashTimeInSeconds));
-                        audioManager.Play(AudioType.DASH);
-                        Dash();
-                        return;
-                    }
+                    dashDelay = 0;
+                    DisableAllFlags();
+                    StartCoroutine(EnableAllFlagsAfterTime(character.dashTimeInSeconds));
+                    audioManager.Play(AudioType.DASH);
+                    Dash();
+                    return;
                 }
             }
 
@@ -447,6 +444,9 @@ public abstract class PlayerManager : MonoBehaviour
 
     public void Dash()
     {
+        if (lastMovementNormalized == Vector3.zero)
+            lastMovementNormalized = transform.forward;
+        
         rb.velocity = lastMovementNormalized * character.dashSpeed * character.dashCurve.Evaluate(dashDelay);
     }
 
