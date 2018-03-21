@@ -388,40 +388,46 @@ public abstract class PlayerManager : MonoBehaviour
 
         if (!collider.tag.Contains(otherPlayer.tag) || positionToInstantiate == Vector3.zero) return;
 
-        float impulse = 0;
-
-        AudioType audio = AudioType.NONE;
-        ParticleType particleType = ParticleType.NONE;
-
         switch (lastAction)
         {
             case Actions.SOFT_PUNCH:
-                impulse = character.softPunchDamage;
-                particleType = ParticleType.SOFT_HIT;
-                audio = AudioType.SOFT_HIT;
-
+                Hit(character.softPunchDamage, positionToInstantiate, ParticleType.SOFT_HIT, AudioType.SOFT_HIT, false);
                 break;
             case Actions.HARD_PUNCH:
-                impulse = character.hardPunchDamage;
-                particleType = ParticleType.HARD_HIT;
-                audio = AudioType.HARD_HIT;
+                float damage = character.hardPunchDamage;
+                
+                if (UnityEngine.Random.value < character.criticChance)
+                {
+                    StartCoroutine(StopTime());
+                    damage *= 2;
+                }
+
+                Hit(damage, positionToInstantiate, ParticleType.HARD_HIT, AudioType.HARD_HIT, true);
                 break;
         }
 
-        if (impulse > 0)
-        {
-            PlayerManager otherPlayerManager = otherPlayer.GetComponent<PlayerManager>();
+    }
 
-            otherPlayerManager.AddImpulse(impulse * ImpulseMultiplier);
+    private IEnumerator StopTime()
+    {
+        Time.timeScale = 0;
+        yield return new WaitForSecondsRealtime(0.5f);
+        Time.timeScale = 1;
+    }
 
-            audioManager.Play(audio);
+    private void Hit(float impulse, Vector3 positionToInstantiate, ParticleType particleType, AudioType audioType, bool inmediateImpulse)
+    {
+        PlayerManager otherPlayerManager = otherPlayer.GetComponent<PlayerManager>();
 
-            particleManager.InstantiateParticle(particleType, positionToInstantiate);
+        otherPlayerManager.AddImpulse(impulse * ImpulseMultiplier);
 
-            if (currentCombo > 3) otherPlayerManager.ApplyImpulse();
+        audioManager.Play(audioType);
 
-            lastAction = Actions.IDLE;
-        }
+        particleManager.InstantiateParticle(particleType, positionToInstantiate);
+
+        if (currentCombo > 3 || inmediateImpulse) otherPlayerManager.ApplyImpulse();
+
+        lastAction = Actions.IDLE;
     }
 
     private Vector3 getCollisionPoint()

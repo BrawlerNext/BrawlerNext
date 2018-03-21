@@ -16,7 +16,9 @@ namespace characters.scriptables
 		public AnimationCurve dashCurve;
 
 		public float softPunchDamage = 25;
-		public float hardPunchDamage = 25;
+
+		public float hardPunchDamage = 150;
+        public float criticChance = 0.3f;
 
 		public float shieldRepairDelay = 3;
 		public float shieldLife = 100;
