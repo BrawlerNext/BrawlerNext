@@ -11,18 +11,17 @@ public abstract class PlayerManager : MonoBehaviour
 {
     // General modifiers
     public float ImpulseMultiplier = 100f;
+    public float delayImpulseOnHit = 0.5f;
 
     // Basic input data
     public Character character;
     public Player player;
     public Controller controller;
 
-
     // Colliders of the player
     protected Collider leftPunchCollider;
     protected Collider rightPunchCollider;
     protected GameObject shield;
-
 
     // Stateless data
     protected Rigidbody rb;
@@ -294,7 +293,7 @@ public abstract class PlayerManager : MonoBehaviour
 
             ActuallyDoing[Actions.SOFT_PUNCH] |= controlManager.IsSoftAttacking();
 
-            animator.SetBool("IsSoftAttacking", ActuallyDoing[Actions.SOFT_PUNCH]);
+            animator.SetBool("IsSoftAttacking", ActuallyDoing[Actions.SOFT_PUNCH] && Flags[Actions.SOFT_PUNCH]);
             if (Flags[Actions.SOFT_PUNCH])
             {
                 if (ActuallyDoing[Actions.SOFT_PUNCH])
@@ -425,6 +424,8 @@ public abstract class PlayerManager : MonoBehaviour
 
         particleManager.InstantiateParticle(particleType, positionToInstantiate);
 
+        print(currentCombo);
+
         if (currentCombo > 3 || inmediateImpulse) otherPlayerManager.ApplyImpulse();
 
         lastAction = Actions.IDLE;
@@ -443,7 +444,7 @@ public abstract class PlayerManager : MonoBehaviour
         if (!shieldsUp)
         {
             DisableAllFlags();
-            impulseDelay = 1;
+            impulseDelay = delayImpulseOnHit;
             this.impulse += impulse;
         }
         else
@@ -509,6 +510,11 @@ public abstract class PlayerManager : MonoBehaviour
     public void toogleFlagOf(Actions action)
     {
         Flags[action] = !Flags[action];
+    }
+
+    public void setCurrentlyActionToFalse(Actions action)
+    {
+        ActuallyDoing[action] = false;
     }
 
     public void toogleLeftPunchCollider()
