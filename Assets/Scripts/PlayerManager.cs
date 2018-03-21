@@ -342,6 +342,10 @@ public abstract class PlayerManager : MonoBehaviour
     {
         rb.AddForce(transform.forward * -1 * impulse, ForceMode.Impulse);
         impulse = 0;
+        animator.SetBool("IsDamaged", false);
+        impulseDelay = 0;
+        isStunned = false;
+        
         EnableAllFlags();
         SetActuallyDoingTo(false);
         ResetCombo();
@@ -378,44 +382,54 @@ public abstract class PlayerManager : MonoBehaviour
         return (middleNormalized - (Vector3.Dot(middleNormalized, Vector3.up) * Vector3.up)).normalized;
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider collider)
     {
+        Vector3 positionToInstantiate = getCollisionPoint();
+
+        if (!collider.tag.Contains(otherPlayer.tag) || positionToInstantiate == Vector3.zero) return;
+
         float impulse = 0;
 
         AudioType audio = AudioType.NONE;
         ParticleType particleType = ParticleType.NONE;
-        Vector3 positionToInstantiate = Vector3.zero;
 
-        foreach (ContactPoint contact in collision.contacts)
+        switch (lastAction)
         {
-            if (contact.thisCollider.tag.Contains("PunchCollider"))
-            {
-                switch (lastAction)
-                {
-                    case Actions.SOFT_PUNCH:
-                        impulse = character.softPunchDamage;
-                        particleType = ParticleType.SOFT_HIT;
-                        positionToInstantiate = contact.point;
-                        audio = AudioType.SOFT_HIT;
-                        break;
-                    case Actions.HARD_PUNCH:
-                        impulse = character.hardPunchDamage;
-                        particleType = ParticleType.HARD_HIT;
-                        positionToInstantiate = contact.point;
-                        audio = AudioType.HARD_HIT;
-                        break;
-                }
-            }
+            case Actions.SOFT_PUNCH:
+                impulse = character.softPunchDamage;
+                particleType = ParticleType.SOFT_HIT;
+                audio = AudioType.SOFT_HIT;
+
+                break;
+            case Actions.HARD_PUNCH:
+                impulse = character.hardPunchDamage;
+                particleType = ParticleType.HARD_HIT;
+                audio = AudioType.HARD_HIT;
+                break;
         }
 
         if (impulse > 0)
         {
-            otherPlayer.GetComponent<PlayerManager>().AddImpulse(impulse * ImpulseMultiplier);
+            PlayerManager otherPlayerManager = otherPlayer.GetComponent<PlayerManager>();
+
+            otherPlayerManager.AddImpulse(impulse * ImpulseMultiplier);
 
             audioManager.Play(audio);
 
             particleManager.InstantiateParticle(particleType, positionToInstantiate);
+
+            if (currentCombo > 3) otherPlayerManager.ApplyImpulse();
+
+            lastAction = Actions.IDLE;
         }
+    }
+
+    private Vector3 getCollisionPoint()
+    {
+        if (leftPunchCollider.enabled) return leftPunchCollider.transform.position;
+        if (rightPunchCollider.enabled) return rightPunchCollider.transform.position;
+
+        return Vector3.zero;
     }
 
     public void AddImpulse(float impulse)
