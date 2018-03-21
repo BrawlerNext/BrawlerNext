@@ -2332,6 +2332,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ImpulseMultiplier: 100
+  delayImpulseOnHit: 0.5
   character: {fileID: 11400000, guid: 5e2046ca4825c484aa7014494fd45422, type: 2}
   player: 1
   controller: 2
@@ -2366,7 +2367,7 @@ CapsuleCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1612318612709778}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.004
   m_Height: 0.003
@@ -2379,7 +2380,7 @@ CapsuleCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1901717082526148}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.004
   m_Height: 0.003

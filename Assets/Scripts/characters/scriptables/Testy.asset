@@ -47,7 +47,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 0
   softPunchDamage: 25
-  hardPunchDamage: 50
+  hardPunchDamage: 150
+  criticChance: 0.3
   shieldRepairDelay: 3
   shieldLife: 50
   shieldDecayVelocity: 10
