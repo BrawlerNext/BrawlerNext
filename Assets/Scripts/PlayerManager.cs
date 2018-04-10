@@ -46,6 +46,7 @@ public abstract class PlayerManager : MonoBehaviour
 
     protected float impulseDelay = 0;
     protected float impulse = 0;
+    protected float damage = 0;
 
     protected Vector3 lastMovementNormalized;
     protected float dashDelay = 999;
@@ -298,7 +299,7 @@ public abstract class PlayerManager : MonoBehaviour
             }
 
             ActuallyDoing[Actions.SOFT_PUNCH] |= controlManager.IsSoftAttacking();
-
+            
             animator.SetBool("IsSoftAttacking", ActuallyDoing[Actions.SOFT_PUNCH] && Flags[Actions.SOFT_PUNCH]);
             if (Flags[Actions.SOFT_PUNCH])
             {
@@ -345,6 +346,7 @@ public abstract class PlayerManager : MonoBehaviour
 
     public void ApplyImpulse()
     {
+        impulse += damage * ImpulseMultiplier;
         rb.AddForce(transform.forward * -1 * impulse, ForceMode.Impulse);
         impulse = 0;
         animator.SetBool("IsDamaged", false);
@@ -382,7 +384,6 @@ public abstract class PlayerManager : MonoBehaviour
         } else {
             movement += rb.velocity;
 
-            float yVelocity = rb.velocity.y;
             Vector3 velocityClamped = Vector3.ClampMagnitude(movement, 15);
 
             rb.velocity = new Vector3(velocityClamped.x, rb.velocity.y, velocityClamped.z);
@@ -442,8 +443,6 @@ public abstract class PlayerManager : MonoBehaviour
 
         particleManager.InstantiateParticle(particleType, positionToInstantiate);
 
-        print(currentCombo);
-
         if (currentCombo > 3 || inmediateImpulse) otherPlayerManager.ApplyImpulse();
 
         lastAction = Actions.IDLE;
@@ -464,6 +463,7 @@ public abstract class PlayerManager : MonoBehaviour
             DisableAllFlags();
             impulseDelay = delayImpulseOnHit;
             this.impulse += impulse;
+            this.damage += (impulse / ImpulseMultiplier) * 0.1f;
         }
         else
         {
@@ -477,12 +477,17 @@ public abstract class PlayerManager : MonoBehaviour
         return transform.position.y < -10;
     }
 
-    public void ResetPosition()
+    public float GetDamage() {
+        return damage;
+    }
+
+    public void Reset()
     {
+        damage = 0;
+        impulse = 0;
         rb.velocity = Vector3.zero;
         transform.position = GameObject.FindGameObjectWithTag("Respawn" +  player).transform.position;
     }
-
 
     // Overrideable methods
 

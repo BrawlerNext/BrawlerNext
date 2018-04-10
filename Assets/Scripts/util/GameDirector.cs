@@ -26,8 +26,8 @@ public class GameDirector : MonoBehaviour
 
 	private void ResetPositions()
 	{
-		player1.ResetPosition();
-		player2.ResetPosition();
+		player1.Reset();
+		player2.Reset();
 
 		if (Debugging)
 		{

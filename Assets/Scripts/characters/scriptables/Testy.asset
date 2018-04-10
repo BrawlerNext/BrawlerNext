@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 10
   maxJumps: 2
-  jumpForce: 500
+  jumpForce: 150
   dashSpeed: 20
   dashTimeInSeconds: 0.5
   dashCurve:
