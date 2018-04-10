@@ -277,6 +277,10 @@ public abstract class PlayerManager : MonoBehaviour
                         currentJumps++;
                         audioManager.Play(AudioType.JUMP);
                         animator.SetBool("IsJumping", true);
+
+                        rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+                        rb.AddForce(Vector3.up * character.jumpForce * 10, ForceMode.Impulse);
+
                         Jump();
                     }
 
@@ -359,8 +363,10 @@ public abstract class PlayerManager : MonoBehaviour
 
         if (Math.Abs(horizontalMovement) != 0f || Math.Abs(verticalMovement) != 0f)
         {
-            movement += Camera.main.transform.right * controlManager.GetHorizontalMovement();
-            movement += getCameraForwardVector() * controlManager.GetVerticalMovement();
+            Vector3 horizontalVector = Camera.main.transform.right * controlManager.GetHorizontalMovement();
+            Vector3 verticalVector = getCameraForwardVector() * controlManager.GetVerticalMovement();  
+            movement += groundChecker.isGrounded ? horizontalVector : horizontalVector / 2;
+            movement += groundChecker.isGrounded ? verticalVector : verticalVector / 2;
         }
 
         animator.SetBool("IsRunning", (Math.Abs(movement.x) > 0.5f || Math.Abs(movement.z) > 0.5f));
@@ -369,9 +375,19 @@ public abstract class PlayerManager : MonoBehaviour
 
         movement *= character.speed;
 
-        rb.velocity += movement;
+        if (movement == Vector3.zero) {
+            rb.velocity = new Vector3(0, rb.velocity.y, 0);
+        } else {
+            movement += rb.velocity;
 
-        rb.velocity = Vector3.ClampMagnitude(rb.velocity, 15);
+            float yVelocity = rb.velocity.y;
+            Vector3 velocityClamped = Vector3.ClampMagnitude(movement, 15);
+
+            rb.velocity = new Vector3(velocityClamped.x, rb.velocity.y, velocityClamped.z);
+        }
+
+        // Fix down force
+        rb.AddForce(0, Physics.gravity.y, 0);
     }
 
     private Vector3 getCameraForwardVector()
