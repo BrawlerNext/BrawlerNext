@@ -20,6 +20,7 @@ public abstract class PlayerManager : MonoBehaviour
 
     // Colliders of the player
     protected Collider leftPunchCollider;
+
     protected Collider rightPunchCollider;
     protected GameObject shield;
 
@@ -29,6 +30,7 @@ public abstract class PlayerManager : MonoBehaviour
     protected ControlManager controlManager;
     protected ParticleManager particleManager;
     protected AudioManager audioManager;
+
     protected Animator animator;
 
     protected Transform otherPlayer;
@@ -468,6 +470,17 @@ public abstract class PlayerManager : MonoBehaviour
             currentShieldLife -= impulse * character.shieldDamagedReducedPercentage / ImpulseMultiplier;
             audioManager.Play(AudioType.SHIELD_HIT);
         }
+    }
+
+    public bool isDead()
+    {
+        return transform.position.y < -10;
+    }
+
+    public void ResetPosition()
+    {
+        rb.velocity = Vector3.zero;
+        transform.position = GameObject.FindGameObjectWithTag("Respawn" +  player).transform.position;
     }
 
 
