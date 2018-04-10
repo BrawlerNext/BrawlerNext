@@ -2,12 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using util;
 
 public class GameDirector : MonoBehaviour
 {
 
 	private PlayerManager player1;
+	private int player1Deaths = 0;
 	private PlayerManager player2;
+	private int player2Deaths = 0;
 
 	public static bool DebugginGame = false;
 	
@@ -22,6 +25,10 @@ public class GameDirector : MonoBehaviour
 
 		ResetPositions();
 		
+	}
+
+	public int GetDeathsOf(Player player) {
+		return player == player1.player ? player1Deaths : player2Deaths;
 	}
 
 	private void ResetPositions()
@@ -40,6 +47,7 @@ public class GameDirector : MonoBehaviour
 		if (player1.isDead())
 		{
 			Debug.Log("Player 1 dies.");
+			player1Deaths++;
 			ResetPositions();
 			player1.GetComponent<PlayerManager>().PlaySoundOf(AudioType.DEATH);
 		}
@@ -47,6 +55,7 @@ public class GameDirector : MonoBehaviour
 		if (player2.isDead())
 		{
 			Debug.Log("Player 2 dies.");
+			player2Deaths++;
 			ResetPositions();
 			player2.GetComponent<PlayerManager>().PlaySoundOf(AudioType.DEATH);
 		}
