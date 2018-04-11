@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 10
   maxJumps: 2
-  jumpForce: 500
+  jumpForce: 150
   dashSpeed: 20
   dashTimeInSeconds: 0.5
   dashCurve:
@@ -79,4 +79,6 @@ MonoBehaviour:
   - type: 0
     particle: {fileID: 1439084418714884, guid: 733d6e6ccf876ae42be8cef5ae70cc4a, type: 2}
   - type: 1
+    particle: {fileID: 1439084418714884, guid: 733d6e6ccf876ae42be8cef5ae70cc4a, type: 2}
+  - type: 4
     particle: {fileID: 1439084418714884, guid: 733d6e6ccf876ae42be8cef5ae70cc4a, type: 2}

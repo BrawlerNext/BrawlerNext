@@ -1,0 +1,693 @@
+fileFormatVersion: 2
+guid: 179e1318967c1bd44a2944ab1882f52c
+timeCreated: 1523464725
+licenseType: Free
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: Bones
+    100002: Bones1
+    100004: CHAQUETA6
+    100006: Character
+    100008: Character1_Head
+    100010: Character1_Hips
+    100012: Character1_LeftArm
+    100014: Character1_LeftArm 1
+    100016: Character1_LeftFoot
+    100018: Character1_LeftForeArm
+    100020: Character1_LeftForeArm 1
+    100022: Character1_LeftHand
+    100024: Character1_LeftHand 1
+    100026: Character1_LeftHandIndex1
+    100028: Character1_LeftHandIndex1 1
+    100030: Character1_LeftHandIndex2
+    100032: Character1_LeftHandIndex2 1
+    100034: Character1_LeftHandIndex3
+    100036: Character1_LeftHandIndex3 1
+    100038: Character1_LeftHandIndex4
+    100040: Character1_LeftHandIndex4 1
+    100042: Character1_LeftHandMiddle1
+    100044: Character1_LeftHandMiddle1 1
+    100046: Character1_LeftHandMiddle2
+    100048: Character1_LeftHandMiddle2 1
+    100050: Character1_LeftHandMiddle3
+    100052: Character1_LeftHandMiddle3 1
+    100054: Character1_LeftHandMiddle4
+    100056: Character1_LeftHandMiddle4 1
+    100058: Character1_LeftHandPinky1
+    100060: Character1_LeftHandPinky1 1
+    100062: Character1_LeftHandPinky2
+    100064: Character1_LeftHandPinky2 1
+    100066: Character1_LeftHandPinky3
+    100068: Character1_LeftHandPinky3 1
+    100070: Character1_LeftHandPinky4
+    100072: Character1_LeftHandPinky4 1
+    100074: Character1_LeftHandRing1
+    100076: Character1_LeftHandRing1 1
+    100078: Character1_LeftHandRing2
+    100080: Character1_LeftHandRing2 1
+    100082: Character1_LeftHandRing3
+    100084: Character1_LeftHandRing3 1
+    100086: Character1_LeftHandRing4
+    100088: Character1_LeftHandRing4 1
+    100090: Character1_LeftHandThumb1
+    100092: Character1_LeftHandThumb1 1
+    100094: Character1_LeftHandThumb2
+    100096: Character1_LeftHandThumb2 1
+    100098: Character1_LeftHandThumb3
+    100100: Character1_LeftHandThumb3 1
+    100102: Character1_LeftHandThumb4
+    100104: Character1_LeftHandThumb4 1
+    100106: Character1_LeftLeg
+    100108: Character1_LeftShoulder
+    100110: Character1_LeftShoulder 1
+    100112: Character1_LeftToeBase
+    100114: Character1_LeftToeBase 1
+    100116: Character1_LeftUpLeg
+    100118: Character1_Neck
+    100120: Character1_RightFoot
+    100122: Character1_RightLeg
+    100124: Character1_RightUpLeg
+    100126: Character1_Spine
+    100128: Character1_Spine1
+    100130: Character1_Spine2
+    100132: Ctlr_cuello
+    100134: Ctrl_Clavicula_Left
+    100136: Ctrl_Clavicula_Right
+    100138: Ctrl_Hips
+    100140: Ctrl_IK_Left_Arm
+    100142: Ctrl_IK_Right_Arm1
+    100144: Ctrl_Left_Hand
+    100146: Ctrl_Right_Hand
+    100148: Ctrl_Spine1
+    100150: Ctrl_Spine2
+    100152: Ctrl_Spine3
+    100154: Ctrl_Toe_Left
+    100156: Ctrl_toe_Right
+    100158: Ctrls
+    100160: Ctrls1
+    100162: //RootNode
+    100164: group1
+    100166: ik_Left_Arm
+    100168: ik_Left_Arm 1
+    100170: ik_Left_Feet
+    100172: ik_Left_Feet 1
+    100174: Left_Feet_ctrl_ik
+    100176: Left_Feet_ctrl_ik1
+    100178: Left_Leg_ctlr
+    100180: pCube10
+    100182: pCube11
+    100184: pCube12
+    100186: pCube13
+    100188: pCube14
+    100190: pCube15
+    100192: pCube16
+    100194: pCube17
+    100196: pCube18
+    100198: pCube19
+    100200: pCube20
+    100202: pCube21
+    100204: pCube22
+    100206: pCube23
+    100208: pCube24
+    100210: pCube25
+    100212: pCube26
+    100214: pCube27
+    100216: pCube28
+    100218: pCube29
+    100220: pCube30
+    100222: pCube31
+    100224: pCube32
+    100226: pCube33
+    100228: pCube34
+    100230: pCube35
+    100232: pCube36
+    100234: pCube37
+    100236: pCube38
+    100238: pCube39
+    100240: pCube40
+    100242: pCube41
+    100244: pCube42
+    100246: pCube43
+    100248: pCube44
+    100250: pCube45
+    100252: pCube46
+    100254: pCube47
+    100256: pCube48
+    100258: pCube49
+    100260: pCube5
+    100262: pCube50
+    100264: pCube51
+    100266: pCube52
+    100268: pCube53
+    100270: pCube54
+    100272: pCube55
+    100274: pCube56
+    100276: pCube57
+    100278: pCube58
+    100280: pCube59
+    100282: pCube6
+    100284: pCube60
+    100286: pCube61
+    100288: pCube62
+    100290: pCube63
+    100292: pCube64
+    100294: pCube65
+    100296: pCube66
+    100298: pCube67
+    100300: pCube68
+    100302: pCube69
+    100304: pCube7
+    100306: pCube70
+    100308: pCube71
+    100310: pCube72
+    100312: pCube73
+    100314: pCube74
+    100316: pCube75
+    100318: pCube76
+    100320: pCube77
+    100322: pCube78
+    100324: pCube8
+    100326: pCube9
+    100328: Pelo
+    100330: Personaje_con_uvs_chachi_pistachi
+    100332: Polevector_Left_Arm
+    100334: Polevector_Left_Arm1
+    100336: Polevector_Left_Leg
+    100338: Polevector_Left_Leg1
+    100340: Right_Leg_ctlr1
+    100342: transform1
+    100344: transform2
+    100346: transform3
+    100348: transform4
+    400000: Bones
+    400002: Bones1
+    400004: CHAQUETA6
+    400006: Character
+    400008: Character1_Head
+    400010: Character1_Hips
+    400012: Character1_LeftArm
+    400014: Character1_LeftArm 1
+    400016: Character1_LeftFoot
+    400018: Character1_LeftForeArm
+    400020: Character1_LeftForeArm 1
+    400022: Character1_LeftHand
+    400024: Character1_LeftHand 1
+    400026: Character1_LeftHandIndex1
+    400028: Character1_LeftHandIndex1 1
+    400030: Character1_LeftHandIndex2
+    400032: Character1_LeftHandIndex2 1
+    400034: Character1_LeftHandIndex3
+    400036: Character1_LeftHandIndex3 1
+    400038: Character1_LeftHandIndex4
+    400040: Character1_LeftHandIndex4 1
+    400042: Character1_LeftHandMiddle1
+    400044: Character1_LeftHandMiddle1 1
+    400046: Character1_LeftHandMiddle2
+    400048: Character1_LeftHandMiddle2 1
+    400050: Character1_LeftHandMiddle3
+    400052: Character1_LeftHandMiddle3 1
+    400054: Character1_LeftHandMiddle4
+    400056: Character1_LeftHandMiddle4 1
+    400058: Character1_LeftHandPinky1
+    400060: Character1_LeftHandPinky1 1
+    400062: Character1_LeftHandPinky2
+    400064: Character1_LeftHandPinky2 1
+    400066: Character1_LeftHandPinky3
+    400068: Character1_LeftHandPinky3 1
+    400070: Character1_LeftHandPinky4
+    400072: Character1_LeftHandPinky4 1
+    400074: Character1_LeftHandRing1
+    400076: Character1_LeftHandRing1 1
+    400078: Character1_LeftHandRing2
+    400080: Character1_LeftHandRing2 1
+    400082: Character1_LeftHandRing3
+    400084: Character1_LeftHandRing3 1
+    400086: Character1_LeftHandRing4
+    400088: Character1_LeftHandRing4 1
+    400090: Character1_LeftHandThumb1
+    400092: Character1_LeftHandThumb1 1
+    400094: Character1_LeftHandThumb2
+    400096: Character1_LeftHandThumb2 1
+    400098: Character1_LeftHandThumb3
+    400100: Character1_LeftHandThumb3 1
+    400102: Character1_LeftHandThumb4
+    400104: Character1_LeftHandThumb4 1
+    400106: Character1_LeftLeg
+    400108: Character1_LeftShoulder
+    400110: Character1_LeftShoulder 1
+    400112: Character1_LeftToeBase
+    400114: Character1_LeftToeBase 1
+    400116: Character1_LeftUpLeg
+    400118: Character1_Neck
+    400120: Character1_RightFoot
+    400122: Character1_RightLeg
+    400124: Character1_RightUpLeg
+    400126: Character1_Spine
+    400128: Character1_Spine1
+    400130: Character1_Spine2
+    400132: Ctlr_cuello
+    400134: Ctrl_Clavicula_Left
+    400136: Ctrl_Clavicula_Right
+    400138: Ctrl_Hips
+    400140: Ctrl_IK_Left_Arm
+    400142: Ctrl_IK_Right_Arm1
+    400144: Ctrl_Left_Hand
+    400146: Ctrl_Right_Hand
+    400148: Ctrl_Spine1
+    400150: Ctrl_Spine2
+    400152: Ctrl_Spine3
+    400154: Ctrl_Toe_Left
+    400156: Ctrl_toe_Right
+    400158: Ctrls
+    400160: Ctrls1
+    400162: //RootNode
+    400164: group1
+    400166: ik_Left_Arm
+    400168: ik_Left_Arm 1
+    400170: ik_Left_Feet
+    400172: ik_Left_Feet 1
+    400174: Left_Feet_ctrl_ik
+    400176: Left_Feet_ctrl_ik1
+    400178: Left_Leg_ctlr
+    400180: pCube10
+    400182: pCube11
+    400184: pCube12
+    400186: pCube13
+    400188: pCube14
+    400190: pCube15
+    400192: pCube16
+    400194: pCube17
+    400196: pCube18
+    400198: pCube19
+    400200: pCube20
+    400202: pCube21
+    400204: pCube22
+    400206: pCube23
+    400208: pCube24
+    400210: pCube25
+    400212: pCube26
+    400214: pCube27
+    400216: pCube28
+    400218: pCube29
+    400220: pCube30
+    400222: pCube31
+    400224: pCube32
+    400226: pCube33
+    400228: pCube34
+    400230: pCube35
+    400232: pCube36
+    400234: pCube37
+    400236: pCube38
+    400238: pCube39
+    400240: pCube40
+    400242: pCube41
+    400244: pCube42
+    400246: pCube43
+    400248: pCube44
+    400250: pCube45
+    400252: pCube46
+    400254: pCube47
+    400256: pCube48
+    400258: pCube49
+    400260: pCube5
+    400262: pCube50
+    400264: pCube51
+    400266: pCube52
+    400268: pCube53
+    400270: pCube54
+    400272: pCube55
+    400274: pCube56
+    400276: pCube57
+    400278: pCube58
+    400280: pCube59
+    400282: pCube6
+    400284: pCube60
+    400286: pCube61
+    400288: pCube62
+    400290: pCube63
+    400292: pCube64
+    400294: pCube65
+    400296: pCube66
+    400298: pCube67
+    400300: pCube68
+    400302: pCube69
+    400304: pCube7
+    400306: pCube70
+    400308: pCube71
+    400310: pCube72
+    400312: pCube73
+    400314: pCube74
+    400316: pCube75
+    400318: pCube76
+    400320: pCube77
+    400322: pCube78
+    400324: pCube8
+    400326: pCube9
+    400328: Pelo
+    400330: Personaje_con_uvs_chachi_pistachi
+    400332: Polevector_Left_Arm
+    400334: Polevector_Left_Arm1
+    400336: Polevector_Left_Leg
+    400338: Polevector_Left_Leg1
+    400340: Right_Leg_ctlr1
+    400342: transform1
+    400344: transform2
+    400346: transform3
+    400348: transform4
+    2100000: initialShadingGroup2
+    2100002: lambert2
+    2300000: pCube10
+    2300002: pCube11
+    2300004: pCube12
+    2300006: pCube13
+    2300008: pCube14
+    2300010: pCube15
+    2300012: pCube16
+    2300014: pCube17
+    2300016: pCube18
+    2300018: pCube19
+    2300020: pCube20
+    2300022: pCube21
+    2300024: pCube22
+    2300026: pCube23
+    2300028: pCube24
+    2300030: pCube25
+    2300032: pCube26
+    2300034: pCube27
+    2300036: pCube28
+    2300038: pCube29
+    2300040: pCube30
+    2300042: pCube31
+    2300044: pCube32
+    2300046: pCube33
+    2300048: pCube34
+    2300050: pCube35
+    2300052: pCube36
+    2300054: pCube37
+    2300056: pCube38
+    2300058: pCube39
+    2300060: pCube40
+    2300062: pCube41
+    2300064: pCube42
+    2300066: pCube43
+    2300068: pCube44
+    2300070: pCube45
+    2300072: pCube46
+    2300074: pCube47
+    2300076: pCube48
+    2300078: pCube49
+    2300080: pCube5
+    2300082: pCube50
+    2300084: pCube51
+    2300086: pCube52
+    2300088: pCube53
+    2300090: pCube54
+    2300092: pCube55
+    2300094: pCube56
+    2300096: pCube57
+    2300098: pCube58
+    2300100: pCube59
+    2300102: pCube6
+    2300104: pCube60
+    2300106: pCube61
+    2300108: pCube62
+    2300110: pCube63
+    2300112: pCube64
+    2300114: pCube65
+    2300116: pCube66
+    2300118: pCube67
+    2300120: pCube68
+    2300122: pCube69
+    2300124: pCube7
+    2300126: pCube70
+    2300128: pCube71
+    2300130: pCube72
+    2300132: pCube73
+    2300134: pCube74
+    2300136: pCube75
+    2300138: pCube76
+    2300140: pCube77
+    2300142: pCube78
+    2300144: pCube8
+    2300146: pCube9
+    3300000: pCube10
+    3300002: pCube11
+    3300004: pCube12
+    3300006: pCube13
+    3300008: pCube14
+    3300010: pCube15
+    3300012: pCube16
+    3300014: pCube17
+    3300016: pCube18
+    3300018: pCube19
+    3300020: pCube20
+    3300022: pCube21
+    3300024: pCube22
+    3300026: pCube23
+    3300028: pCube24
+    3300030: pCube25
+    3300032: pCube26
+    3300034: pCube27
+    3300036: pCube28
+    3300038: pCube29
+    3300040: pCube30
+    3300042: pCube31
+    3300044: pCube32
+    3300046: pCube33
+    3300048: pCube34
+    3300050: pCube35
+    3300052: pCube36
+    3300054: pCube37
+    3300056: pCube38
+    3300058: pCube39
+    3300060: pCube40
+    3300062: pCube41
+    3300064: pCube42
+    3300066: pCube43
+    3300068: pCube44
+    3300070: pCube45
+    3300072: pCube46
+    3300074: pCube47
+    3300076: pCube48
+    3300078: pCube49
+    3300080: pCube5
+    3300082: pCube50
+    3300084: pCube51
+    3300086: pCube52
+    3300088: pCube53
+    3300090: pCube54
+    3300092: pCube55
+    3300094: pCube56
+    3300096: pCube57
+    3300098: pCube58
+    3300100: pCube59
+    3300102: pCube6
+    3300104: pCube60
+    3300106: pCube61
+    3300108: pCube62
+    3300110: pCube63
+    3300112: pCube64
+    3300114: pCube65
+    3300116: pCube66
+    3300118: pCube67
+    3300120: pCube68
+    3300122: pCube69
+    3300124: pCube7
+    3300126: pCube70
+    3300128: pCube71
+    3300130: pCube72
+    3300132: pCube73
+    3300134: pCube74
+    3300136: pCube75
+    3300138: pCube76
+    3300140: pCube77
+    3300142: pCube78
+    3300144: pCube8
+    3300146: pCube9
+    4300000: CHAQUETA6
+    4300002: pCube60
+    4300004: pCube32
+    4300006: pCube70
+    4300008: pCube67
+    4300010: pCube61
+    4300012: pCube42
+    4300014: pCube36
+    4300016: pCube17
+    4300018: pCube16
+    4300020: pCube54
+    4300022: pCube53
+    4300024: pCube15
+    4300026: pCube62
+    4300028: pCube46
+    4300030: pCube12
+    4300032: pCube69
+    4300034: pCube28
+    4300036: pCube14
+    4300038: pCube13
+    4300040: pCube68
+    4300042: pCube64
+    4300044: pCube63
+    4300046: pCube7
+    4300048: pCube29
+    4300050: pCube26
+    4300052: pCube31
+    4300054: pCube5
+    4300056: pCube38
+    4300058: pCube49
+    4300060: pCube48
+    4300062: pCube55
+    4300064: pCube59
+    4300066: pCube58
+    4300068: pCube57
+    4300070: pCube56
+    4300072: pCube66
+    4300074: pCube19
+    4300076: pCube18
+    4300078: pCube24
+    4300080: pCube23
+    4300082: pCube11
+    4300084: pCube44
+    4300086: pCube43
+    4300088: pCube33
+    4300090: pCube25
+    4300092: pCube20
+    4300094: pCube34
+    4300096: pCube40
+    4300098: pCube10
+    4300100: pCube6
+    4300102: pCube30
+    4300104: pCube41
+    4300106: pCube51
+    4300108: pCube50
+    4300110: pCube45
+    4300112: pCube37
+    4300114: pCube21
+    4300116: pCube52
+    4300118: pCube27
+    4300120: pCube39
+    4300122: pCube47
+    4300124: pCube71
+    4300126: pCube22
+    4300128: pCube8
+    4300130: pCube9
+    4300132: pCube65
+    4300134: pCube35
+    4300136: pCube72
+    4300138: pCube73
+    4300140: pCube74
+    4300142: pCube75
+    4300144: pCube76
+    4300146: pCube77
+    4300148: pCube78
+    7400000: Dasho
+    9500000: //RootNode
+    13700000: CHAQUETA6
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Dasho
+      takeName: Take 001
+      firstFrame: 1
+      lastFrame: 14
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

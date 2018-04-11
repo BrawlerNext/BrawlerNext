@@ -2,12 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using util;
 
 public class GameDirector : MonoBehaviour
 {
 
-	private Transform player1;
-	private Transform player2;
+	private PlayerManager player1;
+	private int player1Deaths = 0;
+	private PlayerManager player2;
+	private int player2Deaths = 0;
 
 	public static bool DebugginGame = false;
 	
@@ -17,38 +20,44 @@ public class GameDirector : MonoBehaviour
 	{
 		GameDirector.DebugginGame = Debugging;
 		
-		player1 = GameObject.FindGameObjectWithTag("P1").transform;
-		player2 = GameObject.FindGameObjectWithTag("P2").transform;
+		player1 = GameObject.FindGameObjectWithTag("P1").GetComponent<PlayerManager>();
+		player2 = GameObject.FindGameObjectWithTag("P2").GetComponent<PlayerManager>();
 
 		ResetPositions();
 		
 	}
 
+	public int GetDeathsOf(Player player) {
+		return player == player1.player ? player1Deaths : player2Deaths;
+	}
+
 	private void ResetPositions()
 	{
-		player1.position = GameObject.FindGameObjectWithTag("RespawnP1").transform.position;
-		player2.position = GameObject.FindGameObjectWithTag("RespawnP2").transform.position;
+		player1.Reset();
+		player2.Reset();
 
-		if (Debugging)
+		/*if (Debugging)
 		{
-			player1.position = player2.position + player2.forward * 3f;
-		}
+			player1.transform.position = player2.transform.position + player2.transform.forward * 3f;
+		}*/
 	}
 
 	private void Update()
 	{
-		if (player1.position.y < -10)
+		if (player1.isDead())
 		{
 			Debug.Log("Player 1 dies.");
+			player1Deaths++;
 			ResetPositions();
 			player1.GetComponent<PlayerManager>().PlaySoundOf(AudioType.DEATH);
 		}
 		
-		if (player2.position.y < -10)
+		if (player2.isDead())
 		{
 			Debug.Log("Player 2 dies.");
+			player2Deaths++;
 			ResetPositions();
-            player2.GetComponent<PlayerManager>().PlaySoundOf(AudioType.DEATH);
+			player2.GetComponent<PlayerManager>().PlaySoundOf(AudioType.DEATH);
 		}
 	}
 }

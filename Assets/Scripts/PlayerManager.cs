@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using System.Collections.Concurrent;
+//using System.Collections.Concurrent;
 using System.Collections.Generic;
 using characters.scriptables;
 using util;
@@ -20,6 +20,7 @@ public abstract class PlayerManager : MonoBehaviour
 
     // Colliders of the player
     protected Collider leftPunchCollider;
+
     protected Collider rightPunchCollider;
     protected GameObject shield;
 
@@ -29,6 +30,7 @@ public abstract class PlayerManager : MonoBehaviour
     protected ControlManager controlManager;
     protected ParticleManager particleManager;
     protected AudioManager audioManager;
+
     protected Animator animator;
 
     protected Transform otherPlayer;
@@ -44,6 +46,7 @@ public abstract class PlayerManager : MonoBehaviour
 
     protected float impulseDelay = 0;
     protected float impulse = 0;
+    protected float damage = 0;
 
     protected Vector3 lastMovementNormalized;
     protected float dashDelay = 999;
@@ -277,6 +280,10 @@ public abstract class PlayerManager : MonoBehaviour
                         currentJumps++;
                         audioManager.Play(AudioType.JUMP);
                         animator.SetBool("IsJumping", true);
+
+                        rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+                        rb.AddForce(Vector3.up * character.jumpForce * 10, ForceMode.Impulse);
+
                         Jump();
                     }
 
@@ -292,7 +299,7 @@ public abstract class PlayerManager : MonoBehaviour
             }
 
             ActuallyDoing[Actions.SOFT_PUNCH] |= controlManager.IsSoftAttacking();
-
+            
             animator.SetBool("IsSoftAttacking", ActuallyDoing[Actions.SOFT_PUNCH] && Flags[Actions.SOFT_PUNCH]);
             if (Flags[Actions.SOFT_PUNCH])
             {
@@ -339,6 +346,7 @@ public abstract class PlayerManager : MonoBehaviour
 
     public void ApplyImpulse()
     {
+        impulse += damage * ImpulseMultiplier;
         rb.AddForce(transform.forward * -1 * impulse, ForceMode.Impulse);
         impulse = 0;
         animator.SetBool("IsDamaged", false);
@@ -359,8 +367,10 @@ public abstract class PlayerManager : MonoBehaviour
 
         if (Math.Abs(horizontalMovement) != 0f || Math.Abs(verticalMovement) != 0f)
         {
-            movement += Camera.main.transform.right * controlManager.GetHorizontalMovement();
-            movement += getCameraForwardVector() * controlManager.GetVerticalMovement();
+            Vector3 horizontalVector = Camera.main.transform.right * controlManager.GetHorizontalMovement();
+            Vector3 verticalVector = getCameraForwardVector() * controlManager.GetVerticalMovement();  
+            movement += groundChecker.isGrounded ? horizontalVector : horizontalVector / 2;
+            movement += groundChecker.isGrounded ? verticalVector : verticalVector / 2;
         }
 
         animator.SetBool("IsRunning", (Math.Abs(movement.x) > 0.5f || Math.Abs(movement.z) > 0.5f));
@@ -369,9 +379,18 @@ public abstract class PlayerManager : MonoBehaviour
 
         movement *= character.speed;
 
-        rb.velocity += movement;
+        if (movement == Vector3.zero) {
+            rb.velocity = new Vector3(0, rb.velocity.y, 0);
+        } else {
+            movement += rb.velocity;
 
-        rb.velocity = Vector3.ClampMagnitude(rb.velocity, 15);
+            Vector3 velocityClamped = Vector3.ClampMagnitude(movement, 15);
+
+            rb.velocity = new Vector3(velocityClamped.x, rb.velocity.y, velocityClamped.z);
+        }
+
+        // Fix down force
+        rb.AddForce(0, Physics.gravity.y, 0);
     }
 
     private Vector3 getCameraForwardVector()
@@ -424,8 +443,6 @@ public abstract class PlayerManager : MonoBehaviour
 
         particleManager.InstantiateParticle(particleType, positionToInstantiate);
 
-        print(currentCombo);
-
         if (currentCombo > 3 || inmediateImpulse) otherPlayerManager.ApplyImpulse();
 
         lastAction = Actions.IDLE;
@@ -446,6 +463,7 @@ public abstract class PlayerManager : MonoBehaviour
             DisableAllFlags();
             impulseDelay = delayImpulseOnHit;
             this.impulse += impulse;
+            this.damage += (impulse / ImpulseMultiplier) * 0.1f;
         }
         else
         {
@@ -454,6 +472,22 @@ public abstract class PlayerManager : MonoBehaviour
         }
     }
 
+    public bool isDead()
+    {
+        return transform.position.y < -10;
+    }
+
+    public float GetDamage() {
+        return damage;
+    }
+
+    public void Reset()
+    {
+        damage = 0;
+        impulse = 0;
+        rb.velocity = Vector3.zero;
+        transform.position = GameObject.FindGameObjectWithTag("Respawn" +  player).transform.position;
+    }
 
     // Overrideable methods
 
