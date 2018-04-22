@@ -77,8 +77,8 @@ MonoBehaviour:
     Clip: {fileID: 8300000, guid: a019bf2f23f083849bef8f0b197568f6, type: 3}
   particles:
   - type: 0
-    particle: {fileID: 1439084418714884, guid: 733d6e6ccf876ae42be8cef5ae70cc4a, type: 2}
+    particle: {fileID: 1269844802833584, guid: 590254102e7e83245be4982e295fad38, type: 2}
   - type: 1
-    particle: {fileID: 1439084418714884, guid: 733d6e6ccf876ae42be8cef5ae70cc4a, type: 2}
+    particle: {fileID: 1269844802833584, guid: 590254102e7e83245be4982e295fad38, type: 2}
   - type: 4
     particle: {fileID: 1439084418714884, guid: 733d6e6ccf876ae42be8cef5ae70cc4a, type: 2}

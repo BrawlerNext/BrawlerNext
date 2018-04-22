@@ -16,12 +16,12 @@ public class GameDirector : MonoBehaviour
 	
 	public bool Debugging = false;
 
-	private void Awake()
+	private void Start()
 	{
 		GameDirector.DebugginGame = Debugging;
 		
-		player1 = GameObject.FindGameObjectWithTag("P1").GetComponent<PlayerManager>();
-		player2 = GameObject.FindGameObjectWithTag("P2").GetComponent<PlayerManager>();
+		player1 = GameObject.Find("P1").GetComponent<PlayerManager>();
+		player2 = GameObject.Find("P2").GetComponent<PlayerManager>();
 
 		ResetPositions();
 		

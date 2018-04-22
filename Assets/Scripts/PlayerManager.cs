@@ -17,12 +17,20 @@ public abstract class PlayerManager : MonoBehaviour
     public Character character;
     public Player player;
     public Controller controller;
+    public PlayerManager playerManager;
 
     // Colliders of the player
+    public bool isIgnoringForward = false;
     protected Collider leftPunchCollider;
 
     protected Collider rightPunchCollider;
     protected GameObject shield;
+
+
+    //retjrejtopertjeroptjoetorep
+    public GameObject stunEffect;
+    public GameObject pushedEFFECT;
+
 
     // Stateless data
     protected Rigidbody rb;
@@ -37,6 +45,7 @@ public abstract class PlayerManager : MonoBehaviour
 
     // Runtime data
     protected bool isStunned = false;
+    protected bool isPushed = false;
     protected int currentCombo = 1;
     protected int currentJumps = 0;
 
@@ -69,7 +78,11 @@ public abstract class PlayerManager : MonoBehaviour
         animator = gameObject.GetComponentInChildren<Animator>();
 
         controlManager = gameObject.GetComponent<ControlManager>();
-        controlManager.Init(controller, player);
+
+        playerManager = gameObject.GetComponent<PlayerManager>();
+
+        controlManager.Init(controller, player, playerManager);
+        //rb.isKinematic = true;
 
         currentShieldLife = character.shieldLife;
 
@@ -121,29 +134,36 @@ public abstract class PlayerManager : MonoBehaviour
         switch (player)
         {
             case Player.P1:
-                otherPlayer = GameObject.FindGameObjectWithTag(Player.P2.ToString()).transform;
+                otherPlayer = GameObject.Find(Player.P2.ToString()).transform;
                 break;
             case Player.P2:
-                otherPlayer = GameObject.FindGameObjectWithTag(Player.P1.ToString()).transform;
+                otherPlayer = GameObject.Find(Player.P1.ToString()).transform;
                 break;
         }
     }
 
+
+
     protected void FixedUpdate()
     {
+        Debug.Log("Push = " + isPushed + " Grounded = " + groundChecker.isGrounded + " Stunned = " + isStunned);
+
+
+      //  rb.isKinematic = 
+        //(groundChecker.isGrounded && !isPushed);
+
+        Debug.Log("Es to kinematico" + rb.isKinematic);
+
         if (!shieldsUp)
         {
             animator.SetBool("IsRunning", Flags[Actions.MOVE]);
 
-            if (Flags[Actions.MOVE])
+            if (Flags[Actions.MOVE] && !isPushed)
             {
                 Move();
             }
         }
-    }
 
-    protected void Update()
-    {
         // DEBUG
         if (GameDirector.DebugginGame)
         {
@@ -167,6 +187,15 @@ public abstract class PlayerManager : MonoBehaviour
                     DebugData();
                 }
             }
+
+            if (isStunned)
+            {
+                stunEffect.SetActive(true);
+            }
+            else
+            {
+                stunEffect.SetActive(false);
+            }
         }
         /*********/
 
@@ -178,12 +207,14 @@ public abstract class PlayerManager : MonoBehaviour
 
         if (impulse > 0)
         {
+            Debug.Log("Impulsed " + impulseDelay + " " + impulse);
             impulseDelay -= Time.deltaTime;
 
             animator.SetBool("IsDamaged", true);
 
             if (impulseDelay <= 0)
             {
+                Debug.Log("Apply impulse " + impulseDelay);
                 ApplyImpulse();
                 isStunned = false;
                 animator.SetBool("IsDamaged", false);
@@ -193,6 +224,20 @@ public abstract class PlayerManager : MonoBehaviour
                 isStunned = true;
             }
         }
+
+
+        if (isPushed)
+        {
+            pushedEFFECT.SetActive(true);
+
+            if (rb.velocity.magnitude < 0.01f)
+            {
+                isPushed = false;
+
+                pushedEFFECT.SetActive(false);
+            }
+        }
+
 
         if (!isStunned)
         {
@@ -280,7 +325,7 @@ public abstract class PlayerManager : MonoBehaviour
                         currentJumps++;
                         audioManager.Play(AudioType.JUMP);
                         animator.SetBool("IsJumping", true);
-
+                       // rb.isKinematic = false;
                         rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
                         rb.AddForce(Vector3.up * character.jumpForce * 10, ForceMode.Impulse);
 
@@ -293,13 +338,14 @@ public abstract class PlayerManager : MonoBehaviour
                 if (groundChecker.isGrounded)
                 {
                     currentJumps = 0;
+                   // rb.isKinematic = true;
                 }
 
                 animator.SetBool("IsJumping", false);
             }
 
             ActuallyDoing[Actions.SOFT_PUNCH] |= controlManager.IsSoftAttacking();
-            
+
             animator.SetBool("IsSoftAttacking", ActuallyDoing[Actions.SOFT_PUNCH] && Flags[Actions.SOFT_PUNCH]);
             if (Flags[Actions.SOFT_PUNCH])
             {
@@ -346,13 +392,15 @@ public abstract class PlayerManager : MonoBehaviour
 
     public void ApplyImpulse()
     {
-        impulse += damage * ImpulseMultiplier;
-        rb.AddForce(transform.forward * -1 * impulse, ForceMode.Impulse);
-        impulse = 0;
+        // impulse += damage * ImpulseMultiplier;
+        //rb.AddForce(transform.forward * -1 * impulse, ForceMode.Impulse);
+        rb.velocity = transform.forward * -1f * impulse;
+        isPushed = true;
         animator.SetBool("IsDamaged", false);
         impulseDelay = 0;
+        impulse = 0;
         isStunned = false;
-        
+
         EnableAllFlags();
         SetActuallyDoingTo(false);
         ResetCombo();
@@ -368,7 +416,7 @@ public abstract class PlayerManager : MonoBehaviour
         if (Math.Abs(horizontalMovement) != 0f || Math.Abs(verticalMovement) != 0f)
         {
             Vector3 horizontalVector = Camera.main.transform.right * controlManager.GetHorizontalMovement();
-            Vector3 verticalVector = getCameraForwardVector() * controlManager.GetVerticalMovement();  
+            Vector3 verticalVector = getCameraForwardVector() * controlManager.GetVerticalMovement();
             movement += groundChecker.isGrounded ? horizontalVector : horizontalVector / 2;
             movement += groundChecker.isGrounded ? verticalVector : verticalVector / 2;
         }
@@ -379,16 +427,17 @@ public abstract class PlayerManager : MonoBehaviour
 
         movement *= character.speed;
 
-        if (movement == Vector3.zero) {
-            rb.velocity = new Vector3(0, rb.velocity.y, 0);
-        } else {
-            movement += rb.velocity;
+        //Movement
+        gameObject.transform.position = new Vector3
+        (gameObject.transform.position.x + movement.x * character.speed * Time.deltaTime,
+        gameObject.transform.position.y + movement.y * character.speed * Time.deltaTime,
+        gameObject.transform.position.z + movement.z * character.speed * Time.deltaTime);
 
-            Vector3 velocityClamped = Vector3.ClampMagnitude(movement, 15);
 
-            rb.velocity = new Vector3(velocityClamped.x, rb.velocity.y, velocityClamped.z);
-        }
-
+        if (movement.magnitude == 0)
+            rb.mass = 140;     
+        else
+            rb.mass = 73;
         // Fix down force
         rb.AddForce(0, Physics.gravity.y, 0);
     }
@@ -413,7 +462,7 @@ public abstract class PlayerManager : MonoBehaviour
                 break;
             case Actions.HARD_PUNCH:
                 float damage = character.hardPunchDamage;
-                
+
                 if (UnityEngine.Random.value < character.criticChance)
                 {
                     StartCoroutine(StopTime());
@@ -424,13 +473,15 @@ public abstract class PlayerManager : MonoBehaviour
                 break;
         }
 
+
     }
 
     private IEnumerator StopTime()
     {
-        Time.timeScale = 0;
-        yield return new WaitForSecondsRealtime(0.5f);
-        Time.timeScale = 1;
+        //Time.timeScale = 0;
+        //yield return new WaitForSecondsRealtime(0.5f);
+        //Time.timeScale = 1;
+        yield return 0;
     }
 
     private void Hit(float impulse, Vector3 positionToInstantiate, ParticleType particleType, AudioType audioType, bool inmediateImpulse)
@@ -474,10 +525,13 @@ public abstract class PlayerManager : MonoBehaviour
 
     public bool isDead()
     {
+
         return transform.position.y < -10;
+
     }
 
-    public float GetDamage() {
+    public float GetDamage()
+    {
         return damage;
     }
 
@@ -485,8 +539,12 @@ public abstract class PlayerManager : MonoBehaviour
     {
         damage = 0;
         impulse = 0;
-        rb.velocity = Vector3.zero;
-        transform.position = GameObject.FindGameObjectWithTag("Respawn" +  player).transform.position;
+        impulseDelay = 0;
+        isPushed = false;
+        rb.isKinematic = true;
+        transform.position = GameObject.FindGameObjectWithTag("Respawn" + player).transform.position;
+        rb.velocity = Vector3.zero; 
+        rb.isKinematic = false;
     }
 
     // Overrideable methods
@@ -501,7 +559,7 @@ public abstract class PlayerManager : MonoBehaviour
     {
         if (lastMovementNormalized == Vector3.zero)
             lastMovementNormalized = transform.forward;
-        
+
         rb.velocity = lastMovementNormalized * character.dashSpeed * character.dashCurve.Evaluate(dashDelay);
     }
 
@@ -560,15 +618,34 @@ public abstract class PlayerManager : MonoBehaviour
     {
         rightPunchCollider.enabled = !rightPunchCollider.enabled;
     }
-}
+    public void OnCollisionStay(Collision other)
+    {
+        if ((other.gameObject.tag == "P1" && player == Player.P2) ||
+            (other.gameObject.tag == "P2" && player == Player.P1))
+        {
+            isIgnoringForward = true;
+            Debug.Log("aaee");
+        }
+    }
 
-public enum Actions
-{
-    JUMP,
-    SOFT_PUNCH,
-    HARD_PUNCH,
-    MOVE,
-    DEFEND,
-    IDLE,
-    DASHING
+    public void OnCollisionExit(Collision other)
+    {
+        if ((other.gameObject.tag == "P1" && player == Player.P2) ||
+            (other.gameObject.tag == "P2" && player == Player.P1))
+        {
+            isIgnoringForward = false;
+        }
+    }
+
+
+    public enum Actions
+    {
+        JUMP,
+        SOFT_PUNCH,
+        HARD_PUNCH,
+        MOVE,
+        DEFEND,
+        IDLE,
+        DASHING
+    }
 }

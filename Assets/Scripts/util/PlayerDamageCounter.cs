@@ -8,7 +8,7 @@ public class PlayerDamageCounter : MonoBehaviour {
   private Text damageText;
 
   private void Start() {
-    playerManager = GameObject.FindGameObjectWithTag(player.ToString()).GetComponent<PlayerManager>();
+    playerManager = GameObject.Find(player.ToString()).GetComponent<PlayerManager>();
     damageText = GetComponent<Text>();
   }
 

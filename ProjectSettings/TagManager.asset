@@ -15,6 +15,7 @@ TagManager:
   - RespawnP1
   - RespawnP2
   - Shield
+  - StunEffect
   layers:
   - Default
   - TransparentFX

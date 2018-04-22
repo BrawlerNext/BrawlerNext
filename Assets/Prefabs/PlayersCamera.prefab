@@ -9,51 +9,52 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1338802820762612}
+  m_RootGameObject: {fileID: 1350894839111320}
   m_IsPrefabParent: 1
---- !u!1 &1338802820762612
+--- !u!1 &1350894839111320
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 4405486024471796}
-  - component: {fileID: 20197131536019180}
-  - component: {fileID: 92179145196868928}
-  - component: {fileID: 124570126122457930}
-  - component: {fileID: 81629455752596734}
-  - component: {fileID: 114691995012384150}
+  - component: {fileID: 4898711661014990}
+  - component: {fileID: 20622784943912470}
+  - component: {fileID: 92033674305363548}
+  - component: {fileID: 124945799066240454}
+  - component: {fileID: 81389358286394150}
+  - component: {fileID: 114533317328131358}
+  - component: {fileID: 114142993859220692}
   m_Layer: 0
-  m_Name: Main Camera
+  m_Name: PlayersCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4405486024471796
+--- !u!4 &4898711661014990
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1338802820762612}
-  m_LocalRotation: {x: 0.09229593, y: -0.7010574, z: 0.09229593, w: 0.7010574}
-  m_LocalPosition: {x: 27.18, y: 11.01, z: 7.35}
+  m_GameObject: {fileID: 1350894839111320}
+  m_LocalRotation: {x: 0.03987859, y: -0.70598143, z: 0.03987859, w: 0.70598143}
+  m_LocalPosition: {x: 11, y: 2.9, z: 7.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 15, y: -90, z: 0}
---- !u!20 &20197131536019180
+  m_LocalEulerAnglesHint: {x: 6.466, y: -90.00001, z: 0}
+--- !u!20 &20622784943912470
 Camera:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1338802820762612}
+  m_GameObject: {fileID: 1350894839111320}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -75,30 +76,43 @@ Camera:
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &81629455752596734
+--- !u!81 &81389358286394150
 AudioListener:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1338802820762612}
+  m_GameObject: {fileID: 1350894839111320}
   m_Enabled: 1
---- !u!92 &92179145196868928
+--- !u!92 &92033674305363548
 Behaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1338802820762612}
+  m_GameObject: {fileID: 1350894839111320}
   m_Enabled: 1
---- !u!114 &114691995012384150
+--- !u!114 &114142993859220692
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1338802820762612}
+  m_GameObject: {fileID: 1350894839111320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff26db721962cdf4a8edcdfa9a767d2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profile: {fileID: 11400000, guid: 85a5f5a95a46f29478148df9dd585dc8, type: 2}
+--- !u!114 &114533317328131358
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1350894839111320}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ca2707453fafc6f4c85e47845004f47a, type: 3}
@@ -107,10 +121,14 @@ MonoBehaviour:
   offsetHorizontal: 10
   offsetVertical: 3.5
   verticalRotationOffset: 0.5
---- !u!124 &124570126122457930
+  zoomFactor: 1
+  player1Weight: 0
+  player2Weight: 0
+  weights: 0
+--- !u!124 &124945799066240454
 Behaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1338802820762612}
+  m_GameObject: {fileID: 1350894839111320}
   m_Enabled: 1
