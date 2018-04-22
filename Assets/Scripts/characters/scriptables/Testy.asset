@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecee679f4a9ea004d9f6183faaf54a57, type: 3}
   m_Name: Testy
   m_EditorClassIdentifier: 
-  speed: 10
+  speed: 5
   maxJumps: 2
   jumpForce: 150
   dashSpeed: 20
