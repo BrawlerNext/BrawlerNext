@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecee679f4a9ea004d9f6183faaf54a57, type: 3}
+  m_Name: P1
+  m_EditorClassIdentifier: 
+  speed: 3
+  maxJumps: 2
+  jumpForce: 150
+  dashSpeed: 50
+  dashTimeInSeconds: 0.1
+  dashCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0.009277344
+      inSlope: 5.17378
+      outSlope: 5.17378
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.9958191
+      value: 0.8740158
+      inSlope: -1.5767406
+      outSlope: -1.5767406
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  softPunchDamage: 25
+  hardPunchDamage: 150
+  criticChance: 0.3
+  shieldRepairDelay: 3
+  shieldLife: 50
+  shieldDecayVelocity: 10
+  shieldRepairVelocity: 10
+  shieldDamagedReducedPercentage: 0.5
+  clips:
+  - Type: 0
+    Clip: {fileID: 8300000, guid: d9861073f9caef1499e6bfc029bf8241, type: 3}
+  - Type: 1
+    Clip: {fileID: 8300000, guid: d9861073f9caef1499e6bfc029bf8241, type: 3}
+  - Type: 2
+    Clip: {fileID: 8300000, guid: fcffc773226771b41b51007c3818d7a7, type: 3}
+  - Type: 3
+    Clip: {fileID: 8300000, guid: 9f386bf8082e4cb4ea7c3a5f4ea69680, type: 3}
+  - Type: 4
+    Clip: {fileID: 8300000, guid: 9f386bf8082e4cb4ea7c3a5f4ea69680, type: 3}
+  - Type: 5
+    Clip: {fileID: 8300000, guid: 53d6fb34d1ca7de4fab62c3ad6bcb720, type: 3}
+  - Type: 6
+    Clip: {fileID: 8300000, guid: e5e1c884b25fd7043a27833eee2b4f26, type: 3}
+  - Type: 9
+    Clip: {fileID: 8300000, guid: 9e7c350ee5459314aa55c4c84dab25d6, type: 3}
+  - Type: 8
+    Clip: {fileID: 8300000, guid: 16af4a4e40bfad8459abbdd579111e5b, type: 3}
+  - Type: 11
+    Clip: {fileID: 8300000, guid: a019bf2f23f083849bef8f0b197568f6, type: 3}
+  particles:
+  - type: 0
+    particle: {fileID: 1269844802833584, guid: 590254102e7e83245be4982e295fad38, type: 2}
+  - type: 1
+    particle: {fileID: 1269844802833584, guid: 590254102e7e83245be4982e295fad38, type: 2}
+  - type: 4
+    particle: {fileID: 1439084418714884, guid: 733d6e6ccf876ae42be8cef5ae70cc4a, type: 2}

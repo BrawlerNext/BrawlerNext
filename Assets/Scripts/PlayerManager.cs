@@ -13,6 +13,9 @@ public abstract class PlayerManager : MonoBehaviour
     public float ImpulseMultiplier = 100f;
     public float delayImpulseOnHit = 0.5f;
 
+    public bool isInvulnerable = false;
+    public float invulnerableTime = 2;
+
     // Basic input data
     public Character character;
     public Player player;
@@ -23,8 +26,12 @@ public abstract class PlayerManager : MonoBehaviour
     public bool isIgnoringForward = false;
     protected Collider leftPunchCollider;
 
+    protected Collider dashCollider;
+
     protected Collider rightPunchCollider;
     protected GameObject shield;
+
+    public float stunTime = 5f;
 
 
     //retjrejtopertjeroptjoetorep
@@ -105,6 +112,12 @@ public abstract class PlayerManager : MonoBehaviour
                 rightPunchCollider = child.GetComponent<Collider>();
                 rightPunchCollider.enabled = false;
             }
+
+            if (child.name == "DashCollider")
+            {
+                dashCollider = child.GetComponent<Collider>();
+                dashCollider.enabled = false;
+            }
         }
 
         SetFlagsTo(true);
@@ -146,13 +159,6 @@ public abstract class PlayerManager : MonoBehaviour
 
     protected void FixedUpdate()
     {
-        Debug.Log("Push = " + isPushed + " Grounded = " + groundChecker.isGrounded + " Stunned = " + isStunned);
-
-
-      //  rb.isKinematic = 
-        //(groundChecker.isGrounded && !isPushed);
-
-        Debug.Log("Es to kinematico" + rb.isKinematic);
 
         if (!shieldsUp)
         {
@@ -188,14 +194,8 @@ public abstract class PlayerManager : MonoBehaviour
                 }
             }
 
-            if (isStunned)
-            {
-                stunEffect.SetActive(true);
-            }
-            else
-            {
-                stunEffect.SetActive(false);
-            }
+            stunEffect.SetActive(isStunned);
+
         }
         /*********/
 
@@ -207,6 +207,7 @@ public abstract class PlayerManager : MonoBehaviour
 
         if (impulse > 0)
         {
+
             Debug.Log("Impulsed " + impulseDelay + " " + impulse);
             impulseDelay -= Time.deltaTime;
 
@@ -295,9 +296,16 @@ public abstract class PlayerManager : MonoBehaviour
                 }
             }
 
-            ActuallyDoing[Actions.DASHING] |= controlManager.IsDashing();
+            isDashing = ActuallyDoing[Actions.DASHING] |= controlManager.IsDashing();
 
-            animator.SetBool("IsDashing", ActuallyDoing[Actions.DASHING]);
+            animator.SetBool("IsDashing", isDashing);
+
+            if (isDashing)
+            {
+                dashCollider.enabled = isDashing;
+                StartCoroutine(DisableDashAfterSeconds());
+
+            }
             if (Flags[Actions.DASHING])
             {
                 if (ActuallyDoing[Actions.DASHING])
@@ -323,12 +331,16 @@ public abstract class PlayerManager : MonoBehaviour
                     if (groundChecker.isGrounded || currentJumps < character.maxJumps)
                     {
                         currentJumps++;
+                        if (currentJumps == 2)
+                        {
+                            rb.velocity = new Vector3(0, 0, 0);
+                        }
                         audioManager.Play(AudioType.JUMP);
                         animator.SetBool("IsJumping", true);
-                       // rb.isKinematic = false;
+                        rb.mass = 73;
                         rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
                         rb.AddForce(Vector3.up * character.jumpForce * 10, ForceMode.Impulse);
-
+                        Debug.Log("Vector3 " + Vector3.up + "characterjumpforce " + character.jumpForce * 10 + "elforcemode " + ForceMode.Impulse);
                         Jump();
                     }
 
@@ -338,7 +350,6 @@ public abstract class PlayerManager : MonoBehaviour
                 if (groundChecker.isGrounded)
                 {
                     currentJumps = 0;
-                   // rb.isKinematic = true;
                 }
 
                 animator.SetBool("IsJumping", false);
@@ -394,6 +405,7 @@ public abstract class PlayerManager : MonoBehaviour
     {
         // impulse += damage * ImpulseMultiplier;
         //rb.AddForce(transform.forward * -1 * impulse, ForceMode.Impulse);
+        if (isInvulnerable == true) return;
         rb.velocity = transform.forward * -1f * impulse;
         isPushed = true;
         animator.SetBool("IsDamaged", false);
@@ -430,12 +442,12 @@ public abstract class PlayerManager : MonoBehaviour
         //Movement
         gameObject.transform.position = new Vector3
         (gameObject.transform.position.x + movement.x * character.speed * Time.deltaTime,
-        gameObject.transform.position.y + movement.y * character.speed * Time.deltaTime,
-        gameObject.transform.position.z + movement.z * character.speed * Time.deltaTime);
+       gameObject.transform.position.y + movement.y * character.speed * Time.deltaTime,
+       gameObject.transform.position.z + movement.z * character.speed * Time.deltaTime);
 
 
         if (movement.magnitude == 0)
-            rb.mass = 140;     
+            rb.mass = 144;
         else
             rb.mass = 73;
         // Fix down force
@@ -453,14 +465,16 @@ public abstract class PlayerManager : MonoBehaviour
     {
         Vector3 positionToInstantiate = getCollisionPoint();
 
-        if (!collider.tag.Contains(otherPlayer.tag) || positionToInstantiate == Vector3.zero) return;
+        if (!collider.tag.Contains(otherPlayer.tag)) return;
 
         switch (lastAction)
         {
             case Actions.SOFT_PUNCH:
+                if (positionToInstantiate == Vector3.zero) return;
                 Hit(character.softPunchDamage, positionToInstantiate, ParticleType.SOFT_HIT, AudioType.SOFT_HIT, false);
                 break;
             case Actions.HARD_PUNCH:
+                if (positionToInstantiate == Vector3.zero) return;
                 float damage = character.hardPunchDamage;
 
                 if (UnityEngine.Random.value < character.criticChance)
@@ -471,11 +485,35 @@ public abstract class PlayerManager : MonoBehaviour
 
                 Hit(damage, positionToInstantiate, ParticleType.HARD_HIT, AudioType.HARD_HIT, true);
                 break;
-        }
 
+            case Actions.DASHING:
+                Debug.Log("AitoR " + collider.name);
+
+                PlayerManager otherPlayerManager = otherPlayer.GetComponent<PlayerManager>();
+
+                otherPlayerManager.Stun();
+                break;
+        }
 
     }
 
+    public void Stun(float sTime = 0)
+    {
+        if (isStunned) return;
+
+        isStunned = true;
+        if (sTime == 0)
+            StartCoroutine(DisableStun(stunTime));
+        else
+            StartCoroutine(DisableStun(sTime));
+    }
+
+    IEnumerator DisableStun(float t)
+    {
+        yield return new WaitForSecondsRealtime(t);
+        isStunned = false;
+        EnableAllFlags();
+    }
     private IEnumerator StopTime()
     {
         //Time.timeScale = 0;
@@ -518,7 +556,19 @@ public abstract class PlayerManager : MonoBehaviour
         }
         else
         {
-            currentShieldLife -= impulse * character.shieldDamagedReducedPercentage / ImpulseMultiplier;
+            currentShieldLife -= impulse;
+            // * character.shieldDamagedReducedPercentage / ImpulseMultiplier;
+            //TO DO: Jesé, el escudo nunca llega a 0, cuando se rompe stunea 3 segundos al enemigo.
+            if (currentShieldLife < 50)
+            {
+                Stun(3);
+                shieldsUp = false;
+                shieldIsRepairing = true;
+                StartCoroutine(RepairShield());
+
+                DisableAllFlags();
+
+            }
             audioManager.Play(AudioType.SHIELD_HIT);
         }
     }
@@ -543,11 +593,20 @@ public abstract class PlayerManager : MonoBehaviour
         isPushed = false;
         rb.isKinematic = true;
         transform.position = GameObject.FindGameObjectWithTag("Respawn" + player).transform.position;
-        rb.velocity = Vector3.zero; 
+        rb.velocity = Vector3.zero;
         rb.isKinematic = false;
+        StartCoroutine(InvulnerabilityAfterRespawn());
     }
 
     // Overrideable methods
+
+    IEnumerator InvulnerabilityAfterRespawn()
+    {
+        isInvulnerable = true;
+        yield return new WaitForSecondsRealtime(invulnerableTime);
+        isInvulnerable = false;
+    }
+
 
     public abstract void SoftAttack();
     public abstract void HardAttack();
@@ -559,6 +618,7 @@ public abstract class PlayerManager : MonoBehaviour
     {
         if (lastMovementNormalized == Vector3.zero)
             lastMovementNormalized = transform.forward;
+        animator.SetBool("IsDashing", true);
 
         rb.velocity = lastMovementNormalized * character.dashSpeed * character.dashCurve.Evaluate(dashDelay);
     }
@@ -613,7 +673,6 @@ public abstract class PlayerManager : MonoBehaviour
     {
         leftPunchCollider.enabled = !leftPunchCollider.enabled;
     }
-
     public void toogleRightPunchCollider()
     {
         rightPunchCollider.enabled = !rightPunchCollider.enabled;
@@ -638,6 +697,11 @@ public abstract class PlayerManager : MonoBehaviour
     }
 
 
+    IEnumerator DisableDashAfterSeconds()
+    {
+        yield return new WaitForSecondsRealtime(2);
+        dashCollider.enabled = false;
+    }
     public enum Actions
     {
         JUMP,

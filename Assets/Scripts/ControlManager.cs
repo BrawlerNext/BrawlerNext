@@ -36,6 +36,7 @@ public class ControlManager : MonoBehaviour
 
     public bool IsDashing()
     {
+       
         return GetButton("Dash");
     }
 
