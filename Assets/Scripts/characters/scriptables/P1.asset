@@ -35,8 +35,12 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 0
   softPunchDamage: 25
-  hardPunchDamage: 150
+  hardPunchDamage: 75
   criticChance: 0.5
+  aeroPunchDamage: 50
+  aeroPunchSpeed: 10
+  aeroStopTime: 0.25
+  aeroMaxDistance: 10
   shieldRepairDelay: 3
   shieldLife: 50
   shieldDecayVelocity: 10
