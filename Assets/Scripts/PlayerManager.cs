@@ -10,7 +10,7 @@ using UnityEngine.Experimental.UIElements;
 public abstract class PlayerManager : MonoBehaviour
 {
     // General modifiers
-    public float ImpulseMultiplier = 100f;
+    public float ImpulseMultiplier = 0.1f;
     public float delayImpulseOnHit = 0.5f;
 
     public bool isInvulnerable = false;
@@ -64,6 +64,11 @@ public abstract class PlayerManager : MonoBehaviour
     protected float impulse = 0;
     protected float damage = 0;
 
+    protected float aeroStopTime = 0;
+    protected Vector3 startPosition = Vector3.zero;
+    protected Vector3 endPosition = Vector3.zero;
+    protected Vector3 direction = Vector3.zero;
+
     protected Vector3 lastMovementNormalized;
     protected float dashDelay = 999;
 
@@ -73,7 +78,7 @@ public abstract class PlayerManager : MonoBehaviour
     protected Dictionary<Actions, bool> ActuallyDoing = new Dictionary<Actions, bool>();
 
     protected Actions[] AllActions = new[]
-        {Actions.JUMP, Actions.HARD_PUNCH, Actions.SOFT_PUNCH, Actions.MOVE, Actions.DEFEND, Actions.DASHING};
+        {Actions.JUMP, Actions.HARD_PUNCH, Actions.SOFT_PUNCH, Actions.MOVE, Actions.DEFEND, Actions.DASHING, Actions.AERO_HIT};
 
     void Awake()
     {
@@ -89,7 +94,6 @@ public abstract class PlayerManager : MonoBehaviour
         playerManager = gameObject.GetComponent<PlayerManager>();
 
         controlManager.Init(controller, player, playerManager);
-        //rb.isKinematic = true;
 
         currentShieldLife = character.shieldLife;
 
@@ -170,35 +174,6 @@ public abstract class PlayerManager : MonoBehaviour
             }
         }
 
-        // DEBUG
-        if (GameDirector.DebugginGame)
-        {
-            if (Input.GetKeyDown(KeyCode.C))
-            {
-                Debug.ClearDeveloperConsole();
-            }
-
-            if (Input.GetKey(KeyCode.Z))
-            {
-                if (CompareTag("P1"))
-                {
-                    DebugData();
-                }
-            }
-
-            if (Input.GetKey(KeyCode.X))
-            {
-                if (CompareTag("P2"))
-                {
-                    DebugData();
-                }
-            }
-
-            stunEffect.SetActive(isStunned);
-
-        }
-        /*********/
-
         if (!controlManager.IsCancelTargeting())
         {
             transform.LookAt(otherPlayer);
@@ -208,14 +183,12 @@ public abstract class PlayerManager : MonoBehaviour
         if (impulse > 0)
         {
 
-            Debug.Log("Impulsed " + impulseDelay + " " + impulse);
             impulseDelay -= Time.deltaTime;
 
             animator.SetBool("IsDamaged", true);
 
             if (impulseDelay <= 0)
             {
-                Debug.Log("Apply impulse " + impulseDelay);
                 ApplyImpulse();
                 isStunned = false;
                 animator.SetBool("IsDamaged", false);
@@ -239,6 +212,7 @@ public abstract class PlayerManager : MonoBehaviour
             }
         }
 
+        stunEffect.SetActive(isStunned);
 
         if (!isStunned)
         {
@@ -296,6 +270,33 @@ public abstract class PlayerManager : MonoBehaviour
                 }
             }
 
+            if (ActuallyDoing[Actions.AERO_HIT])
+            {
+                rb.velocity = Vector3.zero;
+
+                if (aeroStopTime > 0)
+                {
+                    aeroStopTime -= Time.deltaTime;
+                    return;
+                }
+
+                rb.velocity = direction * character.aeroPunchSpeed * 2;
+
+                if (Vector3.Distance(transform.position, otherPlayer.transform.position) < 2) {
+                    otherPlayer.GetComponent<PlayerManager>().Stun(delayImpulseOnHit);
+                }
+
+                if (Vector3.Distance(startPosition, transform.position) > character.aeroMaxDistance ||
+                    Vector3.Distance(transform.position, otherPlayer.transform.position) < 2)
+                {
+                    ActuallyDoing[Actions.AERO_HIT] = false;
+                    aeroStopTime = 0;
+                    EnableAllFlags();
+                }
+
+                return;
+            }
+
             isDashing = ActuallyDoing[Actions.DASHING] |= controlManager.IsDashing();
 
             animator.SetBool("IsDashing", isDashing);
@@ -304,8 +305,8 @@ public abstract class PlayerManager : MonoBehaviour
             {
                 dashCollider.enabled = isDashing;
                 StartCoroutine(DisableDashAfterSeconds());
-
             }
+
             if (Flags[Actions.DASHING])
             {
                 if (ActuallyDoing[Actions.DASHING])
@@ -340,7 +341,6 @@ public abstract class PlayerManager : MonoBehaviour
                         rb.mass = 73;
                         rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
                         rb.AddForce(Vector3.up * character.jumpForce * 10, ForceMode.Impulse);
-                        Debug.Log("Vector3 " + Vector3.up + "characterjumpforce " + character.jumpForce * 10 + "elforcemode " + ForceMode.Impulse);
                         Jump();
                     }
 
@@ -357,14 +357,32 @@ public abstract class PlayerManager : MonoBehaviour
 
             ActuallyDoing[Actions.SOFT_PUNCH] |= controlManager.IsSoftAttacking();
 
-            animator.SetBool("IsSoftAttacking", ActuallyDoing[Actions.SOFT_PUNCH] && Flags[Actions.SOFT_PUNCH]);
+            print(Flags[Actions.SOFT_PUNCH]);
+
+            animator.SetBool("IsSoftAttacking", ActuallyDoing[Actions.SOFT_PUNCH] && Flags[Actions.SOFT_PUNCH] && groundChecker.isGrounded);
             if (Flags[Actions.SOFT_PUNCH])
             {
                 if (ActuallyDoing[Actions.SOFT_PUNCH])
                 {
-                    lastAction = Actions.SOFT_PUNCH;
-                    ActuallyDoing[Actions.SOFT_PUNCH] = false;
-                    SoftAttack();
+                    if (groundChecker.isGrounded)
+                    {
+                        lastAction = Actions.SOFT_PUNCH;
+                        ActuallyDoing[Actions.SOFT_PUNCH] = false;
+                        SoftAttack();
+                    }
+                    else
+                    {
+                        lastAction = Actions.AERO_HIT;
+                        ActuallyDoing[Actions.SOFT_PUNCH] = false;
+                        
+                        DisableAllFlags();
+                        ActuallyDoing[Actions.AERO_HIT] = true;
+
+                        startPosition = transform.position;
+                        endPosition = otherPlayer.transform.position;
+                        direction = (endPosition - startPosition).normalized;
+                        aeroStopTime = character.aeroStopTime;
+                    }
                     return;
                 }
             }
@@ -385,16 +403,6 @@ public abstract class PlayerManager : MonoBehaviour
         }
     }
 
-    private void DebugData()
-    {
-        print("Is stunned?: " + isStunned);
-        print("Current jump: " + currentJumps);
-        print("Is grounded?: " + groundChecker.isGrounded);
-        print("Shield current life: " + currentShieldLife);
-        print("Shield is repairing?: " + shieldIsRepairing);
-        print("Current impulse: " + impulse);
-    }
-
     private IEnumerator RepairShield()
     {
         yield return new WaitForSeconds(character.shieldRepairDelay);
@@ -403,10 +411,12 @@ public abstract class PlayerManager : MonoBehaviour
 
     public void ApplyImpulse()
     {
-        // impulse += damage * ImpulseMultiplier;
-        //rb.AddForce(transform.forward * -1 * impulse, ForceMode.Impulse);
         if (isInvulnerable == true) return;
-        rb.velocity = transform.forward * -1f * impulse;
+
+        float totalImpulse = (impulse + (damage / 3));
+        print("Impulse: " + totalImpulse);
+
+        rb.velocity = transform.forward * -1f * totalImpulse;
         isPushed = true;
         animator.SetBool("IsDamaged", false);
         impulseDelay = 0;
@@ -431,6 +441,7 @@ public abstract class PlayerManager : MonoBehaviour
             Vector3 verticalVector = getCameraForwardVector() * controlManager.GetVerticalMovement();
             movement += groundChecker.isGrounded ? horizontalVector : horizontalVector / 2;
             movement += groundChecker.isGrounded ? verticalVector : verticalVector / 2;
+            lastAction = Actions.MOVE;
         }
 
         animator.SetBool("IsRunning", (Math.Abs(movement.x) > 0.5f || Math.Abs(movement.z) > 0.5f));
@@ -450,8 +461,11 @@ public abstract class PlayerManager : MonoBehaviour
             rb.mass = 144;
         else
             rb.mass = 73;
-        // Fix down force
-        rb.AddForce(0, Physics.gravity.y, 0);
+
+        if (!ActuallyDoing[Actions.AERO_HIT])
+        {
+            rb.AddForce(0, Physics.gravity.y / 5, 0);
+        }
     }
 
     private Vector3 getCameraForwardVector()
@@ -472,6 +486,7 @@ public abstract class PlayerManager : MonoBehaviour
             case Actions.SOFT_PUNCH:
                 if (positionToInstantiate == Vector3.zero) return;
                 Hit(character.softPunchDamage, positionToInstantiate, ParticleType.SOFT_HIT, AudioType.SOFT_HIT, false);
+                print("Soft punch! with " + collider.tag);
                 break;
             case Actions.HARD_PUNCH:
                 if (positionToInstantiate == Vector3.zero) return;
@@ -479,19 +494,21 @@ public abstract class PlayerManager : MonoBehaviour
 
                 if (UnityEngine.Random.value < character.criticChance)
                 {
-                    StartCoroutine(StopTime());
                     damage *= 2;
                 }
 
+                print("Hard punch! with " + collider.tag);
                 Hit(damage, positionToInstantiate, ParticleType.HARD_HIT, AudioType.HARD_HIT, true);
                 break;
 
             case Actions.DASHING:
-                Debug.Log("AitoR " + collider.name);
-
                 PlayerManager otherPlayerManager = otherPlayer.GetComponent<PlayerManager>();
 
-                otherPlayerManager.Stun();
+                otherPlayerManager.Stun(delayImpulseOnHit);
+                break;
+
+            case Actions.AERO_HIT:
+                print("AERO HIT");
                 break;
         }
 
@@ -502,6 +519,7 @@ public abstract class PlayerManager : MonoBehaviour
         if (isStunned) return;
 
         isStunned = true;
+        DisableAllFlags();
         if (sTime == 0)
             StartCoroutine(DisableStun(stunTime));
         else
@@ -514,16 +532,11 @@ public abstract class PlayerManager : MonoBehaviour
         isStunned = false;
         EnableAllFlags();
     }
-    private IEnumerator StopTime()
-    {
-        //Time.timeScale = 0;
-        //yield return new WaitForSecondsRealtime(0.5f);
-        //Time.timeScale = 1;
-        yield return 0;
-    }
 
     private void Hit(float impulse, Vector3 positionToInstantiate, ParticleType particleType, AudioType audioType, bool inmediateImpulse)
     {
+        lastAction = Actions.IDLE;
+
         PlayerManager otherPlayerManager = otherPlayer.GetComponent<PlayerManager>();
 
         otherPlayerManager.AddImpulse(impulse * ImpulseMultiplier);
@@ -533,8 +546,6 @@ public abstract class PlayerManager : MonoBehaviour
         particleManager.InstantiateParticle(particleType, positionToInstantiate);
 
         if (currentCombo > 3 || inmediateImpulse) otherPlayerManager.ApplyImpulse();
-
-        lastAction = Actions.IDLE;
     }
 
     private Vector3 getCollisionPoint()
@@ -595,6 +606,7 @@ public abstract class PlayerManager : MonoBehaviour
         transform.position = GameObject.FindGameObjectWithTag("Respawn" + player).transform.position;
         rb.velocity = Vector3.zero;
         rb.isKinematic = false;
+        lastAction = Actions.IDLE;
         StartCoroutine(InvulnerabilityAfterRespawn());
     }
 
@@ -673,17 +685,18 @@ public abstract class PlayerManager : MonoBehaviour
     {
         leftPunchCollider.enabled = !leftPunchCollider.enabled;
     }
+
     public void toogleRightPunchCollider()
     {
         rightPunchCollider.enabled = !rightPunchCollider.enabled;
     }
+
     public void OnCollisionStay(Collision other)
     {
         if ((other.gameObject.tag == "P1" && player == Player.P2) ||
             (other.gameObject.tag == "P2" && player == Player.P1))
         {
             isIgnoringForward = true;
-            Debug.Log("aaee");
         }
     }
 
@@ -702,6 +715,7 @@ public abstract class PlayerManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(2);
         dashCollider.enabled = false;
     }
+
     public enum Actions
     {
         JUMP,
@@ -710,6 +724,7 @@ public abstract class PlayerManager : MonoBehaviour
         MOVE,
         DEFEND,
         IDLE,
-        DASHING
+        DASHING,
+        AERO_HIT
     }
 }
