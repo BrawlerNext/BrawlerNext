@@ -31,7 +31,7 @@ public abstract class PlayerManager : MonoBehaviour
     protected Collider rightPunchCollider;
     protected GameObject shield;
 
-    public float stunTime = 5f;
+    public float stunTime = 1f;
 
 
     //retjrejtopertjeroptjoetorep

@@ -26,17 +26,17 @@ MonoBehaviour:
       outSlope: 5.17378
       tangentMode: 0
     - serializedVersion: 2
-      time: 0.9958191
-      value: 0.8740158
-      inSlope: -1.5767406
-      outSlope: -1.5767406
+      time: 1.004242
+      value: 1.0030975
+      inSlope: -1.1078292
+      outSlope: -1.1078292
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
   softPunchDamage: 25
   hardPunchDamage: 150
-  criticChance: 0.3
+  criticChance: 0.5
   shieldRepairDelay: 3
   shieldLife: 50
   shieldDecayVelocity: 10
