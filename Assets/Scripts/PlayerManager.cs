@@ -284,6 +284,8 @@ public abstract class PlayerManager : MonoBehaviour
 
                 if (Vector3.Distance(transform.position, otherPlayer.transform.position) < 2) {
                     otherPlayer.GetComponent<PlayerManager>().Stun(delayImpulseOnHit);
+
+                    Hit(character.aeroPunchDamage, otherPlayer.transform.position, ParticleType.SOFT_HIT, AudioType.SOFT_HIT, false);
                 }
 
                 if (Vector3.Distance(startPosition, transform.position) > character.aeroMaxDistance ||
@@ -356,8 +358,6 @@ public abstract class PlayerManager : MonoBehaviour
             }
 
             ActuallyDoing[Actions.SOFT_PUNCH] |= controlManager.IsSoftAttacking();
-
-            print(Flags[Actions.SOFT_PUNCH]);
 
             animator.SetBool("IsSoftAttacking", ActuallyDoing[Actions.SOFT_PUNCH] && Flags[Actions.SOFT_PUNCH] && groundChecker.isGrounded);
             if (Flags[Actions.SOFT_PUNCH])
@@ -505,10 +505,6 @@ public abstract class PlayerManager : MonoBehaviour
                 PlayerManager otherPlayerManager = otherPlayer.GetComponent<PlayerManager>();
 
                 otherPlayerManager.Stun(delayImpulseOnHit);
-                break;
-
-            case Actions.AERO_HIT:
-                print("AERO HIT");
                 break;
         }
 

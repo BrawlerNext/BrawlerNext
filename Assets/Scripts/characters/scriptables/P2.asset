@@ -37,7 +37,7 @@ MonoBehaviour:
   softPunchDamage: 25
   hardPunchDamage: 75
   criticChance: 0.5
-  aeroPunchDamage: 50
+  aeroPunchDamage: 25
   aeroPunchSpeed: 10
   aeroStopTime: 0.25
   aeroMaxDistance: 10
