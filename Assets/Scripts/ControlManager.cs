@@ -5,13 +5,11 @@ public class ControlManager : MonoBehaviour
 {
     private Player player;
     private Controller controller;
-    private PlayerManager playerManager;
 
-    public void Init(Controller controller, Player player, PlayerManager playerManager)
+    public void Init(Controller controller, Player player)
     {
         this.controller = controller;
         this.player = player;
-        this.playerManager = playerManager;
     }
 
     public bool IsDefending()

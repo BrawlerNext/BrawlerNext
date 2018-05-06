@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 3
   maxJumps: 2
-  jumpForce: 150
+  jumpForce: 200
   dashSpeed: 50
   dashTimeInSeconds: 0.1
   dashCurve:
@@ -35,8 +35,12 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 0
   softPunchDamage: 25
-  hardPunchDamage: 150
-  criticChance: 0.3
+  hardPunchDamage: 75
+  criticChance: 0.5
+  aeroPunchDamage: 25
+  aeroPunchSpeed: 10
+  aeroStopTime: 0.25
+  aeroMaxDistance: 10
   shieldRepairDelay: 3
   shieldLife: 50
   shieldDecayVelocity: 10

@@ -313,7 +313,7 @@ GameObject:
   - component: {fileID: 23327034013423890}
   - component: {fileID: 64271059536525278}
   - component: {fileID: 65897668041760518}
-  - component: {fileID: 114860906563191488}
+  - component: {fileID: 114345549954559580}
   m_Layer: 0
   m_Name: pCylinder12
   m_TagString: Ground
@@ -7111,9 +7111,9 @@ MeshCollider:
   m_Material: {fileID: 13400000, guid: 3e8898b71116c974b9c30ccc5f0dce7f, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
+  serializedVersion: 2
   m_Convex: 0
-  m_CookingOptions: 14
+  m_InflateMesh: 0
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300192, guid: 4df1aac166480fb4cafbe85fdcfba4da, type: 3}
 --- !u!64 &64271059536525278
@@ -7125,9 +7125,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 0
-  serializedVersion: 3
+  serializedVersion: 2
   m_Convex: 0
-  m_CookingOptions: 14
+  m_InflateMesh: 0
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300188, guid: 4df1aac166480fb4cafbe85fdcfba4da, type: 3}
 --- !u!64 &64468174573262250
@@ -7139,9 +7139,9 @@ MeshCollider:
   m_Material: {fileID: 13400000, guid: 3e8898b71116c974b9c30ccc5f0dce7f, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
+  serializedVersion: 2
   m_Convex: 0
-  m_CookingOptions: 14
+  m_InflateMesh: 0
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300186, guid: 4df1aac166480fb4cafbe85fdcfba4da, type: 3}
 --- !u!64 &64731972279024140
@@ -7153,9 +7153,9 @@ MeshCollider:
   m_Material: {fileID: 13400000, guid: 3e8898b71116c974b9c30ccc5f0dce7f, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
+  serializedVersion: 2
   m_Convex: 0
-  m_CookingOptions: 14
+  m_InflateMesh: 0
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300190, guid: 4df1aac166480fb4cafbe85fdcfba4da, type: 3}
 --- !u!65 &65897668041760518
@@ -7187,7 +7187,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114860906563191488
+--- !u!114 &114345549954559580
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -7195,7 +7195,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1167937335566138}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39f66999b7f65f947ab0dd2a02d42e9f, type: 3}
+  m_Script: {fileID: 11500000, guid: a758d74729580d6408cad0e76a3a843f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   initialPosition: {x: 0, y: 0, z: 0}

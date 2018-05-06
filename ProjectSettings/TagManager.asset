@@ -16,6 +16,7 @@ TagManager:
   - RespawnP2
   - Shield
   - StunEffect
+  - MessageController
   layers:
   - Default
   - TransparentFX
