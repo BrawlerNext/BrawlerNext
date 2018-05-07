@@ -1831,8 +1831,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1136907641206556}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 4.18, z: 9.01}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.7921257, y: 0.92629766, z: 7.385908}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4892194270599446}
@@ -2454,7 +2454,7 @@ MonoBehaviour:
   controller: 2
   playerManager: {fileID: 0}
   isIgnoringForward: 0
-  stunTime: 5
+  stunTime: 1
   stunEffect: {fileID: 1785185801764984}
   pushedEFFECT: {fileID: 1860713751244886}
 --- !u!114 &114208735126224546

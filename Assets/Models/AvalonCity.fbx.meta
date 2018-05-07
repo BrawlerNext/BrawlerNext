@@ -1,0 +1,564 @@
+fileFormatVersion: 2
+guid: 86d29b38278700c48abc0ba4553a2dac
+timeCreated: 1525625760
+licenseType: Free
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: Aceras
+    100002: Aceras_y_Farolas
+    100004: //RootNode
+    100006: Back_Button
+    100008: BaseGate
+    100010: Building_Box
+    100012: Building_Flat
+    100014: Building_Flat1
+    100016: Building_Flat_Balcon
+    100018: Building_Flat_Balcon 1
+    100020: Building_Flat_Balcon_Bars
+    100022: Building_Flat_Balcon_Bars 1
+    100024: Building_Fort1
+    100026: Building_Fort1_Windows1_polySurface74
+    100028: Building_Market1_BuildingSmall_5
+    100030: Building_Market1_BuildingSmall_5 1
+    100032: Building_Market_Left
+    100034: Building_Market_Right
+    100036: Building_Modular
+    100038: Building_V_Industries1
+    100040: Building_V_Industries1_Elevator
+    100042: Building_V_Industries_Base
+    100044: Building_V_Industries_THEBIGV
+    100046: Building_V_Industries_Windows
+    100048: BuildingBoxBase
+    100050: BuildingHole
+    100052: BuildingRandom1
+    100054: BuildingRandom2
+    100056: Button_Play
+    100058: ButtonBack
+    100060: ButtonCredits1
+    100062: ButtonSettings1
+    100064: Cartel_1
+    100066: Cartel_1 1
+    100068: Cartel_2
+    100070: Cartel_2 1
+    100072: Cartel_3
+    100074: Cartel_3 1
+    100076: Cartel_4
+    100078: Cartel_4 1
+    100080: Cartel_Menu
+    100082: CartelesCharacterSelection
+    100084: CartelesCharacterSelection 1
+    100086: CartelesRandom
+    100088: CartelesRandom 1
+    100090: Cartelin1
+    100092: Cartelin2
+    100094: Cartelin2_1
+    100096: Cartelin2_2
+    100098: Cartelin2_3
+    100100: Cartelin2_4
+    100102: Cartelin2_5
+    100104: Cartelin3
+    100106: Cartelin4
+    100108: Cartelin5
+    100110: Cartell
+    100112: CartelMenu1
+    100114: CartelModular
+    100116: CartelModularNeon3
+    100118: CartelModularSoporte
+    100120: CartelPlay
+    100122: CartelPlay 1
+    100124: Character_Selection_1
+    100126: Character_Selection_1 1
+    100128: Character_Selection_2
+    100130: Character_Selection_2 1
+    100132: Character_Selection_3
+    100134: Character_Selection_3 1
+    100136: Character_Selection_4
+    100138: Character_Selection_4 1
+    100140: Elevator
+    100142: Farola_1
+    100144: Farola_2
+    100146: Farola_3
+    100148: Farola_4
+    100150: Farolas
+    100152: FlatBuilding_Base
+    100154: FlatBuilding_Base 1
+    100156: Floor
+    100158: GateLeft
+    100160: GateRight
+    100162: HoleBase
+    100164: HoleProtection
+    100166: HoleSphere
+    100168: LeftPanelCartelX
+    100170: Market_BalconGlass
+    100172: Market_BalconGlass 1
+    100174: Market_BalconWindow
+    100176: Market_BalconWindow 1
+    100178: Martek_Balcon_Bar
+    100180: Martek_Balcon_Bar 1
+    100182: Modular_Right
+    100184: ModularBase
+    100186: ModularLeft
+    100188: PanelBuildingBox
+    100190: polySurface122
+    100192: polySurface22
+    100194: RandomBase
+    100196: RandomBase2
+    100198: SoporteCartelesMarket
+    100200: SoporteCartelesMarket 1
+    100202: SoporteCartelFort
+    100204: SoporteCartelPlay1
+    100206: V_Gate
+    100208: VsPlayer_Button
+    100210: VsWaves_Button
+    400000: Aceras
+    400002: Aceras_y_Farolas
+    400004: //RootNode
+    400006: Back_Button
+    400008: BaseGate
+    400010: Building_Box
+    400012: Building_Flat
+    400014: Building_Flat1
+    400016: Building_Flat_Balcon
+    400018: Building_Flat_Balcon 1
+    400020: Building_Flat_Balcon_Bars
+    400022: Building_Flat_Balcon_Bars 1
+    400024: Building_Fort1
+    400026: Building_Fort1_Windows1_polySurface74
+    400028: Building_Market1_BuildingSmall_5
+    400030: Building_Market1_BuildingSmall_5 1
+    400032: Building_Market_Left
+    400034: Building_Market_Right
+    400036: Building_Modular
+    400038: Building_V_Industries1
+    400040: Building_V_Industries1_Elevator
+    400042: Building_V_Industries_Base
+    400044: Building_V_Industries_THEBIGV
+    400046: Building_V_Industries_Windows
+    400048: BuildingBoxBase
+    400050: BuildingHole
+    400052: BuildingRandom1
+    400054: BuildingRandom2
+    400056: Button_Play
+    400058: ButtonBack
+    400060: ButtonCredits1
+    400062: ButtonSettings1
+    400064: Cartel_1
+    400066: Cartel_1 1
+    400068: Cartel_2
+    400070: Cartel_2 1
+    400072: Cartel_3
+    400074: Cartel_3 1
+    400076: Cartel_4
+    400078: Cartel_4 1
+    400080: Cartel_Menu
+    400082: CartelesCharacterSelection
+    400084: CartelesCharacterSelection 1
+    400086: CartelesRandom
+    400088: CartelesRandom 1
+    400090: Cartelin1
+    400092: Cartelin2
+    400094: Cartelin2_1
+    400096: Cartelin2_2
+    400098: Cartelin2_3
+    400100: Cartelin2_4
+    400102: Cartelin2_5
+    400104: Cartelin3
+    400106: Cartelin4
+    400108: Cartelin5
+    400110: Cartell
+    400112: CartelMenu1
+    400114: CartelModular
+    400116: CartelModularNeon3
+    400118: CartelModularSoporte
+    400120: CartelPlay
+    400122: CartelPlay 1
+    400124: Character_Selection_1
+    400126: Character_Selection_1 1
+    400128: Character_Selection_2
+    400130: Character_Selection_2 1
+    400132: Character_Selection_3
+    400134: Character_Selection_3 1
+    400136: Character_Selection_4
+    400138: Character_Selection_4 1
+    400140: Elevator
+    400142: Farola_1
+    400144: Farola_2
+    400146: Farola_3
+    400148: Farola_4
+    400150: Farolas
+    400152: FlatBuilding_Base
+    400154: FlatBuilding_Base 1
+    400156: Floor
+    400158: GateLeft
+    400160: GateRight
+    400162: HoleBase
+    400164: HoleProtection
+    400166: HoleSphere
+    400168: LeftPanelCartelX
+    400170: Market_BalconGlass
+    400172: Market_BalconGlass 1
+    400174: Market_BalconWindow
+    400176: Market_BalconWindow 1
+    400178: Martek_Balcon_Bar
+    400180: Martek_Balcon_Bar 1
+    400182: Modular_Right
+    400184: ModularBase
+    400186: ModularLeft
+    400188: PanelBuildingBox
+    400190: polySurface122
+    400192: polySurface22
+    400194: RandomBase
+    400196: RandomBase2
+    400198: SoporteCartelesMarket
+    400200: SoporteCartelesMarket 1
+    400202: SoporteCartelFort
+    400204: SoporteCartelPlay1
+    400206: V_Gate
+    400208: VsPlayer_Button
+    400210: VsWaves_Button
+    2300000: Aceras
+    2300002: Back_Button
+    2300004: BaseGate
+    2300006: Building_Flat_Balcon
+    2300008: Building_Flat_Balcon 1
+    2300010: Building_Flat_Balcon_Bars
+    2300012: Building_Flat_Balcon_Bars 1
+    2300014: Building_Fort1_Windows1_polySurface74
+    2300016: Building_Market1_BuildingSmall_5
+    2300018: Building_Market1_BuildingSmall_5 1
+    2300020: Building_V_Industries1_Elevator
+    2300022: Building_V_Industries_Base
+    2300024: Building_V_Industries_THEBIGV
+    2300026: Building_V_Industries_Windows
+    2300028: BuildingBoxBase
+    2300030: Button_Play
+    2300032: ButtonBack
+    2300034: ButtonCredits1
+    2300036: ButtonSettings1
+    2300038: Cartel_1
+    2300040: Cartel_1 1
+    2300042: Cartel_2
+    2300044: Cartel_2 1
+    2300046: Cartel_3
+    2300048: Cartel_3 1
+    2300050: Cartel_4
+    2300052: Cartel_4 1
+    2300054: Cartelin1
+    2300056: Cartelin2
+    2300058: Cartelin2_1
+    2300060: Cartelin2_2
+    2300062: Cartelin2_3
+    2300064: Cartelin2_4
+    2300066: Cartelin2_5
+    2300068: Cartelin3
+    2300070: Cartelin4
+    2300072: Cartelin5
+    2300074: CartelMenu1
+    2300076: CartelModular
+    2300078: CartelModularNeon3
+    2300080: CartelModularSoporte
+    2300082: CartelPlay 1
+    2300084: Character_Selection_1
+    2300086: Character_Selection_1 1
+    2300088: Character_Selection_2
+    2300090: Character_Selection_2 1
+    2300092: Character_Selection_3
+    2300094: Character_Selection_3 1
+    2300096: Character_Selection_4
+    2300098: Character_Selection_4 1
+    2300100: Elevator
+    2300102: Farola_1
+    2300104: Farola_2
+    2300106: Farola_3
+    2300108: Farola_4
+    2300110: Farolas
+    2300112: FlatBuilding_Base
+    2300114: FlatBuilding_Base 1
+    2300116: Floor
+    2300118: GateLeft
+    2300120: GateRight
+    2300122: HoleBase
+    2300124: HoleProtection
+    2300126: HoleSphere
+    2300128: LeftPanelCartelX
+    2300130: Market_BalconGlass
+    2300132: Market_BalconGlass 1
+    2300134: Market_BalconWindow
+    2300136: Market_BalconWindow 1
+    2300138: Martek_Balcon_Bar
+    2300140: Martek_Balcon_Bar 1
+    2300142: Modular_Right
+    2300144: ModularBase
+    2300146: ModularLeft
+    2300148: polySurface122
+    2300150: polySurface22
+    2300152: RandomBase
+    2300154: RandomBase2
+    2300156: SoporteCartelesMarket
+    2300158: SoporteCartelesMarket 1
+    2300160: SoporteCartelFort
+    2300162: SoporteCartelPlay1
+    2300164: V_Gate
+    2300166: VsPlayer_Button
+    2300168: VsWaves_Button
+    3300000: Aceras
+    3300002: Back_Button
+    3300004: BaseGate
+    3300006: Building_Flat_Balcon
+    3300008: Building_Flat_Balcon 1
+    3300010: Building_Flat_Balcon_Bars
+    3300012: Building_Flat_Balcon_Bars 1
+    3300014: Building_Fort1_Windows1_polySurface74
+    3300016: Building_Market1_BuildingSmall_5
+    3300018: Building_Market1_BuildingSmall_5 1
+    3300020: Building_V_Industries1_Elevator
+    3300022: Building_V_Industries_Base
+    3300024: Building_V_Industries_THEBIGV
+    3300026: Building_V_Industries_Windows
+    3300028: BuildingBoxBase
+    3300030: Button_Play
+    3300032: ButtonBack
+    3300034: ButtonCredits1
+    3300036: ButtonSettings1
+    3300038: Cartel_1
+    3300040: Cartel_1 1
+    3300042: Cartel_2
+    3300044: Cartel_2 1
+    3300046: Cartel_3
+    3300048: Cartel_3 1
+    3300050: Cartel_4
+    3300052: Cartel_4 1
+    3300054: Cartelin1
+    3300056: Cartelin2
+    3300058: Cartelin2_1
+    3300060: Cartelin2_2
+    3300062: Cartelin2_3
+    3300064: Cartelin2_4
+    3300066: Cartelin2_5
+    3300068: Cartelin3
+    3300070: Cartelin4
+    3300072: Cartelin5
+    3300074: CartelMenu1
+    3300076: CartelModular
+    3300078: CartelModularNeon3
+    3300080: CartelModularSoporte
+    3300082: CartelPlay 1
+    3300084: Character_Selection_1
+    3300086: Character_Selection_1 1
+    3300088: Character_Selection_2
+    3300090: Character_Selection_2 1
+    3300092: Character_Selection_3
+    3300094: Character_Selection_3 1
+    3300096: Character_Selection_4
+    3300098: Character_Selection_4 1
+    3300100: Elevator
+    3300102: Farola_1
+    3300104: Farola_2
+    3300106: Farola_3
+    3300108: Farola_4
+    3300110: Farolas
+    3300112: FlatBuilding_Base
+    3300114: FlatBuilding_Base 1
+    3300116: Floor
+    3300118: GateLeft
+    3300120: GateRight
+    3300122: HoleBase
+    3300124: HoleProtection
+    3300126: HoleSphere
+    3300128: LeftPanelCartelX
+    3300130: Market_BalconGlass
+    3300132: Market_BalconGlass 1
+    3300134: Market_BalconWindow
+    3300136: Market_BalconWindow 1
+    3300138: Martek_Balcon_Bar
+    3300140: Martek_Balcon_Bar 1
+    3300142: Modular_Right
+    3300144: ModularBase
+    3300146: ModularLeft
+    3300148: polySurface122
+    3300150: polySurface22
+    3300152: RandomBase
+    3300154: RandomBase2
+    3300156: SoporteCartelesMarket
+    3300158: SoporteCartelesMarket 1
+    3300160: SoporteCartelFort
+    3300162: SoporteCartelPlay1
+    3300164: V_Gate
+    3300166: VsPlayer_Button
+    3300168: VsWaves_Button
+    4300000: polySurface22
+    4300002: ButtonBack
+    4300004: Button_Play
+    4300006: ButtonSettings1
+    4300008: ButtonCredits1
+    4300010: CartelMenu1
+    4300012: SoporteCartelPlay1
+    4300014: Farola_1
+    4300016: Farola_2
+    4300018: Farola_3
+    4300020: Farola_4
+    4300022: CartelPlay
+    4300024: VsPlayer_Button
+    4300026: VsWaves_Button
+    4300028: Back_Button
+    4300030: Character_Selection_1
+    4300032: Character_Selection_2
+    4300034: Character_Selection_3
+    4300036: Character_Selection_4
+    4300038: SoporteCartelesMarket
+    4300040: Cartel_1
+    4300042: Cartel_2
+    4300044: Cartel_3
+    4300046: Cartel_4
+    4300048: Market_BalconGlass
+    4300050: Market_BalconWindow
+    4300052: Martek_Balcon_Bar
+    4300054: Building_Market1_BuildingSmall_5
+    4300056: Character_Selection_1
+    4300058: Character_Selection_2
+    4300060: Character_Selection_3
+    4300062: Character_Selection_4
+    4300064: SoporteCartelesMarket
+    4300066: Cartel_1
+    4300068: Cartel_2
+    4300070: Cartel_3
+    4300072: Cartel_4
+    4300074: Market_BalconGlass
+    4300076: Market_BalconWindow
+    4300078: Martek_Balcon_Bar
+    4300080: Building_Market1_BuildingSmall_5
+    4300082: Modular_Right
+    4300084: ModularLeft
+    4300086: ModularBase
+    4300088: CartelModularSoporte
+    4300090: CartelModular
+    4300092: CartelModularNeon3
+    4300094: HoleBase
+    4300096: HoleProtection
+    4300098: HoleSphere
+    4300100: GateRight
+    4300102: GateLeft
+    4300104: SoporteCartelFort
+    4300106: BaseGate
+    4300108: V_Gate
+    4300110: Building_Fort1_Windows1_polySurface74
+    4300112: Elevator
+    4300114: Building_V_Industries_Windows
+    4300116: Building_V_Industries_Base
+    4300118: Building_V_Industries1_Elevator
+    4300120: Building_V_Industries_THEBIGV
+    4300122: RandomBase
+    4300124: Cartelin1
+    4300126: Cartelin2
+    4300128: Cartelin3
+    4300130: Cartelin4
+    4300132: Cartelin5
+    4300134: RandomBase2
+    4300136: Cartelin2_1
+    4300138: Cartelin2_2
+    4300140: Cartelin2_3
+    4300142: Cartelin2_4
+    4300144: Cartelin2_5
+    4300146: FlatBuilding_Base
+    4300148: Building_Flat_Balcon_Bars
+    4300150: Building_Flat_Balcon
+    4300152: Farolas
+    4300154: Aceras
+    4300156: FlatBuilding_Base
+    4300158: Building_Flat_Balcon_Bars
+    4300160: Building_Flat_Balcon
+    4300162: BuildingBoxBase
+    4300164: LeftPanelCartelX
+    4300166: polySurface122
+    4300168: Floor
+    7400000: Take 001
+    9500000: //RootNode
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: aiStandardSurface46
+    second: {fileID: 2100000, guid: 66786372f5854524f9432726df92a2ba, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: aiStandardSurface47
+    second: {fileID: 2100000, guid: 7d1abf6fb5c8e4a42b95fd2a46b7207f, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

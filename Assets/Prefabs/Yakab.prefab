@@ -9271,11 +9271,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ImpulseMultiplier: 1
   delayImpulseOnHit: 0.5
+  isInvulnerable: 0
+  invulnerableTime: 2
   character: {fileID: 11400000, guid: 5e2046ca4825c484aa7014494fd45422, type: 2}
   player: 0
   controller: 0
   playerManager: {fileID: 0}
   isIgnoringForward: 0
+  stunTime: 1
   stunEffect: {fileID: 1842945693146896}
   pushedEFFECT: {fileID: 1986891514583412}
 --- !u!114 &114669904357642232
