@@ -32,6 +32,26 @@ public class AudioManager
             Debug.LogWarning("Audio type: " + type.ToString() + " not found in " + character.ToString() + " clips!");
         }
     }
+
+    internal void PlayOnce(AudioType type)
+    {
+        if (type != AudioType.NONE)
+        {
+            foreach (AudioEntry audioEntry in character.clips)
+            {
+                if (audioEntry.Type == type)
+                {
+                    if (!soundSource.isPlaying) {
+                        soundSource.clip = audioEntry.Clip;
+                        soundSource.Play();
+                    }
+                    return;
+                }
+            }
+
+            Debug.LogWarning("Audio type: " + type.ToString() + " not found in " + character.ToString() + " clips!");
+        }
+    }
 }
 
 [Serializable]
@@ -54,5 +74,7 @@ public enum AudioType
     SHIELD_HIT,
     SHIELD_DOWN,
     NONE,
-    DASH
+    DASH,
+    RUN,
+    JUMP_END
 }
