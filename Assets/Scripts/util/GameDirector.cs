@@ -51,9 +51,11 @@ public class GameDirector : MonoBehaviour
 
     InitializePosition();
 
-    FreezePlayers(true);
+    if (!Debugging) {
+      FreezePlayers(true);
 
-    StartCoroutine(StartCounter());
+      StartCoroutine(StartCounter());
+    }
 
     InitializeEvents();
   }

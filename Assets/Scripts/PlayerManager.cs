@@ -24,17 +24,13 @@ public abstract class PlayerManager : MonoBehaviour
 
   // Colliders of the player
   public bool isIgnoringForward = false;
-  protected Collider leftPunchCollider;
 
   protected Collider dashCollider;
-
-  protected Collider rightPunchCollider;
+  public PunchCollider[] colliders;
   protected GameObject shield;
 
   public float stunTime = 1f;
 
-
-  //retjrejtopertjeroptjoetorep
   public GameObject stunEffect;
   public GameObject pushedEFFECT;
 
@@ -86,6 +82,7 @@ public abstract class PlayerManager : MonoBehaviour
 
     rb = gameObject.GetComponent<Rigidbody>();
     groundChecker = gameObject.GetComponentInChildren<GroundChecker>();
+    groundChecker.Init(character, audioManager);
     animator = gameObject.GetComponentInChildren<Animator>();
 
     controlManager = gameObject.GetComponent<ControlManager>();
@@ -100,18 +97,6 @@ public abstract class PlayerManager : MonoBehaviour
       {
         shield = child.gameObject;
         shield.SetActive(false);
-      }
-
-      if (child.CompareTag("LeftPunchCollider"))
-      {
-        leftPunchCollider = child.GetComponent<Collider>();
-        leftPunchCollider.enabled = false;
-      }
-
-      if (child.CompareTag("RightPunchCollider"))
-      {
-        rightPunchCollider = child.GetComponent<Collider>();
-        rightPunchCollider.enabled = false;
       }
 
       if (child.name == "DashCollider")
@@ -196,6 +181,7 @@ public abstract class PlayerManager : MonoBehaviour
     }
 
 
+    animator.SetBool("IsPushed", isPushed);
     if (isPushed)
     {
       pushedEFFECT.SetActive(true);
@@ -216,6 +202,8 @@ public abstract class PlayerManager : MonoBehaviour
 
       bool isDashing = dashDelay < character.dashTimeInSeconds;
 
+      animator.SetBool("IsDashing", isDashing);
+
       if (isDashing)
       {
         Dash();
@@ -231,6 +219,7 @@ public abstract class PlayerManager : MonoBehaviour
         {
           if (currentShieldLife < (character.shieldLife * 0.25))
           {
+            Stun(3);
             audioManager.Play(AudioType.SHIELD_DOWN);
             shieldIsRepairing = true;
             StartCoroutine(RepairShield());
@@ -244,6 +233,8 @@ public abstract class PlayerManager : MonoBehaviour
         }
 
         bool shieldIsActive = shield.activeSelf;
+
+        animator.SetBool("IsDefending", shieldIsActive);
 
         if (!shieldIsActive && shieldsUp)
         {
@@ -266,6 +257,8 @@ public abstract class PlayerManager : MonoBehaviour
         }
       }
 
+      animator.SetBool("IsAeroAttacking", ActuallyDoing[Actions.AERO_HIT]);
+      
       if (ActuallyDoing[Actions.AERO_HIT])
       {
         rb.velocity = Vector3.zero;
@@ -298,8 +291,6 @@ public abstract class PlayerManager : MonoBehaviour
 
       isDashing = ActuallyDoing[Actions.DASHING] |= controlManager.IsDashing();
 
-      animator.SetBool("IsDashing", isDashing);
-
       if (isDashing)
       {
         dashCollider.enabled = isDashing;
@@ -328,6 +319,7 @@ public abstract class PlayerManager : MonoBehaviour
         {
           ActuallyDoing[Actions.JUMP] = false;
 
+          print(groundChecker.isGrounded || currentJumps < character.maxJumps);
           if (groundChecker.isGrounded || currentJumps < character.maxJumps)
           {
             currentJumps++;
@@ -432,6 +424,8 @@ public abstract class PlayerManager : MonoBehaviour
     float horizontalMovement = controlManager.GetHorizontalMovement();
     float verticalMovement = controlManager.GetVerticalMovement();
 
+    animator.SetBool("IsRunning", false);
+    
     if (Math.Abs(horizontalMovement) != 0f || Math.Abs(verticalMovement) != 0f)
     {
       Vector3 horizontalVector = Camera.main.transform.right * controlManager.GetHorizontalMovement();
@@ -439,9 +433,11 @@ public abstract class PlayerManager : MonoBehaviour
       movement += groundChecker.isGrounded ? horizontalVector : horizontalVector / 2;
       movement += groundChecker.isGrounded ? verticalVector : verticalVector / 2;
       lastAction = Actions.MOVE;
-    }
 
-    animator.SetBool("IsRunning", (Math.Abs(movement.x) > 0.5f || Math.Abs(movement.z) > 0.5f));
+      audioManager.PlayOnce(AudioType.RUN);
+
+      animator.SetBool("IsRunning", (Math.Abs(movement.x) > 0.5f || Math.Abs(movement.z) > 0.5f));
+    }
 
     lastMovementNormalized = movement.normalized;
 
@@ -543,8 +539,10 @@ public abstract class PlayerManager : MonoBehaviour
 
   private Vector3 getCollisionPoint()
   {
-    if (leftPunchCollider.enabled) return leftPunchCollider.transform.position;
-    if (rightPunchCollider.enabled) return rightPunchCollider.transform.position;
+    foreach (PunchCollider punchCollider in colliders)
+    {
+        if (punchCollider.collider.enabled) return punchCollider.collider.transform.position;
+    }
 
     return Vector3.zero;
   }
@@ -678,14 +676,12 @@ public abstract class PlayerManager : MonoBehaviour
     ActuallyDoing[action] = false;
   }
 
-  public void toogleLeftPunchCollider()
+  public void TooglePunchCollider(ColliderType colliderType)
   {
-    leftPunchCollider.enabled = !leftPunchCollider.enabled;
-  }
-
-  public void toogleRightPunchCollider()
-  {
-    rightPunchCollider.enabled = !rightPunchCollider.enabled;
+    foreach (PunchCollider punchCollider in colliders)
+    {
+        if (punchCollider.colliderType == colliderType) punchCollider.collider.enabled = !punchCollider.collider.enabled;
+    }
   }
 
   public void OnCollisionStay(Collision other)
