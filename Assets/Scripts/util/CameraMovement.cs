@@ -22,8 +22,8 @@ public class CameraMovement : MonoBehaviour
 
     void Awake()
     {
-        player1 = GameObject.Find("P1").transform;
-        player2 = GameObject.Find("P2").transform;
+        player1 = GameObject.FindGameObjectWithTag("P1").transform;
+        player2 = GameObject.FindGameObjectWithTag("P2").transform;
     }
 
     void Update()

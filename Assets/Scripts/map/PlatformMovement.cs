@@ -10,12 +10,12 @@ public class PlatformMovement : MonoBehaviour {
     protected bool startToEnd = true;
 
     private void Awake() {
-        this.transform.position = initialPosition;
+        this.transform.localPosition = initialPosition;
     }
 
     private void Update()
     {
-        Vector3 currentPosition = this.transform.position;
+        Vector3 currentPosition = this.transform.localPosition;
 
         Vector3 newPos;
         bool changeDirection;
@@ -33,7 +33,7 @@ public class PlatformMovement : MonoBehaviour {
             changeDirection = Mathf.Abs(Vector3.Distance(currentPosition, initialPosition)) < 0.5f;
         }
 
-        this.transform.position = newPos;
+        this.transform.localPosition = newPos;
 
         if (changeDirection)
             {

@@ -23,6 +23,7 @@ namespace characters.scriptables
         public float aeroPunchSpeed = 10;
         public float aeroStopTime = 0.5f;
         public float aeroMaxDistance = 10;
+		public float aeroAscensionDistance = 0.1f;
 
 		public float shieldRepairDelay = 3;
 		public float shieldLife = 100;
@@ -32,5 +33,5 @@ namespace characters.scriptables
 
         public AudioEntry[] clips;
         public Particle[] particles;
-	}
+    }
 }

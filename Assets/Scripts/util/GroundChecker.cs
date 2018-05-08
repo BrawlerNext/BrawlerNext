@@ -12,16 +12,23 @@ namespace util
 
         void OnTriggerEnter(Collider col)
         {
-            if (col.gameObject.CompareTag("Ground"))
+            if (col.gameObject.CompareTag("Ground") || (col.gameObject.tag.Contains("P") && col.gameObject.tag.Length == 2))
             {
                 isGrounded = true;
                 audioManager.Play(AudioType.JUMP_END);
             }
         }
 
+        private void OnTriggerStay(Collider col) {
+            if (col.gameObject.CompareTag("Ground") || (col.gameObject.tag.Contains("P") && col.gameObject.tag.Length == 2))
+            {
+                isGrounded = true;
+            }
+        }
+
         void OnTriggerExit(Collider col)
         {
-            if (col.gameObject.CompareTag("Ground"))
+            if (col.gameObject.CompareTag("Ground") || (col.gameObject.tag.Contains("P") && col.gameObject.tag.Length == 2))
             {
                 isGrounded = false;
             }

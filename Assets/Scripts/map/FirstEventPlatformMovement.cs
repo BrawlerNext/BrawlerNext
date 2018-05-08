@@ -29,14 +29,14 @@ public class FirstEventPlatformMovement : MonoBehaviour
 
     if (eventStart)
     {
-      eventStart = !(Mathf.Abs(Vector3.Distance(currentPosition, finalPosition)) < 0.5f);
+      eventStart = !(Mathf.Abs(Vector3.Distance(currentPosition, finalPosition)) < 0.1f);
 
       this.transform.localPosition = Vector3.Lerp(currentPosition, finalPosition, Time.deltaTime);
     }
 
     if (eventEnd)
     {
-      eventEnd = !(Mathf.Abs(Vector3.Distance(currentPosition, startPosition)) < 0.5f);
+      eventEnd = !(Mathf.Abs(Vector3.Distance(currentPosition, startPosition)) < 0.1f);
 
       this.transform.localPosition = Vector3.Lerp(currentPosition, startPosition, Time.deltaTime);
     }
