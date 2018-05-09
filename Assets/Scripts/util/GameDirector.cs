@@ -96,8 +96,8 @@ public class GameDirector : MonoBehaviour
 
   private void InitializePosition()
   {
-    player1.Reset();
-    player2.Reset();
+    player1.BasicReset();
+    player2.BasicReset();
   }
 
   private void RoundMessage() {
@@ -114,7 +114,9 @@ public class GameDirector : MonoBehaviour
     {
       player1Deaths++;
       InitializePosition();
-      player1.GetComponent<PlayerManager>().PlaySoundOf(AudioType.DEATH);
+      PlayerManager playerManager = player1.GetComponent<PlayerManager>();
+      playerManager.PlaySoundOf(AudioType.DEATH);
+      playerManager.damage = 0;
       InitializeEvents();
     }
 
@@ -122,7 +124,9 @@ public class GameDirector : MonoBehaviour
     {
       player2Deaths++;
       InitializePosition();
-      player2.GetComponent<PlayerManager>().PlaySoundOf(AudioType.DEATH);
+      PlayerManager playerManager = player2.GetComponent<PlayerManager>();
+      playerManager.PlaySoundOf(AudioType.DEATH);
+      playerManager.damage = 0;
       InitializeEvents();
     }
 

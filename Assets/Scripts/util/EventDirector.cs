@@ -73,7 +73,7 @@ public class EventDirector : MonoBehaviour
         {
             gameDirector.ShowMessage("¡El gran centro desaparecerá!");
         }
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(7.5f);
         gameObject.BroadcastMessage(eventName, false);
         eventFinished = true;
     }

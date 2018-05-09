@@ -13,6 +13,6 @@ public class PlayerDamageCounter : MonoBehaviour {
   }
 
   private void Update() {
-    damageText.text = playerManager.GetDamage() + " %";
+    damageText.text = playerManager.damage + " %";
   }
 }

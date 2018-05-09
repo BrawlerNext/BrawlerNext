@@ -84,6 +84,7 @@ public class CollisionManager : MonoBehaviour
         Vector3 positionToInstantiate = getCollisionPoint();
 
         if (!collider.tag.Contains(otherPlayer.tag)) return;
+        if (pm.shieldsUp) return;
 
         switch (lastAction)
         {

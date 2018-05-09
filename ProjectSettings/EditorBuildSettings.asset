@@ -8,3 +8,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scene/InGame.unity
     guid: 6809ac29fa6f32049a5eb0e625b60a8b
+  - enabled: 1
+    path: Assets/Scene/Winner.unity
+    guid: ef04e4eddb518044ab06ef4fae94e967
+  - enabled: 1
+    path: Assets/Scene/Main Menu.unity
+    guid: a867e41fa4c2eb04c98f0ac39eb55d2d

@@ -53,12 +53,16 @@ public abstract class PlayerManager : MonoBehaviour
     protected int currentJumps = 0;
 
     protected float currentShieldLife = 0;
-    protected bool shieldsUp = false;
+
+    [HideInInspector]
+    public bool shieldsUp = false;
     protected bool shieldIsRepairing = false;
 
     protected float impulseDelay = 0;
     protected float impulse = 0;
-    protected float damage = 0;
+
+    [HideInInspector]
+    public float damage = 0;
 
     protected float aeroStopTime = 0;
     protected Vector3 startPosition = Vector3.zero;
@@ -66,6 +70,8 @@ public abstract class PlayerManager : MonoBehaviour
     protected Vector3 direction = Vector3.zero;
 
     protected Vector3 lastMovementNormalized;
+
+    protected IEnumerator finishingCombo = null;
 
     [HideInInspector]
     public float dashDelay = 999;
@@ -130,19 +136,9 @@ public abstract class PlayerManager : MonoBehaviour
         }
     }
 
-    protected void FixedUpdate()
+    protected void Update()
     {
         if (isFreeze) return;
-
-        if (!shieldsUp && !isDashing)
-        {
-            animator.SetBool("IsRunning", Flags[Actions.MOVE]);
-
-            if (Flags[Actions.MOVE] && !isPushed)
-            {
-                Move();
-            }
-        }
 
         if (!controlManager.IsCancelTargeting())
         {
@@ -190,9 +186,13 @@ public abstract class PlayerManager : MonoBehaviour
         {
             dashDelay += Time.deltaTime;
 
+            bool wasDashing = isDashing;
+
             isDashing = dashDelay < character.dashTimeInSeconds;
 
             animator.SetBool("IsDashing", isDashing);
+
+            if (wasDashing && !isDashing) lastAction = Actions.IDLE;
 
             if (isDashing)
             {
@@ -202,11 +202,6 @@ public abstract class PlayerManager : MonoBehaviour
 
             animator.SetInteger("Combo", currentCombo);
             animator.SetBool("InAir", !groundChecker.isGrounded);
-
-            if (currentCombo == 4)
-            {
-                StartCoroutine(FinishCombo());
-            }
 
             if (Flags[Actions.DEFEND] || !groundChecker.isGrounded)
             {
@@ -314,36 +309,6 @@ public abstract class PlayerManager : MonoBehaviour
                 }
             }
 
-            ActuallyDoing[Actions.JUMP] |= controlManager.IsJumping();
-
-            if (Flags[Actions.JUMP])
-            {
-                if (ActuallyDoing[Actions.JUMP])
-                {
-                    ActuallyDoing[Actions.JUMP] = false;
-
-                    if (groundChecker.isGrounded || currentJumps <= character.maxJumps)
-                    {
-                        animator.SetBool("IsJumping", true);
-                        audioManager.Play(AudioType.JUMP);
-                        rb.mass = 73;
-                        rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-                        rb.AddForce(Vector3.up * character.jumpForce * 10, ForceMode.Impulse);
-                        Jump();
-                        currentJumps++;
-                    }
-
-                    return;
-                }
-
-                if (groundChecker.isGrounded)
-                {
-                    currentJumps = 0;
-                }
-
-                animator.SetBool("IsJumping", false);
-            }
-
             ActuallyDoing[Actions.SOFT_PUNCH] |= controlManager.IsSoftAttacking();
 
             animator.SetBool("IsSoftAttacking", ActuallyDoing[Actions.SOFT_PUNCH] && Flags[Actions.SOFT_PUNCH] && groundChecker.isGrounded);
@@ -356,6 +321,11 @@ public abstract class PlayerManager : MonoBehaviour
                         lastAction = Actions.SOFT_PUNCH;
                         ActuallyDoing[Actions.SOFT_PUNCH] = false;
                         SoftAttack();
+
+                        if (finishingCombo != null) StopCoroutine(finishingCombo);
+
+                        finishingCombo = FinishCombo();
+                        StartCoroutine(finishingCombo);
                     }
                     else
                     {
@@ -393,10 +363,68 @@ public abstract class PlayerManager : MonoBehaviour
         }
     }
 
+    void FixedUpdate()
+    {
+        if (isFreeze) return;
+
+        if (!shieldsUp && !isDashing)
+        {
+            animator.SetBool("IsRunning", Flags[Actions.MOVE]);
+
+            if (Flags[Actions.MOVE] && !isPushed)
+            {
+                Move();
+            }
+        }
+
+        if (impulse > 0)
+        {
+            return;
+        }
+
+        if (isPushed)
+        {
+            return;
+        }
+
+        if (!isStunned)
+        {
+            ActuallyDoing[Actions.JUMP] |= controlManager.IsJumping();
+
+            if (Flags[Actions.JUMP])
+            {
+                if (ActuallyDoing[Actions.JUMP])
+                {
+                    ActuallyDoing[Actions.JUMP] = false;
+
+                    if (groundChecker.isGrounded || currentJumps < character.maxJumps)
+                    {
+                        animator.SetBool("IsJumping", true);
+                        audioManager.Play(AudioType.JUMP);
+                        rb.mass = 73;
+                        rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+                        rb.AddForce(Vector3.up * character.jumpForce * 10, ForceMode.Impulse);
+                        Jump();
+                        currentJumps++;
+                    }
+
+                    return;
+                }
+
+                if (groundChecker.isGrounded)
+                {
+                    currentJumps = 0;
+                }
+
+                animator.SetBool("IsJumping", false);
+            }
+        }
+    }
+
     private IEnumerator FinishCombo()
     {
+        yield return new WaitForSeconds(0.25f);
         ResetCombo();
-        yield return new WaitForSeconds(0.5f);
         EnableAllFlags();
     }
 
@@ -526,14 +554,9 @@ public abstract class PlayerManager : MonoBehaviour
 
     }
 
-    public float GetDamage()
+    // Reset all except the damage
+    public void BasicReset()
     {
-        return damage;
-    }
-
-    public void Reset()
-    {
-        damage = 0;
         impulse = 0;
         impulseDelay = 0;
         isPushed = false;
@@ -620,4 +643,6 @@ public abstract class PlayerManager : MonoBehaviour
     {
         ActuallyDoing[action] = false;
     }
+
+
 }
