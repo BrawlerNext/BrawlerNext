@@ -43,7 +43,7 @@ MonoBehaviour:
   aeroMaxDistance: 10
   aeroAscensionDistance: 0.1
   shieldRepairDelay: 3
-  shieldLife: 10
+  shieldLife: 50
   shieldDecayVelocity: 10
   shieldRepairVelocity: 10
   shieldDamagedReducedPercentage: 0.5

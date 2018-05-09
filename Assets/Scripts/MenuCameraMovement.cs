@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MenuCameraMovement : MonoBehaviour {
     public GameObject characterSelection;
@@ -23,5 +24,10 @@ public class MenuCameraMovement : MonoBehaviour {
     public void FadePositionToMapSelection()
     {
         this.transform.position = mapSelection.transform.position;
+    }
+
+    public void GoToScene(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
     }
 }
