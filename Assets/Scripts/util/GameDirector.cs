@@ -49,9 +49,9 @@ public class GameDirector : MonoBehaviour
 
     messageController = GameObject.FindGameObjectWithTag("MessageController").GetComponent<MessageController>();
 
-    InitializePosition();
-
     if (!Debugging) {
+      InitializePosition();
+
       FreezePlayers(true);
 
       StartCoroutine(StartCounter());
