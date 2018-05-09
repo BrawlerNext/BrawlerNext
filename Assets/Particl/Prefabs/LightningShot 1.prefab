@@ -19,6 +19,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4041896741469334}
+  - component: {fileID: 114298607643478980}
   m_Layer: 0
   m_Name: LightningShot 1
   m_TagString: Untagged
@@ -64,12 +65,24 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1459501364717420}
   m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 7.2, z: 18.6}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4041896741469334}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+--- !u!114 &114298607643478980
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1028851454640566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5b642516528a204c9f87e9b2a06c54d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aliveTime: 2
 --- !u!198 &198401850789604108
 ParticleSystem:
   m_ObjectHideFlags: 1
