@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class WinnerScript : MonoBehaviour
 {
@@ -25,5 +26,10 @@ public class WinnerScript : MonoBehaviour
     void Update()
     {
 
+    }
+
+    public void PlayAgainMenu(string scenename)
+    {
+        SceneManager.LoadScene(scenename);
     }
 }
