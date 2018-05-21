@@ -22,6 +22,7 @@ namespace characters.scriptables
         public float aeroPunchDamage = 50;
         public float aeroPunchSpeed = 10;
         public float aeroStopTime = 0.5f;
+        public float aeroHitMaxTime = 2.0f;
         public float aeroMaxDistance = 10;
 		public float aeroAscensionDistance = 0.1f;
 

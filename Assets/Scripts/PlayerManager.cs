@@ -65,6 +65,7 @@ public abstract class PlayerManager : MonoBehaviour
     public float damage = 0;
 
     protected float aeroStopTime = 0;
+    protected float aeroHitMaxTime = 0;
     protected Vector3 startPosition = Vector3.zero;
     protected Vector3 endPosition = Vector3.zero;
     protected Vector3 direction = Vector3.zero;
@@ -78,8 +79,11 @@ public abstract class PlayerManager : MonoBehaviour
 
     [HideInInspector]
     public Actions lastAction = Actions.IDLE;
+
     protected Dictionary<Actions, bool> Flags = new Dictionary<Actions, bool>();
     protected Dictionary<Actions, bool> ActuallyDoing = new Dictionary<Actions, bool>();
+    protected Dictionary<Actions, float> Cooldowns = new Dictionary<Actions, float>();
+    protected Dictionary<Actions, bool> InCooldown = new Dictionary<Actions, bool>();
 
     protected Actions[] AllActions = new[]
         {Actions.JUMP, Actions.HARD_PUNCH, Actions.SOFT_PUNCH, Actions.MOVE, Actions.DEFEND, Actions.DASHING, Actions.AERO_HIT};
@@ -101,8 +105,16 @@ public abstract class PlayerManager : MonoBehaviour
 
         currentShieldLife = character.shieldLife;
 
-        SetFlagsTo(true);
-        SetActuallyDoingTo(false);
+        foreach (Actions action in AllActions)
+        {
+            Cooldowns[action] = 0.0f;
+            InCooldown[action] = false;
+            Flags[action] = true;
+            ActuallyDoing[action] = false;
+        }
+
+        Cooldowns[Actions.AERO_HIT] = 2.0f;
+        Cooldowns[Actions.DASHING] = 1.0f;
 
         FindOtherPlayer();
     }
@@ -136,7 +148,7 @@ public abstract class PlayerManager : MonoBehaviour
         }
     }
 
-    protected void Update()
+    protected void FixedUpdate()
     {
         if (isFreeze) return;
 
@@ -192,7 +204,10 @@ public abstract class PlayerManager : MonoBehaviour
 
             animator.SetBool("IsDashing", isDashing);
 
-            if (wasDashing && !isDashing) lastAction = Actions.IDLE;
+            if (wasDashing && !isDashing) {
+                lastAction = Actions.IDLE;
+                StartCoroutine(StartCooldown(Actions.DASHING));
+            }
 
             if (isDashing)
             {
@@ -262,14 +277,17 @@ public abstract class PlayerManager : MonoBehaviour
                     aeroStopTime -= Time.deltaTime;
                     transform.position += new Vector3(0, character.aeroAscensionDistance, 0);
                     return;
+                } else {
+                    aeroHitMaxTime -= Time.deltaTime;
                 }
 
                 rb.velocity = direction * character.aeroPunchSpeed * 2;
 
-                if (Vector3.Distance(startPosition, transform.position) > character.aeroMaxDistance)
+                if (Vector3.Distance(startPosition, transform.position) > character.aeroMaxDistance || aeroHitMaxTime <= 0)
                 {
                     ActuallyDoing[Actions.AERO_HIT] = false;
                     aeroStopTime = 0;
+                    StartCoroutine(StartCooldown(Actions.AERO_HIT));
                     EnableAllFlags();
                 }
 
@@ -279,6 +297,7 @@ public abstract class PlayerManager : MonoBehaviour
                 {
                     ActuallyDoing[Actions.AERO_HIT] = false;
                     aeroStopTime = 0;
+                    StartCoroutine(StartCooldown(Actions.AERO_HIT));
                     StartCoroutine(EnableAllFlagsAfterTime(0.5f));
                     return;
                 }
@@ -286,7 +305,7 @@ public abstract class PlayerManager : MonoBehaviour
                 return;
             }
 
-            isDashing = ActuallyDoing[Actions.DASHING] |= controlManager.IsDashing() && Vector3.Distance(transform.position, otherPlayer.transform.position) > 2.0;
+            isDashing = ActuallyDoing[Actions.DASHING] |= controlManager.IsDashing() && Vector3.Distance(transform.position, otherPlayer.transform.position) > 2.0 && !InCooldown[Actions.DASHING];
 
             if (isDashing)
             {
@@ -329,7 +348,7 @@ public abstract class PlayerManager : MonoBehaviour
                     }
                     else
                     {
-                        if (Flags[Actions.AERO_HIT])
+                        if (Flags[Actions.AERO_HIT] && !InCooldown[Actions.AERO_HIT])
                         {
                             lastAction = Actions.AERO_HIT;
                             ActuallyDoing[Actions.SOFT_PUNCH] = false;
@@ -341,6 +360,7 @@ public abstract class PlayerManager : MonoBehaviour
                             endPosition = otherPlayer.transform.position;
                             direction = (endPosition - startPosition).normalized;
                             aeroStopTime = character.aeroStopTime;
+                            aeroHitMaxTime = character.aeroHitMaxTime;
                         }
                     }
                     return;
@@ -363,7 +383,7 @@ public abstract class PlayerManager : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
+    void Update()
     {
         if (isFreeze) return;
 
@@ -389,6 +409,10 @@ public abstract class PlayerManager : MonoBehaviour
 
         if (!isStunned)
         {
+            if (!groundChecker.isGrounded && currentJumps > 0) {
+                rb.AddForce(0, -Physics.gravity.y * (rb.mass * 0.6f), 0);
+            }
+
             ActuallyDoing[Actions.JUMP] |= controlManager.IsJumping();
 
             if (Flags[Actions.JUMP])
@@ -401,7 +425,6 @@ public abstract class PlayerManager : MonoBehaviour
                     {
                         animator.SetBool("IsJumping", true);
                         audioManager.Play(AudioType.JUMP);
-                        rb.mass = 73;
                         rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
                         rb.AddForce(Vector3.up * character.jumpForce * 10, ForceMode.Impulse);
                         Jump();
@@ -426,6 +449,12 @@ public abstract class PlayerManager : MonoBehaviour
         yield return new WaitForSeconds(0.25f);
         ResetCombo();
         EnableAllFlags();
+    }
+
+    private IEnumerator StartCooldown(Actions action) {
+        InCooldown[action] = true;
+        yield return new WaitForSeconds(Cooldowns[action]);
+        InCooldown[action] = false;
     }
 
     private IEnumerator RepairShield()
@@ -466,8 +495,8 @@ public abstract class PlayerManager : MonoBehaviour
         {
             Vector3 horizontalVector = Camera.main.transform.right * controlManager.GetHorizontalMovement();
             Vector3 verticalVector = getCameraForwardVector() * controlManager.GetVerticalMovement();
-            movement += groundChecker.isGrounded ? horizontalVector : horizontalVector / 2;
-            movement += groundChecker.isGrounded ? verticalVector : verticalVector / 2;
+            movement += horizontalVector;
+            movement += verticalVector;
             lastAction = Actions.MOVE;
 
             audioManager.PlayOnce(AudioType.RUN);
@@ -485,16 +514,6 @@ public abstract class PlayerManager : MonoBehaviour
        gameObject.transform.position.y + movement.y * character.speed * Time.deltaTime,
        gameObject.transform.position.z + movement.z * character.speed * Time.deltaTime);
 
-
-        if (movement.magnitude == 0)
-            rb.mass = 144;
-        else
-            rb.mass = 73;
-
-        if (!ActuallyDoing[Actions.AERO_HIT])
-        {
-            rb.AddForce(0, Physics.gravity.y / 5, 0);
-        }
     }
 
     private Vector3 getCameraForwardVector()
