@@ -21,6 +21,8 @@ public class CollisionManager : MonoBehaviour
     private Character character;
     private ParticleManager particleManager;
     private Player player;
+    private PlayerManager otherPlayerManager;
+    private bool otherPlayerIsInvulnerable = false;
 
     private void Start()
     {
@@ -45,12 +47,13 @@ public class CollisionManager : MonoBehaviour
             }
         }
 
+        otherPlayerManager = otherPlayer.GetComponent<PlayerManager>();
+
     }
 
     private void Update()
     {
         SetDataFromPlayerManager();
-        print(lastAction);
     }
 
     private void SetDataFromPlayerManager()
@@ -59,6 +62,10 @@ public class CollisionManager : MonoBehaviour
         this.otherPlayer = pm.otherPlayer;
         this.character = pm.character;
         this.player = pm.player;
+
+        if (this.otherPlayerManager != null) {
+            this.otherPlayerIsInvulnerable = otherPlayerManager.isInvulnerable;
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -72,7 +79,9 @@ public class CollisionManager : MonoBehaviour
             case Actions.DASHING:
                 PlayerManager otherPlayerManager = otherPlayer.GetComponent<PlayerManager>();
 
-                otherPlayerManager.Stun(pm.delayImpulseOnHit);
+                if (!this.otherPlayerIsInvulnerable) {
+                    otherPlayerManager.Stun(pm.delayImpulseOnHit);
+                }
 
                 pm.dashDelay = character.dashTimeInSeconds;
                 break;
@@ -83,7 +92,8 @@ public class CollisionManager : MonoBehaviour
     {
         Vector3 positionToInstantiate = getCollisionPoint();
 
-        if (!collider.tag.Contains(otherPlayer.tag)) return;
+        if (!collider.tag.Contains(otherPlayer.tag) || this.otherPlayerIsInvulnerable) return;
+
         if (pm.shieldsUp) return;
 
         switch (lastAction)
@@ -128,9 +138,9 @@ public class CollisionManager : MonoBehaviour
 
     public void Hit(float impulse, Vector3 positionToInstantiate, ParticleType particleType, AudioType audioType, bool inmediateImpulse)
     {
-        lastAction = Actions.IDLE;
+        if (this.otherPlayerIsInvulnerable) return;
 
-        PlayerManager otherPlayerManager = otherPlayer.GetComponent<PlayerManager>();
+        lastAction = Actions.IDLE;
 
         otherPlayerManager.AddImpulse(impulse * pm.impulseMultiplier);
 
@@ -169,9 +179,11 @@ public class CollisionManager : MonoBehaviour
     {
         if (Vector3.Distance(transform.position, otherPlayer.transform.position) < 2)
         {
-            otherPlayer.GetComponent<PlayerManager>().Stun(pm.delayImpulseOnHit);
-
-            Hit(character.aeroPunchDamage, otherPlayer.transform.position, ParticleType.SOFT_HIT, AudioType.SOFT_HIT, false);
+            if (!this.otherPlayerIsInvulnerable) {
+                otherPlayer.GetComponent<PlayerManager>().Stun(pm.delayImpulseOnHit);
+                
+                Hit(character.aeroPunchDamage, otherPlayer.transform.position, ParticleType.SOFT_HIT, AudioType.SOFT_HIT, false);
+            }
 
             return true;
         }

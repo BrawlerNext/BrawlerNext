@@ -587,8 +587,6 @@ public abstract class PlayerManager : MonoBehaviour
         StartCoroutine(InvulnerabilityAfterRespawn());
     }
 
-    // Overrideable methods
-
     IEnumerator InvulnerabilityAfterRespawn()
     {
         isInvulnerable = true;

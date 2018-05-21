@@ -113,7 +113,7 @@ public class GameDirector : MonoBehaviour
     if (player1.isDead())
     {
       player1Deaths++;
-      InitializePosition();
+      player1.BasicReset();
       PlayerManager playerManager = player1.GetComponent<PlayerManager>();
       playerManager.PlaySoundOf(AudioType.DEATH);
       playerManager.damage = 0;
@@ -123,7 +123,7 @@ public class GameDirector : MonoBehaviour
     if (player2.isDead())
     {
       player2Deaths++;
-      InitializePosition();
+      player2.BasicReset();
       PlayerManager playerManager = player2.GetComponent<PlayerManager>();
       playerManager.PlaySoundOf(AudioType.DEATH);
       playerManager.damage = 0;
