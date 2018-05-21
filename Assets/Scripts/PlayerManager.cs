@@ -286,7 +286,7 @@ public abstract class PlayerManager : MonoBehaviour
                 return;
             }
 
-            isDashing = ActuallyDoing[Actions.DASHING] |= controlManager.IsDashing();
+            isDashing = ActuallyDoing[Actions.DASHING] |= controlManager.IsDashing() && Vector3.Distance(transform.position, otherPlayer.transform.position) > 2.0;
 
             if (isDashing)
             {
