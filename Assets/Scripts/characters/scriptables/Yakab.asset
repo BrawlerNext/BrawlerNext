@@ -40,6 +40,7 @@ MonoBehaviour:
   aeroPunchDamage: 25
   aeroPunchSpeed: 10
   aeroStopTime: 0.5
+  aeroHitMaxTime: 2
   aeroMaxDistance: 10
   aeroAscensionDistance: 0.1
   shieldRepairDelay: 3
@@ -69,12 +70,12 @@ MonoBehaviour:
   - Type: 11
     Clip: {fileID: 8300000, guid: a019bf2f23f083849bef8f0b197568f6, type: 3}
   - Type: 12
-    Clip: {fileID: 8300000, guid: 4f636a33fbb9940f38f02b86ccb86cfe, type: 3}
+    Clip: {fileID: 8300000, guid: 5cf7696d45f60459a937f92f0f02ad7d, type: 3}
   - Type: 13
     Clip: {fileID: 8300000, guid: f00ce16d53e3042f0b30954f69375984, type: 3}
   particles:
   - type: 0
-    particle: {fileID: 1028851454640566, guid: a3461c06e715c24499a7296215227423, type: 2}
+    particle: {fileID: 1269844802833584, guid: 590254102e7e83245be4982e295fad38, type: 2}
   - type: 1
     particle: {fileID: 1269844802833584, guid: 590254102e7e83245be4982e295fad38, type: 2}
   - type: 4

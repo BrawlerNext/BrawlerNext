@@ -220,6 +220,11 @@ Prefab:
       propertyPath: controlsMenu
       value: 
       objectReference: {fileID: 942419169}
+    - target: {fileID: 114797834541865178, guid: d6390b052e4f76e4ba8a820a57482c2e,
+        type: 2}
+      propertyPath: Debugging
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d6390b052e4f76e4ba8a820a57482c2e, type: 2}
   m_IsPrefabParent: 0
@@ -979,6 +984,11 @@ Prefab:
         type: 2}
       propertyPath: far clip plane
       value: 2300
+      objectReference: {fileID: 0}
+    - target: {fileID: 114533317328131358, guid: 367ae0cc482bdb44a941e19ade5c2a14,
+        type: 2}
+      propertyPath: minDistanceFromMidPoint
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 367ae0cc482bdb44a941e19ade5c2a14, type: 2}
