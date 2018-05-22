@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using characters.scriptables;
 using util;
 using UnityEngine;
-using UnityEngine.Experimental.UIElements;
+using UnityEngine.UI;
 
 public abstract class PlayerManager : MonoBehaviour
 {
@@ -87,6 +87,9 @@ public abstract class PlayerManager : MonoBehaviour
 
     protected Actions[] AllActions = new[]
         {Actions.JUMP, Actions.HARD_PUNCH, Actions.SOFT_PUNCH, Actions.MOVE, Actions.DEFEND, Actions.DASHING, Actions.AERO_HIT};
+
+    public Image dashCooldown;
+    public Image airCooldown;
 
     void Awake()
     {
@@ -451,11 +454,28 @@ public abstract class PlayerManager : MonoBehaviour
     private IEnumerator StartCooldown(Actions action) {
         InCooldown[action] = true;
         float cooldown = Cooldowns[action];
+        Image cooldownImage = null;
+        
+        switch (action)
+        {
+            case Actions.AERO_HIT:
+                cooldownImage = airCooldown;
+                break;
+            case Actions.DASHING:
+                cooldownImage = dashCooldown;
+                break;
+        }
+
+        if (cooldownImage != null) cooldownImage.fillAmount = 0;
+
         while (cooldown > 0)
         {
             cooldown -= Time.deltaTime;
+            if (cooldownImage != null) cooldownImage.fillAmount = cooldown / Cooldowns[action];
             yield return 0;
         }
+
+        if (cooldownImage != null) cooldownImage.fillAmount = 1;
         InCooldown[action] = false;
     }
 
