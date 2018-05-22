@@ -16,7 +16,7 @@ public class AudioManager
         this.character = character;
     }
 
-    public void Play(AudioType type)
+    public void Play(AudioType type, float volume = 0.8f)
     {
         if (type != AudioType.NONE)
         {
@@ -24,7 +24,7 @@ public class AudioManager
             {
                 if (audioEntry.Type == type)
                 {
-                    soundSource.PlayOneShot(audioEntry.Clip);
+                    soundSource.PlayOneShot(audioEntry.Clip, volume);
                     return;
                 }
             }

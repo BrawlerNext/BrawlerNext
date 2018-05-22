@@ -70,8 +70,6 @@ public class CollisionManager : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Vector3 positionToInstantiate = getCollisionPoint();
-
         if (!collision.collider.tag.Contains(otherPlayer.tag)) return;
 
         switch (lastAction)

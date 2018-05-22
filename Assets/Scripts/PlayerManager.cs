@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-//using System.Collections.Concurrent;
 using System.Collections.Generic;
 using characters.scriptables;
 using util;
@@ -14,7 +13,7 @@ public abstract class PlayerManager : MonoBehaviour
     public float delayImpulseOnHit = 0.5f;
 
     public bool isInvulnerable = false;
-    public float invulnerableTime = 2;
+    public float invulnerableTime = 5;
 
     // Basic input data
     public Character character;
@@ -23,15 +22,13 @@ public abstract class PlayerManager : MonoBehaviour
 
     public float stunTime = 1f;
 
-    public GameObject stunEffect;
-    public GameObject pushedEFFECT;
-
-
     // Stateless data
     protected Rigidbody rb;
     protected GroundChecker groundChecker;
-    protected ControlManager controlManager;
     protected ParticleManager particleManager;
+
+    [HideInInspector]
+    public ControlManager controlManager;
 
     [HideInInspector]
     public AudioManager audioManager;
@@ -47,6 +44,9 @@ public abstract class PlayerManager : MonoBehaviour
     protected bool isPushed = false;
     protected bool isFreeze = false;
     protected bool isDashing = false;
+
+    public float runCooldownTimeOrig = 1.0f;
+    protected float runCooldownTime = 1.0f;
 
     [HideInInspector]
     public int currentCombo = 1;
@@ -117,6 +117,8 @@ public abstract class PlayerManager : MonoBehaviour
         Cooldowns[Actions.DASHING] = 1.0f;
 
         FindOtherPlayer();
+
+        runCooldownTime = runCooldownTimeOrig;
     }
 
     private void SetFlagsTo(bool enabled)
@@ -181,17 +183,12 @@ public abstract class PlayerManager : MonoBehaviour
         animator.SetBool("IsPushed", isPushed);
         if (isPushed)
         {
-            pushedEFFECT.SetActive(true);
-
             if (rb.velocity.magnitude < 0.01f)
             {
                 isPushed = false;
-
-                pushedEFFECT.SetActive(false);
             }
         }
 
-        stunEffect.SetActive(isStunned);
         animator.SetBool("IsDamaged", isStunned);
 
         if (!isStunned)
@@ -453,7 +450,12 @@ public abstract class PlayerManager : MonoBehaviour
 
     private IEnumerator StartCooldown(Actions action) {
         InCooldown[action] = true;
-        yield return new WaitForSeconds(Cooldowns[action]);
+        float cooldown = Cooldowns[action];
+        while (cooldown > 0)
+        {
+            cooldown -= Time.deltaTime;
+            yield return 0;
+        }
         InCooldown[action] = false;
     }
 
@@ -499,7 +501,14 @@ public abstract class PlayerManager : MonoBehaviour
             movement += verticalVector;
             lastAction = Actions.MOVE;
 
-            audioManager.PlayOnce(AudioType.RUN);
+            if (groundChecker.isGrounded) {
+                runCooldownTime -= Time.deltaTime;
+
+                if (runCooldownTime < 0) {
+                    audioManager.Play(AudioType.RUN, 0.3f);
+                    runCooldownTime = runCooldownTimeOrig;
+                }
+            }
 
             animator.SetBool("IsRunning", (Math.Abs(movement.x) > 0.5f || Math.Abs(movement.z) > 0.5f));
         }

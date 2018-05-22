@@ -10,7 +10,7 @@ public class CameraMovement : MonoBehaviour
     public float offsetVertical;
     public float verticalRotationOffset;
     public float zoomFactor;
-    public float maxDistanceFromMidPoint;
+    public float minDistanceFromMidPoint;
 
     private Transform player1;
     private Transform player2;
@@ -52,7 +52,7 @@ public class CameraMovement : MonoBehaviour
 
         this.transform.rotation = Quaternion.Slerp(this.transform.rotation, rotation, Time.deltaTime);
 
-        midpoint += new Vector3(distance, verticalRotationOffset, 0);
+        midpoint += new Vector3(distance + minDistanceFromMidPoint, verticalRotationOffset, 0);
 
         transform.position = Vector3.Lerp(transform.position, midpoint, Time.deltaTime);
     }

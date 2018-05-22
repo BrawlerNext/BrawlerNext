@@ -110,6 +110,17 @@ public class GameDirector : MonoBehaviour
 
   private void Update()
   {
+
+    if (Input.GetJoystickNames().Length > 0) {
+      player1.controller = Controller.Xbox;
+      player1.controlManager.Init(player1.controller, player1.player);
+    }
+
+    if (Input.GetJoystickNames().Length > 1) {
+      player2.controller = Controller.Xbox;
+      player2.controlManager.Init(player2.controller, player2.player);
+    }
+
     if (player1.isDead())
     {
       player1Deaths++;
