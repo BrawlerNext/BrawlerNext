@@ -11,6 +11,7 @@ public class MenuCameraMovement : MonoBehaviour
     public GameObject playMenu;
 
     public GameObject credits;
+    public GameObject instruction;
     // Use this for initialization
     void Start()
     {
@@ -46,5 +47,10 @@ public class MenuCameraMovement : MonoBehaviour
     {
         this.transform.position = credits.transform.position;
         Debug.Log("chachoxd");
+    }
+
+    public void PopUpControls()
+    {
+            instruction.SetActive(true);
     }
 }
