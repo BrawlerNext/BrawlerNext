@@ -51,6 +51,10 @@ public class MenuCameraMovement : MonoBehaviour
 
     public void PopUpControls()
     {
-            instruction.SetActive(true);
+        instruction.SetActive(true);
+    }
+    public void UnPopUpControls()
+    {
+        instruction.SetActive(false);
     }
 }
