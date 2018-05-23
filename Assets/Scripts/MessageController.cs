@@ -17,7 +17,7 @@ public class MessageController : MonoBehaviour {
 		this.gui.text = message;
 	}
 
-	private void Start() {
+	private void Awake() {
 		startPosition = this.transform.localPosition;
 		endPosition = startPosition + new Vector3(0, 100, 0);
 		gui = gameObject.GetComponent<Text>();

@@ -14,8 +14,8 @@ MonoBehaviour:
   speed: 2.5
   maxJumps: 2
   jumpForce: 200
-  dashSpeed: 10
-  dashTimeInSeconds: 1
+  dashSpeed: 20
+  dashTimeInSeconds: 0.5
   dashCurve:
     serializedVersion: 2
     m_Curve:
@@ -56,7 +56,7 @@ MonoBehaviour:
   - Type: 2
     Clip: {fileID: 8300000, guid: fcffc773226771b41b51007c3818d7a7, type: 3}
   - Type: 3
-    Clip: {fileID: 8300000, guid: 9f386bf8082e4cb4ea7c3a5f4ea69680, type: 3}
+    Clip: {fileID: 8300000, guid: 2c66d95613d844268a64349f6ae99aa2, type: 3}
   - Type: 4
     Clip: {fileID: 8300000, guid: c00fca4c93e9b448482d6a783139230b, type: 3}
   - Type: 5
@@ -75,8 +75,8 @@ MonoBehaviour:
     Clip: {fileID: 8300000, guid: f00ce16d53e3042f0b30954f69375984, type: 3}
   particles:
   - type: 0
-    particle: {fileID: 1269844802833584, guid: 590254102e7e83245be4982e295fad38, type: 2}
+    particle: {fileID: 1156215820338420, guid: b48bde2f0da90284a9ae5e40c66f3469, type: 2}
   - type: 1
-    particle: {fileID: 1269844802833584, guid: 590254102e7e83245be4982e295fad38, type: 2}
+    particle: {fileID: 1156215820338420, guid: b48bde2f0da90284a9ae5e40c66f3469, type: 2}
   - type: 4
     particle: {fileID: 1439084418714884, guid: 733d6e6ccf876ae42be8cef5ae70cc4a, type: 2}
