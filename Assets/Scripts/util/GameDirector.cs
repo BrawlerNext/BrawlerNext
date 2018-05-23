@@ -148,7 +148,7 @@ public class GameDirector : MonoBehaviour
       else
         PlayerPrefs.SetInt("winner", 1);
 
-      SceneManager.LoadScene("Winner");
+      FadeManager.LoadSceneTo(2);
     }
 
   }

@@ -27,11 +27,25 @@ public class FadeManager : MonoBehaviour {
 	}
 
 
+    public static void LoadSceneTo(int scene)
+    {
+        FadeManager.instance.gameObject.SetActive(true);
+
+        FadeManager.instance.StartCoroutine(FadeManager.instance.FadeOut(scene));
+    }
+
     public void LoadScene(int scene)
     {
         gameObject.SetActive(true);
 
         StartCoroutine(FadeOut(scene));
+    }
+
+    public void Quit()
+    {
+        gameObject.SetActive(true);
+
+        StartCoroutine(FadeOut());
     }
 
     IEnumerator FadeOut(int scene)
@@ -51,6 +65,23 @@ public class FadeManager : MonoBehaviour {
         SceneManager.LoadScene(scene);
     }
 
+    IEnumerator FadeOut()
+    {
+        fadeTimeRuntime = fadeTime;
+        print(fadeTimeRuntime);
+
+        while (fadeTimeRuntime > 0)
+        {
+            group.alpha = 1 - fadeTimeRuntime / fadeTime;
+            fadeTimeRuntime -= Time.unscaledDeltaTime;
+            yield return 0;
+        }
+
+        group.alpha = 1;
+
+        Application.Quit();
+    }
+
     IEnumerator FadeIn()
     {
         fadeTimeRuntime = fadeTime;
@@ -58,7 +89,7 @@ public class FadeManager : MonoBehaviour {
         while (fadeTimeRuntime > 0)
         {
             group.alpha = fadeTimeRuntime / fadeTime;
-            fadeTimeRuntime -= Time.unscaledDeltaTime;
+            fadeTimeRuntime -= Time.deltaTime;
             yield return 0;
         }
 
