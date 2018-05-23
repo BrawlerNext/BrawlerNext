@@ -7,10 +7,14 @@ public class WinnerScript : MonoBehaviour
 {
     public GameObject winner1;
     public GameObject winner2;
+    public GameObject panelMenu;
     private int winner;
     // Use this for initialization
+
+
     void Start()
     {
+
         winner = PlayerPrefs.GetInt("winner");
         if (winner == 1)
         {
@@ -20,16 +24,25 @@ public class WinnerScript : MonoBehaviour
         {
             winner2.SetActive(true);
         }
+        StartCoroutine(Waitforpause());
+
     }
 
     // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     public void PlayAgainMenu(string scenename)
     {
         SceneManager.LoadScene(scenename);
+    }
+
+    IEnumerator Waitforpause()
+    {
+        yield return new WaitForSecondsRealtime(2f);
+        panelMenu.SetActive(true);
+        Debug.Log("funcionaloco");
+    }
+
+    void QuitGame()
+    {
+        Application.Quit();
     }
 }
