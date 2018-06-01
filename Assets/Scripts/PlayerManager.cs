@@ -70,8 +70,6 @@ public abstract class PlayerManager : MonoBehaviour
     protected Vector3 endPosition = Vector3.zero;
     protected Vector3 direction = Vector3.zero;
 
-    protected Vector3 lastMovementNormalized;
-
     protected IEnumerator finishingCombo = null;
 
     [HideInInspector]
@@ -533,8 +531,6 @@ public abstract class PlayerManager : MonoBehaviour
             animator.SetBool("IsRunning", (Math.Abs(movement.x) > 0.5f || Math.Abs(movement.z) > 0.5f));
         }
 
-        lastMovementNormalized = movement.normalized;
-
         movement *= character.speed;
 
         //Movement
@@ -632,11 +628,9 @@ public abstract class PlayerManager : MonoBehaviour
 
     public void Dash()
     {
-        if (lastMovementNormalized == Vector3.zero)
-            lastMovementNormalized = transform.forward;
         animator.SetBool("IsDashing", true);
 
-        rb.velocity = lastMovementNormalized * character.dashSpeed * character.dashCurve.Evaluate(dashDelay);
+        rb.velocity = (otherPlayer.position - transform.position).normalized * character.dashSpeed * character.dashCurve.Evaluate(dashDelay);
     }
 
     public void Freeze(bool freeze)
