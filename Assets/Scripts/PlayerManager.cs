@@ -329,40 +329,40 @@ public abstract class PlayerManager : MonoBehaviour
             ActuallyDoing[Actions.SOFT_PUNCH] |= controlManager.IsSoftAttacking();
 
             animator.SetBool("IsSoftAttacking", ActuallyDoing[Actions.SOFT_PUNCH] && Flags[Actions.SOFT_PUNCH] && groundChecker.isGrounded);
-            if (Flags[Actions.SOFT_PUNCH])
+
+            print(controlManager.IsSoftAttacking());
+            
+            if (Flags[Actions.SOFT_PUNCH] && ActuallyDoing[Actions.SOFT_PUNCH])
             {
-                if (ActuallyDoing[Actions.SOFT_PUNCH])
+                if (groundChecker.isGrounded)
                 {
-                    if (groundChecker.isGrounded)
-                    {
-                        lastAction = Actions.SOFT_PUNCH;
-                        ActuallyDoing[Actions.SOFT_PUNCH] = false;
-                        SoftAttack();
+                    lastAction = Actions.SOFT_PUNCH;
+                    ActuallyDoing[Actions.SOFT_PUNCH] = false;
+                    SoftAttack();
 
-                        if (finishingCombo != null) StopCoroutine(finishingCombo);
+                    if (finishingCombo != null) StopCoroutine(finishingCombo);
 
-                        finishingCombo = FinishCombo();
-                        StartCoroutine(finishingCombo);
-                    }
-                    else
-                    {
-                        if (Flags[Actions.AERO_HIT] && !InCooldown[Actions.AERO_HIT])
-                        {
-                            lastAction = Actions.AERO_HIT;
-                            ActuallyDoing[Actions.SOFT_PUNCH] = false;
-
-                            DisableAllFlags();
-                            ActuallyDoing[Actions.AERO_HIT] = true;
-
-                            startPosition = transform.position;
-                            endPosition = otherPlayer.transform.position;
-                            direction = (endPosition - startPosition).normalized;
-                            aeroStopTime = character.aeroStopTime;
-                            aeroHitMaxTime = character.aeroHitMaxTime;
-                        }
-                    }
-                    return;
+                    finishingCombo = FinishCombo();
+                    StartCoroutine(finishingCombo);
                 }
+                else
+                {
+                    if (Flags[Actions.AERO_HIT] && !InCooldown[Actions.AERO_HIT])
+                    {
+                        lastAction = Actions.AERO_HIT;
+                        ActuallyDoing[Actions.SOFT_PUNCH] = false;
+
+                        DisableAllFlags();
+                        ActuallyDoing[Actions.AERO_HIT] = true;
+
+                        startPosition = transform.position;
+                        endPosition = otherPlayer.transform.position;
+                        direction = (endPosition - startPosition).normalized;
+                        aeroStopTime = character.aeroStopTime;
+                        aeroHitMaxTime = character.aeroHitMaxTime;
+                    }
+                }
+                return;
             }
 
             ActuallyDoing[Actions.HARD_PUNCH] |= controlManager.IsHardAttacking();
@@ -444,7 +444,14 @@ public abstract class PlayerManager : MonoBehaviour
 
     private IEnumerator FinishCombo()
     {
-        yield return new WaitForSeconds(0.25f);
+        if (currentCombo == 3)
+        {
+            yield return new WaitForSeconds(0.3f);
+        }
+        else
+        {
+            yield return new WaitForSeconds(0.8f);
+        }
         ResetCombo();
         EnableAllFlags();
     }

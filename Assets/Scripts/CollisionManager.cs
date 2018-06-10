@@ -126,11 +126,27 @@ public class CollisionManager : MonoBehaviour
         return Vector3.zero;
     }
 
-    public void TooglePunchCollider(ColliderType colliderType)
+    public void EnablePunchCollider(ColliderType colliderType)
     {
         foreach (PunchCollider punchCollider in colliders)
         {
-            if (punchCollider.colliderType == colliderType) punchCollider.collider.enabled = !punchCollider.collider.enabled;
+            if (punchCollider.colliderType == colliderType) punchCollider.collider.enabled = true;
+        }
+    }
+    
+    public void DisablePunchCollider(ColliderType colliderType)
+    {
+        foreach (PunchCollider punchCollider in colliders)
+        {
+            if (punchCollider.colliderType == colliderType) punchCollider.collider.enabled = false;
+        }
+    }
+    
+    public void DisableAllPunchCollider()
+    {
+        foreach (PunchCollider punchCollider in colliders)
+        {
+            punchCollider.collider.enabled = false;
         }
     }
 
