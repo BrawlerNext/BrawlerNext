@@ -14,8 +14,8 @@ MonoBehaviour:
   speed: 3
   maxJumps: 2
   jumpForce: 200
-  dashSpeed: 50
-  dashTimeInSeconds: 0.1
+  dashSpeed: 25
+  dashTimeInSeconds: 0.2
   dashCurve:
     serializedVersion: 2
     m_Curve:
@@ -40,7 +40,9 @@ MonoBehaviour:
   aeroPunchDamage: 25
   aeroPunchSpeed: 10
   aeroStopTime: 0.25
+  aeroHitMaxTime: 2
   aeroMaxDistance: 10
+  aeroAscensionDistance: 0.1
   shieldRepairDelay: 3
   shieldLife: 50
   shieldDecayVelocity: 10

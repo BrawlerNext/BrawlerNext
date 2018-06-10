@@ -70683,15 +70683,22 @@ AnimationClip:
     floatParameter: 0
     intParameter: 4
     messageOptions: 0
+  - time: 0
+    functionName: DisableAllPunchCollider
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
   - time: 0.48333332
-    functionName: TooglePunchCollider
+    functionName: EnablePunchCollider
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 0.73333335
-    functionName: TooglePunchCollider
+    functionName: DisablePunchCollider
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

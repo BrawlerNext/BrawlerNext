@@ -14,8 +14,8 @@ MonoBehaviour:
   speed: 2.5
   maxJumps: 2
   jumpForce: 200
-  dashSpeed: 20
-  dashTimeInSeconds: 0.5
+  dashSpeed: 10
+  dashTimeInSeconds: 0.6
   dashCurve:
     serializedVersion: 2
     m_Curve:
@@ -24,6 +24,12 @@ MonoBehaviour:
       value: 0.009277344
       inSlope: 5.17378
       outSlope: 5.17378
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.1583103
+      value: 1.4216813
+      inSlope: 0.29444695
+      outSlope: 0.29444695
       tangentMode: 0
     - serializedVersion: 2
       time: 1.004242

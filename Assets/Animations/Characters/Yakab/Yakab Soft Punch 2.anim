@@ -28282,6 +28282,13 @@ AnimationClip:
   m_GenerateMotionCurves: 0
   m_Events:
   - time: 0
+    functionName: PlaySoundOf
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 3
+    messageOptions: 0
+  - time: 0
     functionName: DisableAllFlags
     data: 
     objectReferenceParameter: {fileID: 0}
@@ -28289,11 +28296,11 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 0
-    functionName: PlaySoundOf
+    functionName: DisableAllPunchCollider
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
-    intParameter: 3
+    intParameter: 0
     messageOptions: 0
   - time: 0
     functionName: IncreaseCombo
@@ -28303,35 +28310,35 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 0.016666668
+    functionName: EnablePunchCollider
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 1
+    messageOptions: 0
+  - time: 0.016666668
     functionName: toogleFlagOf
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 1
     messageOptions: 0
-  - time: 0.06666667
-    functionName: TooglePunchCollider
+  - time: 0.18333334
+    functionName: DisablePunchCollider
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 1
     messageOptions: 0
   - time: 0.18333334
-    functionName: TooglePunchCollider
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 1
-    messageOptions: 0
-  - time: 0.18333334
-    functionName: EnableAllFlags
+    functionName: ResetCombo
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 0.18333334
-    functionName: ResetCombo
+    functionName: EnableAllFlags
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
